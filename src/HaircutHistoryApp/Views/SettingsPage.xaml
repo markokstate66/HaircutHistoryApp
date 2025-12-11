@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HaircutHistoryApp.ViewModels"
+             x:Class="HaircutHistoryApp.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="{StaticResource Background}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="15" Spacing="20">
+
+            <!-- Account Section -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Surface}"
+                   BorderColor="Transparent"
+                   CornerRadius="12">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Account"
+                           FontSize="18"
+                           FontAttributes="Bold"/>
+
+                    <!-- Profile Info -->
+                    <HorizontalStackLayout Spacing="15">
+                        <Frame WidthRequest="60"
+                               HeightRequest="60"
+                               CornerRadius="30"
+                               Padding="0"
+                               BackgroundColor="{StaticResource Primary}">
+                            <Label Text="{Binding DisplayName, Converter={StaticResource NameToInitialsConverter}}"
+                                   FontSize="24"
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Frame>
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label Text="{Binding DisplayName}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"/>
+                            <Label Text="{Binding Email}"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray500}"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Mode Section -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Surface}"
+                   BorderColor="Transparent"
+                   CornerRadius="12">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="App Mode"
+                           FontSize="18"
+                           FontAttributes="Bold"/>
+
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Barber/Stylist Mode"
+                                   FontSize="16"/>
+                            <Label Text="Switch to view and add notes to client profiles"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Gray500}"/>
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding IsBarberMode}"
+                                OnColor="{StaticResource Primary}"
+                                VerticalOptions="Center"/>
+
+                        <!-- Shop Name (for barbers) -->
+                        <Frame Grid.Row="1" Grid.ColumnSpan="2"
+                               Padding="10"
+                               Margin="0,10,0,0"
+                               BackgroundColor="{StaticResource Background}"
+                               BorderColor="Transparent"
+                               CornerRadius="8"
+                               IsVisible="{Binding IsBarberMode}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout>
+                                    <Label Text="Shop Name" FontSize="12" TextColor="{StaticResource Gray500}"/>
+                                    <Label Text="{Binding ShopName, TargetNullValue='Not set'}"
+                                           FontSize="14"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1"
+                                        Text="Edit"
+                                        Command="{Binding UpdateShopNameCommand}"
+                                        Style="{StaticResource SecondaryButton}"
+                                        HeightRequest="35"
+                                        FontSize="12"/>
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Achievements Section -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Surface}"
+                   BorderColor="Transparent"
+                   CornerRadius="12">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Achievements"
+                           FontSize="18"
+                           FontAttributes="Bold"/>
+
+                    <Frame Padding="15"
+                           BackgroundColor="{StaticResource Background}"
+                           BorderColor="Transparent"
+                           CornerRadius="10">
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <Frame WidthRequest="45"
+                                   HeightRequest="45"
+                                   CornerRadius="22"
+                                   Padding="0"
+                                   BackgroundColor="{StaticResource Secondary}">
+                                <Label Text="🏆"
+                                       FontSize="22"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Frame>
+                            <VerticalStackLayout Grid.Column="1" Margin="15,0,0,0" VerticalOptions="Center">
+                                <Label Text="Your Progress"
+                                       FontSize="16"
+                                       FontAttributes="Bold"/>
+                                <Label Text="Track your haircut milestones"
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}"/>
+                            </VerticalStackLayout>
+                            <Button Grid.Column="2"
+                                    Text="View"
+                                    Command="{Binding ViewAchievementsCommand}"
+                                    Style="{StaticResource SecondaryButton}"
+                                    HeightRequest="35"
+                                    FontSize="12"
+                                    VerticalOptions="Center"/>
+                        </Grid>
+                    </Frame>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- App Info -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Surface}"
+                   BorderColor="Transparent"
+                   CornerRadius="12">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="About"
+                           FontSize="18"
+                           FontAttributes="Bold"/>
+
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                        <Label Text="Version" Grid.Row="0"/>
+                        <Label Text="1.0.0" Grid.Row="0" Grid.Column="1" TextColor="{StaticResource Gray500}"/>
+
+                        <Label Text="Build" Grid.Row="1"/>
+                        <Label Text="1" Grid.Row="1" Grid.Column="1" TextColor="{StaticResource Gray500}"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Sign Out -->
+            <Button Text="Sign Out"
+                    Command="{Binding SignOutCommand}"
+                    Style="{StaticResource DangerButton}"
+                    Margin="0,20,0,0"/>
+
+            <!-- Loading -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                             IsVisible="{Binding IsBusy}"
+                             Color="{StaticResource Primary}"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

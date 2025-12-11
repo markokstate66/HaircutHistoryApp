@@ -1,0 +1,39 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:HaircutHistoryApp"
+             xmlns:converters="clr-namespace:HaircutHistoryApp.Converters"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui;assembly=ZXing.Net.MAUI"
+             x:Class="HaircutHistoryApp.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Converters -->
+            <converters:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+            <converters:StringToBoolConverter x:Key="StringToBoolConverter"/>
+            <converters:IntToBoolConverter x:Key="IntToBoolConverter"/>
+            <converters:BoolToModeConverter x:Key="BoolToModeConverter"/>
+            <converters:BoolToScanTextConverter x:Key="BoolToScanTextConverter"/>
+            <converters:NameToInitialsConverter x:Key="NameToInitialsConverter"/>
+            <converters:DateToRelativeConverter x:Key="DateToRelativeConverter"/>
+            <converters:AreaToIconConverter x:Key="AreaToIconConverter"/>
+
+            <!-- Achievement Converters -->
+            <converters:BoolToUnlockedBorderConverter x:Key="BoolToUnlockedBorderConverter"/>
+            <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
+            <converters:BoolToAchievementBgConverter x:Key="BoolToAchievementBgConverter"/>
+            <converters:ProgressToWidthConverter x:Key="ProgressToWidthConverter"/>
+            <converters:ProgressToSmallWidthConverter x:Key="ProgressToSmallWidthConverter"/>
+
+            <!-- Barcode Reader Options -->
+            <zxing:BarcodeReaderOptions x:Key="BarcodeReaderOptions"
+                                       Formats="QrCode"
+                                       AutoRotate="True"
+                                       Multiple="False"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

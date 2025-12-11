@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HaircutHistoryApp.ViewModels"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             x:Class="HaircutHistoryApp.Views.QRScanPage"
+             x:DataType="vm:QRScanViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="{StaticResource Background}">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <!-- Scanner View -->
+        <zxing:CameraBarcodeReaderView
+            x:Name="BarcodeReader"
+            Grid.Row="0"
+            IsDetecting="{Binding IsScanning}"
+            IsVisible="{Binding ShowManualEntry, Converter={StaticResource InvertedBoolConverter}}"
+            Options="{StaticResource BarcodeReaderOptions}"/>
+
+        <!-- Scanner Overlay -->
+        <Grid Grid.Row="0"
+              IsVisible="{Binding ShowManualEntry, Converter={StaticResource InvertedBoolConverter}}">
+            <!-- Dark overlay with cutout effect simulated -->
+            <BoxView Color="#80000000" Opacity="0.6"/>
+
+            <!-- Scanner Frame -->
+            <Frame WidthRequest="250"
+                   HeightRequest="250"
+                   BackgroundColor="Transparent"
+                   BorderColor="{StaticResource Primary}"
+                   CornerRadius="12"
+                   HasShadow="False"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+
+            <!-- Instructions -->
+            <VerticalStackLayout VerticalOptions="End"
+                                Margin="0,0,0,120"
+                                Spacing="10">
+                <Label Text="Point at the QR code"
+                       FontSize="16"
+                       TextColor="White"
+                       HorizontalOptions="Center"/>
+                <Label Text="The code will scan automatically"
+                       FontSize="12"
+                       TextColor="#CCCCCC"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- Manual Entry View -->
+        <VerticalStackLayout Grid.Row="0"
+                           IsVisible="{Binding ShowManualEntry}"
+                           VerticalOptions="Center"
+                           Padding="30"
+                           Spacing="20">
+            <Label Text="Enter Share Code"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"/>
+            <Label Text="Enter the 8-character code shared by your client"
+                   FontSize="14"
+                   TextColor="{StaticResource Gray500}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"/>
+
+            <Entry Placeholder="e.g., ABC12345"
+                   Text="{Binding ManualCode}"
+                   MaxLength="8"
+                   Keyboard="Plain"
+                   HorizontalTextAlignment="Center"
+                   FontSize="24"
+                   LetterSpacing="3"
+                   Style="{StaticResource EntryStyle}"/>
+
+            <Button Text="Submit"
+                    Command="{Binding SubmitManualCodeCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    HorizontalOptions="Center"
+                    WidthRequest="200"/>
+        </VerticalStackLayout>
+
+        <!-- Bottom Bar -->
+        <Frame Grid.Row="1"
+               Padding="20"
+               BackgroundColor="{StaticResource Surface}"
+               BorderColor="Transparent"
+               CornerRadius="0">
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                <Button Text="{Binding ShowManualEntry, Converter={StaticResource BoolToScanTextConverter}}"
+                        Command="{Binding ToggleManualEntryCommand}"
+                        Style="{StaticResource SecondaryButton}"/>
+            </HorizontalStackLayout>
+        </Frame>
+
+        <!-- Loading -->
+        <ActivityIndicator Grid.RowSpan="2"
+                         IsRunning="{Binding IsBusy}"
+                         IsVisible="{Binding IsBusy}"
+                         Color="{StaticResource Primary}"
+                         VerticalOptions="Center"
+                         HorizontalOptions="Center"/>
+    </Grid>
+</ContentPage>

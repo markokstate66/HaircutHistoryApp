@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HaircutHistoryApp.ViewModels"
+             xmlns:models="clr-namespace:HaircutHistoryApp.Models"
+             x:Class="HaircutHistoryApp.Views.AchievementsPage"
+             x:DataType="vm:AchievementsViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="{StaticResource Background}">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Progress Header -->
+        <Frame Grid.Row="0"
+               Padding="20"
+               Margin="15,15,15,0"
+               BackgroundColor="{StaticResource Primary}"
+               BorderColor="Transparent"
+               CornerRadius="16">
+            <VerticalStackLayout Spacing="15">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout>
+                        <Label Text="{Binding IsBarberMode, Converter={StaticResource BoolToModeConverter}, StringFormat='{0} Achievements'}"
+                               FontSize="14"
+                               TextColor="#FFFFFFAA"/>
+                        <Label FontSize="28"
+                               FontAttributes="Bold"
+                               TextColor="White">
+                            <Label.Text>
+                                <MultiBinding StringFormat="{}{0} / {1}">
+                                    <Binding Path="UnlockedCount"/>
+                                    <Binding Path="TotalAchievements"/>
+                                </MultiBinding>
+                            </Label.Text>
+                        </Label>
+                    </VerticalStackLayout>
+                    <Frame Grid.Column="1"
+                           Padding="12,8"
+                           CornerRadius="20"
+                           BackgroundColor="#FFFFFF33"
+                           BorderColor="Transparent"
+                           VerticalOptions="Center">
+                        <Label Text="{Binding OverallProgress, StringFormat='{0:P0}'}"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="White"/>
+                    </Frame>
+                </Grid>
+
+                <!-- Progress Bar -->
+                <Frame Padding="0"
+                       HeightRequest="10"
+                       CornerRadius="5"
+                       BackgroundColor="#FFFFFF33"
+                       HasShadow="False">
+                    <Frame Padding="0"
+                           HeightRequest="10"
+                           CornerRadius="5"
+                           BackgroundColor="White"
+                           HorizontalOptions="Start"
+                           WidthRequest="{Binding OverallProgress, Converter={StaticResource ProgressToWidthConverter}}"
+                           HasShadow="False"/>
+                </Frame>
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Achievements List -->
+        <CollectionView Grid.Row="1"
+                       ItemsSource="{Binding Achievements}"
+                       SelectionMode="None"
+                       Margin="15,15,15,0">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="12"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Achievement">
+                    <Frame Padding="15"
+                           BackgroundColor="{StaticResource Surface}"
+                           BorderColor="{Binding IsUnlocked, Converter={StaticResource BoolToUnlockedBorderConverter}}"
+                           CornerRadius="12"
+                           Opacity="{Binding IsUnlocked, Converter={StaticResource BoolToOpacityConverter}}">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="15">
+                            <!-- Icon -->
+                            <Frame WidthRequest="55"
+                                   HeightRequest="55"
+                                   CornerRadius="27"
+                                   Padding="0"
+                                   BackgroundColor="{Binding IsUnlocked, Converter={StaticResource BoolToAchievementBgConverter}}"
+                                   BorderColor="Transparent">
+                                <Label Text="{Binding Icon}"
+                                       FontSize="26"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Frame>
+
+                            <!-- Info -->
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label Text="{Binding Name}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"/>
+                                    <Label Text="✓"
+                                           FontSize="16"
+                                           TextColor="{StaticResource Success}"
+                                           IsVisible="{Binding IsUnlocked}"/>
+                                </HorizontalStackLayout>
+                                <Label Text="{Binding Description}"
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}"/>
+
+                                <!-- Progress Bar (if not unlocked) -->
+                                <Grid ColumnDefinitions="*,Auto"
+                                     ColumnSpacing="10"
+                                     IsVisible="{Binding IsUnlocked, Converter={StaticResource InvertedBoolConverter}}"
+                                     Margin="0,5,0,0">
+                                    <Frame Padding="0"
+                                           HeightRequest="6"
+                                           CornerRadius="3"
+                                           BackgroundColor="{StaticResource Gray200}"
+                                           HasShadow="False">
+                                        <Frame Padding="0"
+                                               HeightRequest="6"
+                                               CornerRadius="3"
+                                               BackgroundColor="{StaticResource Secondary}"
+                                               HorizontalOptions="Start"
+                                               WidthRequest="{Binding Progress, Converter={StaticResource ProgressToSmallWidthConverter}}"
+                                               HasShadow="False"/>
+                                    </Frame>
+                                    <Label Grid.Column="1"
+                                           Text="{Binding ProgressText}"
+                                           FontSize="11"
+                                           TextColor="{StaticResource Gray500}"/>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10" Padding="20">
+                    <Label Text="🏆" FontSize="60" HorizontalOptions="Center"/>
+                    <Label Text="No achievements yet"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Start creating haircut profiles to unlock achievements!"
+                           FontSize="14"
+                           TextColor="{StaticResource Gray500}"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+        <!-- Loading -->
+        <ActivityIndicator Grid.RowSpan="2"
+                         IsRunning="{Binding IsBusy}"
+                         IsVisible="{Binding IsBusy}"
+                         Color="{StaticResource Primary}"
+                         VerticalOptions="Center"
+                         HorizontalOptions="Center"/>
+    </Grid>
+</ContentPage>

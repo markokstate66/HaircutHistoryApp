@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HaircutHistoryApp.ViewModels"
+             xmlns:models="clr-namespace:HaircutHistoryApp.Models"
+             x:Class="HaircutHistoryApp.Views.ClientViewPage"
+             x:DataType="vm:ClientViewViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="{StaticResource Background}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="15" Spacing="15">
+
+            <!-- Client Header -->
+            <Frame Padding="20"
+                   BackgroundColor="{StaticResource Primary}"
+                   BorderColor="Transparent"
+                   CornerRadius="12">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="{Binding ClientName}"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="White"/>
+                    <Label Text="{Binding Profile.Name}"
+                           FontSize="16"
+                           TextColor="#FFFFFFCC"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Images Section -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Surface}"
+                   BorderColor="Transparent"
+                   CornerRadius="12"
+                   IsVisible="{Binding HasImages}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Reference Photos"
+                           FontSize="18"
+                           FontAttributes="Bold"/>
+                    <CollectionView ItemsSource="{Binding Images}"
+                                  HeightRequest="120">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Frame Padding="0"
+                                       CornerRadius="8"
+                                       IsClippedToBounds="True"
+                                       HasShadow="False"
+                                       BorderColor="Transparent">
+                                    <Image Source="{Binding .}"
+                                           Aspect="AspectFill"
+                                           WidthRequest="100"
+                                           HeightRequest="100">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ClientViewViewModel}}, Path=ViewImageCommand}"
+                                                                CommandParameter="{Binding .}"/>
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Measurements Section -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Surface}"
+                   BorderColor="Transparent"
+                   CornerRadius="12">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Measurements"
+                           FontSize="18"
+                           FontAttributes="Bold"/>
+
+                    <CollectionView ItemsSource="{Binding Measurements}"
+                                  SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:HaircutMeasurement">
+                                <Frame Padding="12"
+                                       Margin="0,0,0,10"
+                                       BackgroundColor="{StaticResource Background}"
+                                       BorderColor="Transparent"
+                                       CornerRadius="8">
+                                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="15">
+                                        <!-- Area Icon -->
+                                        <Frame Grid.RowSpan="3"
+                                               WidthRequest="50"
+                                               HeightRequest="50"
+                                               CornerRadius="25"
+                                               Padding="0"
+                                               BackgroundColor="{StaticResource Primary}"
+                                               VerticalOptions="Center">
+                                            <Label Text="{Binding Area, Converter={StaticResource AreaToIconConverter}}"
+                                                   FontSize="20"
+                                                   TextColor="White"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
+                                        </Frame>
+
+                                        <!-- Area Name -->
+                                        <Label Grid.Row="0" Grid.Column="1"
+                                               Text="{Binding Area}"
+                                               FontSize="16"
+                                               FontAttributes="Bold"/>
+
+                                        <!-- Guard Size & Technique -->
+                                        <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Spacing="10">
+                                            <Label Text="{Binding GuardSize, StringFormat='Guard: {0}'}"
+                                                   FontSize="14"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource Secondary}"
+                                                   IsVisible="{Binding GuardSize, Converter={StaticResource StringToBoolConverter}}"/>
+                                            <Label Text="{Binding Technique}"
+                                                   FontSize="13"
+                                                   TextColor="{StaticResource Gray600}"
+                                                   IsVisible="{Binding Technique, Converter={StaticResource StringToBoolConverter}}"/>
+                                        </HorizontalStackLayout>
+
+                                        <!-- Notes -->
+                                        <Label Grid.Row="2" Grid.Column="1"
+                                               Text="{Binding Notes}"
+                                               FontSize="12"
+                                               TextColor="{StaticResource Gray500}"
+                                               IsVisible="{Binding Notes, Converter={StaticResource StringToBoolConverter}}"/>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- General Notes -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Surface}"
+                   BorderColor="Transparent"
+                   CornerRadius="12"
+                   IsVisible="{Binding Profile.GeneralNotes, Converter={StaticResource StringToBoolConverter}}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Client Notes"
+                           FontSize="18"
+                           FontAttributes="Bold"/>
+                    <Label Text="{Binding Profile.GeneralNotes}"
+                           FontSize="14"
+                           TextColor="{StaticResource Gray600}"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Previous Barber Notes -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Surface}"
+                   BorderColor="Transparent"
+                   CornerRadius="12"
+                   IsVisible="{Binding HasBarberNotes}">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Previous Barber Notes"
+                           FontSize="18"
+                           FontAttributes="Bold"/>
+
+                    <CollectionView ItemsSource="{Binding BarberNotes}"
+                                  SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:BarberNote">
+                                <Frame Padding="12"
+                                       Margin="0,0,0,10"
+                                       BackgroundColor="{StaticResource Background}"
+                                       BorderColor="{StaticResource Secondary}"
+                                       CornerRadius="8">
+                                    <VerticalStackLayout Spacing="5">
+                                        <HorizontalStackLayout Spacing="10">
+                                            <Label Text="{Binding BarberName}"
+                                                   FontSize="14"
+                                                   FontAttributes="Bold"/>
+                                            <Label Text="{Binding ShopName}"
+                                                   FontSize="12"
+                                                   TextColor="{StaticResource Gray500}"
+                                                   IsVisible="{Binding ShopName, Converter={StaticResource StringToBoolConverter}}"/>
+                                        </HorizontalStackLayout>
+                                        <Label Text="{Binding Note}"
+                                               FontSize="14"/>
+                                        <Label Text="{Binding CreatedAt, StringFormat='{0:MMM dd, yyyy}'}"
+                                               FontSize="11"
+                                               TextColor="{StaticResource Gray400}"/>
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Add Note Section -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Surface}"
+                   BorderColor="Transparent"
+                   CornerRadius="12"
+                   IsVisible="{Binding CanAddNotes}">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Add Your Note"
+                           FontSize="18"
+                           FontAttributes="Bold"/>
+                    <Label Text="Leave a tip for future cuts (e.g., cowlick areas, growth patterns)"
+                           FontSize="12"
+                           TextColor="{StaticResource Gray500}"/>
+
+                    <!-- Note Input (collapsed by default) -->
+                    <VerticalStackLayout Spacing="10"
+                                        IsVisible="{Binding IsAddingNote}">
+                        <Editor Placeholder="Enter your professional notes about this client's hair..."
+                                Text="{Binding NewNote}"
+                                HeightRequest="100"
+                                Style="{StaticResource EditorStyle}"/>
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
+                            <Button Text="Cancel"
+                                    Command="{Binding CancelAddNoteCommand}"
+                                    Style="{StaticResource SecondaryButton}"/>
+                            <Button Text="Save Note"
+                                    Command="{Binding SaveNoteCommand}"
+                                    Style="{StaticResource PrimaryButton}"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+                    <!-- Add Note Button -->
+                    <Button Text="+ Add Note"
+                            Command="{Binding ShowAddNoteCommand}"
+                            Style="{StaticResource SecondaryButton}"
+                            IsVisible="{Binding IsAddingNote, Converter={StaticResource InvertedBoolConverter}}"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Cannot Add Notes Message -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Warning}"
+                   BorderColor="Transparent"
+                   CornerRadius="8"
+                   IsVisible="{Binding CanAddNotes, Converter={StaticResource InvertedBoolConverter}}">
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="ℹ️" FontSize="16"/>
+                    <Label Text="Client has disabled barber notes for this share"
+                           FontSize="13"
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Frame>
+
+            <!-- Bottom Padding -->
+            <BoxView HeightRequest="20"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

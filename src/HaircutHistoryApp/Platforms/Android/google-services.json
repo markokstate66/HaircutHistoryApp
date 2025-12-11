@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "517009667256",
+    "project_id": "haircut-history-361f3",
+    "storage_bucket": "haircut-history-361f3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517009667256:android:444184cdb8b18eb7b2b04d",
+        "android_client_info": {
+          "package_name": "com.haircuthistory.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBw55QdDlA3S1MgWvTpLdkMPGz2TcVXG5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

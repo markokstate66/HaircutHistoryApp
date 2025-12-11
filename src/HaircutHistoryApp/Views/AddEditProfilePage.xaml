@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HaircutHistoryApp.ViewModels"
+             x:Class="HaircutHistoryApp.Views.AddEditProfilePage"
+             x:DataType="vm:AddEditProfileViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="{StaticResource Background}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="15" Spacing="20">
+
+            <!-- Basic Info -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Surface}"
+                   BorderColor="Transparent"
+                   CornerRadius="12">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Profile Info" FontSize="18" FontAttributes="Bold"/>
+
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Profile Name *" FontSize="14" TextColor="{StaticResource Gray600}"/>
+                        <Entry Placeholder="e.g., My Regular Cut, Summer Style"
+                               Text="{Binding ProfileName}"
+                               Style="{StaticResource EntryStyle}"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Description" FontSize="14" TextColor="{StaticResource Gray600}"/>
+                        <Editor Placeholder="Brief description of this style..."
+                                Text="{Binding Description}"
+                                HeightRequest="80"
+                                Style="{StaticResource EditorStyle}"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Photos -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Surface}"
+                   BorderColor="Transparent"
+                   CornerRadius="12">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Reference Photos" FontSize="18" FontAttributes="Bold"/>
+                    <Label Text="Add photos to show your barber exactly what you want"
+                           FontSize="12" TextColor="{StaticResource Gray500}"/>
+
+                    <!-- Image Gallery -->
+                    <CollectionView ItemsSource="{Binding Images}"
+                                  HeightRequest="120"
+                                  IsVisible="{Binding Images.Count, Converter={StaticResource IntToBoolConverter}}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Grid>
+                                    <Frame Padding="0"
+                                           CornerRadius="8"
+                                           IsClippedToBounds="True"
+                                           HasShadow="False"
+                                           BorderColor="Transparent">
+                                        <Image Source="{Binding .}"
+                                               Aspect="AspectFill"
+                                               WidthRequest="100"
+                                               HeightRequest="100"/>
+                                    </Frame>
+                                    <Button Text="×"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=RemoveImageCommand}"
+                                            CommandParameter="{Binding .}"
+                                            WidthRequest="25"
+                                            HeightRequest="25"
+                                            CornerRadius="12"
+                                            Padding="0"
+                                            FontSize="14"
+                                            BackgroundColor="{StaticResource Danger}"
+                                            TextColor="White"
+                                            HorizontalOptions="End"
+                                            VerticalOptions="Start"
+                                            Margin="0,-5,-5,0"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!-- Add Photo Buttons -->
+                    <HorizontalStackLayout Spacing="10">
+                        <Button Text="📷 Camera"
+                                Command="{Binding TakePhotoCommand}"
+                                Style="{StaticResource SecondaryButton}"/>
+                        <Button Text="🖼️ Gallery"
+                                Command="{Binding AddImageFromGalleryCommand}"
+                                Style="{StaticResource SecondaryButton}"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Measurements -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Surface}"
+                   BorderColor="Transparent"
+                   CornerRadius="12">
+                <VerticalStackLayout Spacing="15">
+                    <HorizontalStackLayout>
+                        <Label Text="Measurements"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalOptions="StartAndExpand"/>
+                        <Button Text="+ Add Area"
+                                Command="{Binding AddMeasurementCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                HeightRequest="35"
+                                FontSize="12"/>
+                    </HorizontalStackLayout>
+
+                    <CollectionView ItemsSource="{Binding Measurements}"
+                                  SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:MeasurementEntry">
+                                <Frame Padding="12"
+                                       Margin="0,0,0,10"
+                                       BackgroundColor="{StaticResource Background}"
+                                       BorderColor="Transparent"
+                                       CornerRadius="8">
+                                    <VerticalStackLayout Spacing="10">
+                                        <HorizontalStackLayout>
+                                            <Label Text="{Binding Area, StringFormat='{0} Area'}"
+                                                   FontSize="14"
+                                                   FontAttributes="Bold"
+                                                   HorizontalOptions="StartAndExpand"/>
+                                            <Button Text="×"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=RemoveMeasurementCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    WidthRequest="30"
+                                                    HeightRequest="30"
+                                                    CornerRadius="15"
+                                                    Padding="0"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource Gray500}"/>
+                                        </HorizontalStackLayout>
+
+                                        <!-- Area Picker -->
+                                        <Picker Title="Select Area"
+                                                SelectedItem="{Binding Area}"
+                                                ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=AvailableAreas}"
+                                                Style="{StaticResource PickerStyle}"/>
+
+                                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                            <!-- Guard Size -->
+                                            <Picker Grid.Column="0"
+                                                    Title="Guard Size"
+                                                    SelectedItem="{Binding GuardSize}"
+                                                    ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=AvailableGuardSizes}"
+                                                    Style="{StaticResource PickerStyle}"/>
+
+                                            <!-- Technique -->
+                                            <Picker Grid.Column="1"
+                                                    Title="Technique"
+                                                    SelectedItem="{Binding Technique}"
+                                                    ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=AvailableTechniques}"
+                                                    Style="{StaticResource PickerStyle}"/>
+                                        </Grid>
+
+                                        <!-- Notes -->
+                                        <Entry Placeholder="Additional notes for this area..."
+                                               Text="{Binding Notes}"
+                                               Style="{StaticResource EntryStyle}"/>
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- General Notes -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Surface}"
+                   BorderColor="Transparent"
+                   CornerRadius="12">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="General Notes" FontSize="18" FontAttributes="Bold"/>
+                    <Label Text="Any other details your barber should know"
+                           FontSize="12" TextColor="{StaticResource Gray500}"/>
+                    <Editor Placeholder="e.g., I like my hair to fall naturally to the left, be careful around my cowlick..."
+                            Text="{Binding GeneralNotes}"
+                            HeightRequest="120"
+                            Style="{StaticResource EditorStyle}"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Save/Cancel Buttons -->
+            <HorizontalStackLayout Spacing="15" HorizontalOptions="Center" Margin="0,10,0,30">
+                <Button Text="Cancel"
+                        Command="{Binding CancelCommand}"
+                        Style="{StaticResource SecondaryButton}"
+                        WidthRequest="120"/>
+                <Button Text="Save Profile"
+                        Command="{Binding SaveCommand}"
+                        Style="{StaticResource PrimaryButton}"
+                        WidthRequest="140"/>
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

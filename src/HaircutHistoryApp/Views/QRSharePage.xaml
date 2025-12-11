@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HaircutHistoryApp.ViewModels"
+             x:Class="HaircutHistoryApp.Views.QRSharePage"
+             x:DataType="vm:QRShareViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="{StaticResource Background}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20" VerticalOptions="Center">
+
+            <!-- Header -->
+            <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
+                <Label Text="Share Your Haircut"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"/>
+                <Label Text="{Binding Profile.Name}"
+                       FontSize="16"
+                       TextColor="{StaticResource Gray500}"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+
+            <!-- QR Code -->
+            <Frame Padding="20"
+                   BackgroundColor="White"
+                   BorderColor="Transparent"
+                   CornerRadius="16"
+                   HorizontalOptions="Center"
+                   HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <Image Source="{Binding QrCodeImage}"
+                           WidthRequest="250"
+                           HeightRequest="250"
+                           Aspect="AspectFit"
+                           HorizontalOptions="Center"/>
+
+                    <!-- Share Code -->
+                    <Frame Padding="10"
+                           BackgroundColor="{StaticResource Background}"
+                           BorderColor="Transparent"
+                           CornerRadius="8">
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                            <Label Text="{Binding ShareCode}"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   LetterSpacing="3"
+                                   VerticalOptions="Center"/>
+                            <Button Text="📋"
+                                    Command="{Binding CopyCodeCommand}"
+                                    BackgroundColor="Transparent"
+                                    FontSize="20"
+                                    Padding="5"
+                                    VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Instructions -->
+            <Label Text="Show this QR code to your barber or share the code above"
+                   FontSize="14"
+                   TextColor="{StaticResource Gray500}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"/>
+
+            <!-- Expiry Info -->
+            <Frame Padding="10"
+                   BackgroundColor="{StaticResource Warning}"
+                   BorderColor="Transparent"
+                   CornerRadius="8">
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+                    <Label Text="⏰" FontSize="16"/>
+                    <Label Text="{Binding ExpiresIn, StringFormat='Expires in {0}'}"
+                           FontSize="14"
+                           TextColor="White"/>
+                </HorizontalStackLayout>
+            </Frame>
+
+            <!-- Options -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Surface}"
+                   BorderColor="Transparent"
+                   CornerRadius="12">
+                <HorizontalStackLayout Spacing="15">
+                    <Switch IsToggled="{Binding AllowBarberNotes}"
+                            OnColor="{StaticResource Primary}"/>
+                    <VerticalStackLayout>
+                        <Label Text="Allow Barber Notes"
+                               FontSize="14"
+                               FontAttributes="Bold"/>
+                        <Label Text="Let your barber add tips about cutting your hair"
+                               FontSize="12"
+                               TextColor="{StaticResource Gray500}"/>
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+            </Frame>
+
+            <!-- Share Button -->
+            <Button Text="Share Link"
+                    Command="{Binding ShareLinkCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    HorizontalOptions="Center"
+                    WidthRequest="200"/>
+
+            <!-- Loading -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                             IsVisible="{Binding IsBusy}"
+                             Color="{StaticResource Primary}"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

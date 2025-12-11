@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HaircutHistory - Achievements</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .how-it-works {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .how-it-works h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .flow-step {
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 15px 20px;
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+            max-width: 200px;
+        }
+
+        .flow-step .icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .flow-step .label {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            color: #6366f1;
+            font-size: 1.5rem;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .section-header .emoji {
+            font-size: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.4rem;
+        }
+
+        .section-header .badge {
+            background: #6366f1;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 15px;
+        }
+
+        .achievement-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        .achievement-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .achievement-info {
+            flex: 1;
+        }
+
+        .achievement-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .achievement-desc {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .achievement-target {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.3);
+            color: #a5b4fc;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .mode-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .mode-tab {
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .mode-tab.client {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+
+        .mode-tab.barber {
+            background: rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            margin: 40px 0;
+        }
+
+        .stats-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #10b981;
+        }
+
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #64748b;
+        }
+
+        footer a {
+            color: #6366f1;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .flow-arrow {
+                display: none;
+            }
+
+            .achievements-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✂️ HaircutHistory</h1>
+            <p class="subtitle">Track your haircuts, share with barbers, unlock achievements</p>
+        </header>
+
+        <div class="how-it-works">
+            <h2>💡 How It Works</h2>
+            <div class="flow">
+                <div class="flow-step">
+                    <div class="icon">📝</div>
+                    <div class="label">Create haircut profiles with measurements</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="icon">📱</div>
+                    <div class="label">Generate QR code to share</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="icon">💈</div>
+                    <div class="label">Barber scans & views your specs</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="icon">🏆</div>
+                    <div class="label">Unlock achievements!</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mode-tabs">
+            <div class="mode-tab client">👤 Client Mode</div>
+            <div class="mode-tab barber">💈 Barber Mode</div>
+        </div>
+
+        <!-- Client Achievements -->
+        <div class="section">
+            <div class="section-header">
+                <span class="emoji">✂️</span>
+                <h2>Haircut Profiles</h2>
+                <span class="badge">6 Achievements</span>
+            </div>
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">✂️</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">First Cut</div>
+                        <div class="achievement-desc">Create your first haircut profile</div>
+                        <span class="achievement-target">1 profile</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">💇</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Style Explorer</div>
+                        <div class="achievement-desc">Create 5 haircut profiles</div>
+                        <span class="achievement-target">5 profiles</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">📚</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Style Collector</div>
+                        <div class="achievement-desc">Create 10 haircut profiles</div>
+                        <span class="achievement-target">10 profiles</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🎨</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Style Enthusiast</div>
+                        <div class="achievement-desc">Create 25 haircut profiles</div>
+                        <span class="achievement-target">25 profiles</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🏆</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Style Master</div>
+                        <div class="achievement-desc">Create 50 haircut profiles</div>
+                        <span class="achievement-target">50 profiles</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">👑</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Style Legend</div>
+                        <div class="achievement-desc">Create 100 haircut profiles</div>
+                        <span class="achievement-target">100 profiles</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <span class="emoji">💈</span>
+                <h2>Barber Visits</h2>
+                <span class="badge">6 Achievements</span>
+            </div>
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">💈</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Fresh Cut</div>
+                        <div class="achievement-desc">Complete your first barber visit</div>
+                        <span class="achievement-target">1 visit</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🪑</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Regular</div>
+                        <div class="achievement-desc">Complete 5 barber visits</div>
+                        <span class="achievement-target">5 visits</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">⭐</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Loyal Customer</div>
+                        <div class="achievement-desc">Complete 10 barber visits</div>
+                        <span class="achievement-target">10 visits</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🌟</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">VIP Client</div>
+                        <div class="achievement-desc">Complete 25 barber visits</div>
+                        <span class="achievement-target">25 visits</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">💎</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Barbershop Regular</div>
+                        <div class="achievement-desc">Complete 50 barber visits</div>
+                        <span class="achievement-target">50 visits</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🏅</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Lifetime Member</div>
+                        <div class="achievement-desc">Complete 100 barber visits</div>
+                        <span class="achievement-target">100 visits</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <span class="emoji">📲</span>
+                <h2>Sharing</h2>
+                <span class="badge">3 Achievements</span>
+            </div>
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">📲</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">First Share</div>
+                        <div class="achievement-desc">Share a profile with a barber</div>
+                        <span class="achievement-target">1 share</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🔗</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Connector</div>
+                        <div class="achievement-desc">Share profiles 10 times</div>
+                        <span class="achievement-target">10 shares</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🌐</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Networker</div>
+                        <div class="achievement-desc">Share profiles 50 times</div>
+                        <span class="achievement-target">50 shares</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Barber Mode Achievements -->
+        <div class="section">
+            <div class="section-header">
+                <span class="emoji">👥</span>
+                <h2>Barber Mode - Clients</h2>
+                <span class="badge">4 Achievements</span>
+            </div>
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">👋</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">First Client</div>
+                        <div class="achievement-desc">View your first client's profile</div>
+                        <span class="achievement-target">1 client</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">📈</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Growing Clientele</div>
+                        <div class="achievement-desc">View 10 client profiles</div>
+                        <span class="achievement-target">10 clients</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🔥</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Busy Barber</div>
+                        <div class="achievement-desc">View 50 client profiles</div>
+                        <span class="achievement-target">50 clients</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🏆</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Master Barber</div>
+                        <div class="achievement-desc">View 100 client profiles</div>
+                        <span class="achievement-target">100 clients</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <span class="emoji">📝</span>
+                <h2>Barber Mode - Notes</h2>
+                <span class="badge">3 Achievements</span>
+            </div>
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">📝</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Helpful Tip</div>
+                        <div class="achievement-desc">Add your first note to a client</div>
+                        <span class="achievement-target">1 note</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">✍️</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Note Taker</div>
+                        <div class="achievement-desc">Add 25 notes to clients</div>
+                        <span class="achievement-target">25 notes</span>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🎓</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Detail Oriented</div>
+                        <div class="achievement-desc">Add 100 notes to clients</div>
+                        <span class="achievement-target">100 notes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="how-it-works">
+            <h2>📊 Achievement Summary</h2>
+            <div class="stats-preview">
+                <div class="stat-card">
+                    <div class="value">22</div>
+                    <div class="label">Total Achievements</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value">15</div>
+                    <div class="label">Client Mode</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value">7</div>
+                    <div class="label">Barber Mode</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>HaircutHistory App - Never forget your perfect cut</p>
+            <p style="margin-top: 10px; font-size: 0.85rem;">
+                Built with .NET MAUI • Powered by PlayFab
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
