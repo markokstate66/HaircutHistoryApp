@@ -2,14 +2,14 @@ name: Deploy to Azure Static Web App
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
     paths:
       - 'website/**'
       - 'docs/**'
       - '.github/workflows/azure-static-web-app.yml'
   pull_request:
     types: [opened, synchronize, reopened, closed]
-    branches: [ main ]
+    branches: [ main, master ]
     paths:
       - 'website/**'
       - 'docs/**'
