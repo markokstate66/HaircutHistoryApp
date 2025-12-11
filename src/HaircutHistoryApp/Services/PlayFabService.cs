@@ -126,7 +126,7 @@ public class PlayFabService : IPlayFabService
     {
         var request = new LoginWithGoogleAccountRequest
         {
-            AccessToken = accessToken,
+            ServerAuthCode = accessToken,
             CreateAccount = true,
             InfoRequestParameters = new GetPlayerCombinedInfoRequestParams
             {

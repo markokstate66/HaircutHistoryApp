@@ -5,16 +5,17 @@
              x:Class="HaircutHistoryApp.Views.LoginPage"
              x:DataType="vm:LoginViewModel"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="{StaticResource Background}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
 
     <ScrollView>
         <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
 
             <!-- Logo/Title -->
             <VerticalStackLayout Spacing="10" Margin="0,0,0,30">
-                <Label Text="✂️"
+                <Label Text="S"
                        FontSize="60"
-                       HorizontalOptions="Center"/>
+                       HorizontalOptions="Center"
+                       TextColor="{StaticResource Primary}"/>
                 <Label Text="HairCut History"
                        FontSize="28"
                        FontAttributes="Bold"
@@ -23,28 +24,36 @@
                 <Label Text="Remember your perfect cut"
                        FontSize="14"
                        HorizontalOptions="Center"
-                       TextColor="{StaticResource Gray500}"/>
+                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
             </VerticalStackLayout>
 
             <!-- Email Entry -->
             <VerticalStackLayout Spacing="5">
-                <Label Text="Email" FontSize="14" TextColor="{StaticResource Gray600}"/>
+                <Label Text="Email" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                 <Entry Placeholder="Enter your email"
                        Text="{Binding Email}"
                        Keyboard="Email"
                        ReturnType="Next"
                        Style="{StaticResource EntryStyle}"/>
+                <Label Text="{Binding EmailError}"
+                       FontSize="12"
+                       TextColor="{StaticResource Danger}"
+                       IsVisible="{Binding EmailError, Converter={StaticResource StringToBoolConverter}}"/>
             </VerticalStackLayout>
 
             <!-- Password Entry -->
             <VerticalStackLayout Spacing="5">
-                <Label Text="Password" FontSize="14" TextColor="{StaticResource Gray600}"/>
+                <Label Text="Password" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                 <Entry Placeholder="Enter your password"
                        Text="{Binding Password}"
                        IsPassword="True"
                        ReturnType="Done"
                        ReturnCommand="{Binding SignInCommand}"
                        Style="{StaticResource EntryStyle}"/>
+                <Label Text="{Binding PasswordError}"
+                       FontSize="12"
+                       TextColor="{StaticResource Danger}"
+                       IsVisible="{Binding PasswordError, Converter={StaticResource StringToBoolConverter}}"/>
             </VerticalStackLayout>
 
             <!-- Sign In Button -->
@@ -56,17 +65,17 @@
 
             <!-- Divider -->
             <Grid ColumnDefinitions="*,Auto,*" Margin="0,20">
-                <BoxView HeightRequest="1" BackgroundColor="{StaticResource Gray300}" VerticalOptions="Center" Grid.Column="0"/>
-                <Label Text="or continue with" Grid.Column="1" Margin="15,0" TextColor="{StaticResource Gray500}" FontSize="12"/>
-                <BoxView HeightRequest="1" BackgroundColor="{StaticResource Gray300}" VerticalOptions="Center" Grid.Column="2"/>
+                <BoxView HeightRequest="1" BackgroundColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}" VerticalOptions="Center" Grid.Column="0"/>
+                <Label Text="or continue with" Grid.Column="1" Margin="15,0" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" FontSize="12"/>
+                <BoxView HeightRequest="1" BackgroundColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}" VerticalOptions="Center" Grid.Column="2"/>
             </Grid>
 
             <!-- Social Login Buttons -->
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
                 <!-- Google Button -->
                 <Border StrokeShape="RoundRectangle 12"
-                        Stroke="{StaticResource Gray300}"
-                        BackgroundColor="White"
+                        Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                        BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource SurfaceDark}}"
                         Padding="20,15"
                         HeightRequest="56"
                         WidthRequest="100">
@@ -83,8 +92,8 @@
 
                 <!-- Facebook Button -->
                 <Border StrokeShape="RoundRectangle 12"
-                        Stroke="{StaticResource Gray300}"
-                        BackgroundColor="White"
+                        Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                        BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource SurfaceDark}}"
                         Padding="20,15"
                         HeightRequest="56"
                         WidthRequest="100">
@@ -101,8 +110,8 @@
 
                 <!-- Apple Button (iOS only) -->
                 <Border StrokeShape="RoundRectangle 12"
-                        Stroke="{StaticResource Gray300}"
-                        BackgroundColor="White"
+                        Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                        BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource SurfaceDark}}"
                         Padding="20,15"
                         HeightRequest="56"
                         WidthRequest="100"
@@ -110,9 +119,9 @@
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SignInWithAppleCommand}"/>
                     </Border.GestureRecognizers>
-                    <Label Text=""
+                    <Label Text="A"
                            FontSize="24"
-                           TextColor="Black"
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}"
                            HorizontalOptions="Center"
                            VerticalOptions="Center"/>
                 </Border>
@@ -127,7 +136,7 @@
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="5" Margin="0,20,0,0">
                 <Label Text="Don't have an account?"
                        VerticalOptions="Center"
-                       TextColor="{StaticResource Gray500}"/>
+                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                 <Label Text="Sign Up"
                        TextColor="{StaticResource Primary}"
                        FontAttributes="Bold"

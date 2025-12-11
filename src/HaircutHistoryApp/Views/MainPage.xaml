@@ -3,11 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="HaircutHistoryApp.Views.MainPage"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="{StaticResource Background}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
 
     <!-- This page handles routing to the correct dashboard based on user mode -->
-    <ActivityIndicator IsRunning="True"
-                     Color="{StaticResource Primary}"
-                     VerticalOptions="Center"
-                     HorizontalOptions="Center"/>
+    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+        <ActivityIndicator IsRunning="True"
+                         Color="{StaticResource Primary}"
+                         WidthRequest="50"
+                         HeightRequest="50"/>
+        <Label Text="Loading..."
+               FontSize="16"
+               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+               HorizontalOptions="Center"/>
+    </VerticalStackLayout>
 </ContentPage>

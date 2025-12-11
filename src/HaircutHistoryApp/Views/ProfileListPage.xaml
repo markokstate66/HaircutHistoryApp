@@ -6,7 +6,7 @@
              x:Class="HaircutHistoryApp.Views.ProfileListPage"
              x:DataType="vm:ProfileListViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{StaticResource Background}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Settings" Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.GoToSettingsCommand}" IconImageSource="settings.png"/>
@@ -19,14 +19,15 @@
                            HorizontalOptions="Center"
                            Spacing="20"
                            Padding="30">
-            <Label Text="✂️" FontSize="80" HorizontalOptions="Center"/>
+            <Label Text="S" FontSize="80" HorizontalOptions="Center" TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
             <Label Text="No Haircuts Yet"
                    FontSize="22"
                    FontAttributes="Bold"
-                   HorizontalOptions="Center"/>
+                   HorizontalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
             <Label Text="Add your first haircut profile to remember your perfect cut!"
                    FontSize="14"
-                   TextColor="{StaticResource Gray500}"
+                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center"/>
             <Button Text="Add Haircut Profile"
@@ -48,7 +49,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:HaircutProfile">
                         <Frame Padding="15"
-                               BackgroundColor="{StaticResource Surface}"
+                               BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                                BorderColor="Transparent"
                                CornerRadius="12"
                                HasShadow="True">
@@ -61,19 +62,21 @@
                                 <Label Grid.Row="0" Grid.Column="0"
                                        Text="{Binding Name}"
                                        FontSize="18"
-                                       FontAttributes="Bold"/>
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
 
                                 <!-- Favorite Indicator -->
                                 <Label Grid.Row="0" Grid.Column="1"
-                                       Text="⭐"
+                                       Text="*"
                                        IsVisible="{Binding IsFavorite}"
-                                       FontSize="16"/>
+                                       FontSize="16"
+                                       TextColor="{StaticResource Warning}"/>
 
                                 <!-- Summary -->
                                 <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                                        Text="{Binding DisplaySummary}"
                                        FontSize="14"
-                                       TextColor="{StaticResource Gray500}"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                        Margin="0,5,0,0"/>
 
                                 <!-- Action Buttons -->

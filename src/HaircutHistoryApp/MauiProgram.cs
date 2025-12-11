@@ -30,6 +30,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<IDataService, PlayFabDataService>();
         builder.Services.AddSingleton<IImageService, ImageService>();
         builder.Services.AddSingleton<IQRService, QRService>();
+        builder.Services.AddSingleton<IThemeService, ThemeService>();
+        builder.Services.AddSingleton<IAlertService, AlertService>();
 
         // Register ViewModels
         builder.Services.AddTransient<LoginViewModel>();

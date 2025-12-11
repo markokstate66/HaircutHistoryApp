@@ -14,24 +14,58 @@ public partial class LoginViewModel : BaseViewModel
     [ObservableProperty]
     private string _password = string.Empty;
 
+    [ObservableProperty]
+    private string? _emailError;
+
+    [ObservableProperty]
+    private string? _passwordError;
+
     public LoginViewModel(IAuthService authService)
     {
         _authService = authService;
         Title = "Sign In";
     }
 
+    private bool ValidateInput()
+    {
+        EmailError = null;
+        PasswordError = null;
+        var isValid = true;
+
+        if (string.IsNullOrWhiteSpace(Email))
+        {
+            EmailError = "Email is required";
+            isValid = false;
+        }
+        else if (!Email.Contains('@') || !Email.Contains('.'))
+        {
+            EmailError = "Please enter a valid email address";
+            isValid = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(Password))
+        {
+            PasswordError = "Password is required";
+            isValid = false;
+        }
+        else if (Password.Length < 6)
+        {
+            PasswordError = "Password must be at least 6 characters";
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
     [RelayCommand]
     private async Task SignInAsync()
     {
-        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
-        {
-            await Shell.Current.DisplayAlert("Validation", "Please enter your email and password.", "OK");
+        if (!ValidateInput())
             return;
-        }
 
         await ExecuteAsync(async () =>
         {
-            var (success, error) = await _authService.SignInAsync(Email, Password);
+            var (success, error) = await _authService.SignInAsync(Email.Trim(), Password);
 
             if (success)
             {
@@ -39,9 +73,9 @@ public partial class LoginViewModel : BaseViewModel
             }
             else
             {
-                await Shell.Current.DisplayAlert("Sign In Failed", error ?? "Unable to sign in.", "OK");
+                await AlertService.ShowErrorAsync(error ?? "Invalid email or password. Please try again.", "Sign In Failed");
             }
-        });
+        }, "Signing in...", "Sign in failed");
     }
 
     [RelayCommand]
@@ -63,9 +97,9 @@ public partial class LoginViewModel : BaseViewModel
             }
             else
             {
-                await Shell.Current.DisplayAlert("Google Sign In Failed", error ?? "Unable to sign in with Google.", "OK");
+                await AlertService.ShowErrorAsync(error ?? "Unable to sign in with Google. Please try again.", "Google Sign In");
             }
-        });
+        }, "Signing in with Google...", "Google sign in failed");
     }
 
     [RelayCommand]
@@ -81,9 +115,9 @@ public partial class LoginViewModel : BaseViewModel
             }
             else
             {
-                await Shell.Current.DisplayAlert("Facebook Sign In Failed", error ?? "Unable to sign in with Facebook.", "OK");
+                await AlertService.ShowErrorAsync(error ?? "Unable to sign in with Facebook. Please try again.", "Facebook Sign In");
             }
-        });
+        }, "Signing in with Facebook...", "Facebook sign in failed");
     }
 
     [RelayCommand]
@@ -99,8 +133,8 @@ public partial class LoginViewModel : BaseViewModel
             }
             else
             {
-                await Shell.Current.DisplayAlert("Apple Sign In Failed", error ?? "Unable to sign in with Apple.", "OK");
+                await AlertService.ShowErrorAsync(error ?? "Unable to sign in with Apple. Please try again.", "Apple Sign In");
             }
-        });
+        }, "Signing in with Apple...", "Apple sign in failed");
     }
 }

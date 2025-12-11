@@ -178,4 +178,19 @@ public class LocalAuthService : IAuthService
         }
         return Task.CompletedTask;
     }
+
+    public Task<(bool Success, string? Error)> SignInWithGoogleAsync()
+    {
+        return Task.FromResult<(bool, string?)>((false, "Social login is not available in offline mode. Please use email and password."));
+    }
+
+    public Task<(bool Success, string? Error)> SignInWithFacebookAsync()
+    {
+        return Task.FromResult<(bool, string?)>((false, "Social login is not available in offline mode. Please use email and password."));
+    }
+
+    public Task<(bool Success, string? Error)> SignInWithAppleAsync()
+    {
+        return Task.FromResult<(bool, string?)>((false, "Social login is not available in offline mode. Please use email and password."));
+    }
 }

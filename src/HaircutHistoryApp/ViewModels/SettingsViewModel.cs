@@ -8,6 +8,7 @@ namespace HaircutHistoryApp.ViewModels;
 public partial class SettingsViewModel : BaseViewModel
 {
     private readonly IAuthService _authService;
+    private readonly IThemeService _themeService;
 
     [ObservableProperty]
     private User? _currentUser;
@@ -24,10 +25,25 @@ public partial class SettingsViewModel : BaseViewModel
     [ObservableProperty]
     private string _email = string.Empty;
 
-    public SettingsViewModel(IAuthService authService)
+    [ObservableProperty]
+    private int _selectedThemeIndex;
+
+    public List<string> ThemeOptions { get; } = new() { "System Default", "Light", "Dark" };
+
+    public SettingsViewModel(IAuthService authService, IThemeService themeService)
     {
         _authService = authService;
+        _themeService = themeService;
         Title = "Settings";
+
+        // Load current theme
+        SelectedThemeIndex = (int)_themeService.CurrentTheme;
+    }
+
+    partial void OnSelectedThemeIndexChanged(int value)
+    {
+        var theme = (Services.AppTheme)value;
+        _themeService.SetTheme(theme);
     }
 
     [RelayCommand]
