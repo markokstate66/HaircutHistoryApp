@@ -49,4 +49,58 @@ public partial class LoginViewModel : BaseViewModel
     {
         await Shell.Current.GoToAsync("register");
     }
+
+    [RelayCommand]
+    private async Task SignInWithGoogleAsync()
+    {
+        await ExecuteAsync(async () =>
+        {
+            var (success, error) = await _authService.SignInWithGoogleAsync();
+
+            if (success)
+            {
+                await Shell.Current.GoToAsync("//main");
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Google Sign In Failed", error ?? "Unable to sign in with Google.", "OK");
+            }
+        });
+    }
+
+    [RelayCommand]
+    private async Task SignInWithFacebookAsync()
+    {
+        await ExecuteAsync(async () =>
+        {
+            var (success, error) = await _authService.SignInWithFacebookAsync();
+
+            if (success)
+            {
+                await Shell.Current.GoToAsync("//main");
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Facebook Sign In Failed", error ?? "Unable to sign in with Facebook.", "OK");
+            }
+        });
+    }
+
+    [RelayCommand]
+    private async Task SignInWithAppleAsync()
+    {
+        await ExecuteAsync(async () =>
+        {
+            var (success, error) = await _authService.SignInWithAppleAsync();
+
+            if (success)
+            {
+                await Shell.Current.GoToAsync("//main");
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Apple Sign In Failed", error ?? "Unable to sign in with Apple.", "OK");
+            }
+        });
+    }
 }

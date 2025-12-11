@@ -11,6 +11,9 @@ public interface IPlayFabService
     Task<(bool Success, string? Error)> RegisterAsync(string email, string password, string displayName);
     Task<(bool Success, string? Error)> LoginAsync(string email, string password);
     Task<(bool Success, string? Error)> LoginWithDeviceAsync();
+    Task<(bool Success, string? Error)> LoginWithGoogleAsync(string accessToken);
+    Task<(bool Success, string? Error)> LoginWithFacebookAsync(string accessToken);
+    Task<(bool Success, string? Error)> LoginWithAppleAsync(string identityToken);
     Task LogoutAsync();
 
     // Player Data (for haircut profiles)

@@ -122,6 +122,87 @@ public class PlayFabService : IPlayFabService
         return (true, null);
     }
 
+    public async Task<(bool Success, string? Error)> LoginWithGoogleAsync(string accessToken)
+    {
+        var request = new LoginWithGoogleAccountRequest
+        {
+            AccessToken = accessToken,
+            CreateAccount = true,
+            InfoRequestParameters = new GetPlayerCombinedInfoRequestParams
+            {
+                GetPlayerStatistics = true,
+                GetUserData = true,
+                GetPlayerProfile = true
+            }
+        };
+
+        var result = await PlayFabClientAPI.LoginWithGoogleAccountAsync(request);
+
+        if (result.Error != null)
+        {
+            return (false, result.Error.ErrorMessage);
+        }
+
+        _playFabId = result.Result.PlayFabId;
+        _sessionTicket = result.Result.SessionTicket;
+
+        return (true, null);
+    }
+
+    public async Task<(bool Success, string? Error)> LoginWithFacebookAsync(string accessToken)
+    {
+        var request = new LoginWithFacebookRequest
+        {
+            AccessToken = accessToken,
+            CreateAccount = true,
+            InfoRequestParameters = new GetPlayerCombinedInfoRequestParams
+            {
+                GetPlayerStatistics = true,
+                GetUserData = true,
+                GetPlayerProfile = true
+            }
+        };
+
+        var result = await PlayFabClientAPI.LoginWithFacebookAsync(request);
+
+        if (result.Error != null)
+        {
+            return (false, result.Error.ErrorMessage);
+        }
+
+        _playFabId = result.Result.PlayFabId;
+        _sessionTicket = result.Result.SessionTicket;
+
+        return (true, null);
+    }
+
+    public async Task<(bool Success, string? Error)> LoginWithAppleAsync(string identityToken)
+    {
+        var request = new LoginWithAppleRequest
+        {
+            IdentityToken = identityToken,
+            CreateAccount = true,
+            InfoRequestParameters = new GetPlayerCombinedInfoRequestParams
+            {
+                GetPlayerStatistics = true,
+                GetUserData = true,
+                GetPlayerProfile = true
+            }
+        };
+
+        var result = await PlayFabClientAPI.LoginWithAppleAsync(request);
+
+        if (result.Error != null)
+        {
+            return (false, result.Error.ErrorMessage);
+        }
+
+        _playFabId = result.Result.PlayFabId;
+        _sessionTicket = result.Result.SessionTicket;
+
+        return (true, null);
+    }
+
     public Task LogoutAsync()
     {
         _playFabId = null;

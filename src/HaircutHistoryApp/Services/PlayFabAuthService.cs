@@ -68,6 +68,156 @@ public class PlayFabAuthService : IAuthService
         return (true, null);
     }
 
+    public async Task<(bool Success, string? Error)> SignInWithGoogleAsync()
+    {
+        try
+        {
+            // Use WebAuthenticator to get Google OAuth token
+            var authResult = await WebAuthenticator.Default.AuthenticateAsync(
+                new Uri($"https://accounts.google.com/o/oauth2/v2/auth?client_id={SocialAuthConfig.GoogleClientId}&redirect_uri={SocialAuthConfig.RedirectUri}&response_type=token&scope=email%20profile"),
+                new Uri(SocialAuthConfig.RedirectUri));
+
+            var accessToken = authResult.AccessToken;
+
+            if (string.IsNullOrEmpty(accessToken))
+                return (false, "Failed to get Google access token");
+
+            var (success, error) = await _playFabService.LoginWithGoogleAsync(accessToken);
+
+            if (!success)
+                return (false, error);
+
+            _currentUser = await LoadUserProfileAsync();
+
+            if (_currentUser == null)
+            {
+                // Create profile for new Google user
+                _currentUser = new User
+                {
+                    Id = _playFabService.PlayFabId ?? Guid.NewGuid().ToString(),
+                    Email = "google-user",
+                    DisplayName = "Google User",
+                    Mode = UserMode.Client,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+                await SaveUserAsync(_currentUser);
+            }
+
+            return (true, null);
+        }
+        catch (TaskCanceledException)
+        {
+            return (false, "Google sign-in was cancelled");
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
+    }
+
+    public async Task<(bool Success, string? Error)> SignInWithFacebookAsync()
+    {
+        try
+        {
+            // Use WebAuthenticator to get Facebook OAuth token
+            var authResult = await WebAuthenticator.Default.AuthenticateAsync(
+                new Uri($"https://www.facebook.com/v18.0/dialog/oauth?client_id={SocialAuthConfig.FacebookAppId}&redirect_uri={SocialAuthConfig.RedirectUri}&response_type=token&scope=email,public_profile"),
+                new Uri(SocialAuthConfig.RedirectUri));
+
+            var accessToken = authResult.AccessToken;
+
+            if (string.IsNullOrEmpty(accessToken))
+                return (false, "Failed to get Facebook access token");
+
+            var (success, error) = await _playFabService.LoginWithFacebookAsync(accessToken);
+
+            if (!success)
+                return (false, error);
+
+            _currentUser = await LoadUserProfileAsync();
+
+            if (_currentUser == null)
+            {
+                _currentUser = new User
+                {
+                    Id = _playFabService.PlayFabId ?? Guid.NewGuid().ToString(),
+                    Email = "facebook-user",
+                    DisplayName = "Facebook User",
+                    Mode = UserMode.Client,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+                await SaveUserAsync(_currentUser);
+            }
+
+            return (true, null);
+        }
+        catch (TaskCanceledException)
+        {
+            return (false, "Facebook sign-in was cancelled");
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
+    }
+
+    public async Task<(bool Success, string? Error)> SignInWithAppleAsync()
+    {
+        try
+        {
+#if IOS || MACCATALYST
+            // Use Apple Sign In (iOS native)
+            var authResult = await WebAuthenticator.Default.AuthenticateAsync(
+                new WebAuthenticatorOptions
+                {
+                    Url = new Uri("https://appleid.apple.com/auth/authorize"),
+                    CallbackUrl = new Uri(SocialAuthConfig.RedirectUri),
+                    PrefersEphemeralWebBrowserSession = true
+                });
+
+            var identityToken = authResult.IdToken;
+
+            if (string.IsNullOrEmpty(identityToken))
+                return (false, "Failed to get Apple identity token");
+
+            var (success, error) = await _playFabService.LoginWithAppleAsync(identityToken);
+
+            if (!success)
+                return (false, error);
+
+            _currentUser = await LoadUserProfileAsync();
+
+            if (_currentUser == null)
+            {
+                _currentUser = new User
+                {
+                    Id = _playFabService.PlayFabId ?? Guid.NewGuid().ToString(),
+                    Email = "apple-user",
+                    DisplayName = "Apple User",
+                    Mode = UserMode.Client,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+                await SaveUserAsync(_currentUser);
+            }
+
+            return (true, null);
+#else
+            return (false, "Apple Sign In is only available on iOS");
+#endif
+        }
+        catch (TaskCanceledException)
+        {
+            return (false, "Apple sign-in was cancelled");
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
+    }
+
     public async Task SignOutAsync()
     {
         await _playFabService.LogoutAsync();
