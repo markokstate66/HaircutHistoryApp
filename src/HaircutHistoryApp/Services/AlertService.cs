@@ -1,10 +1,17 @@
-using System.Diagnostics;
 using System.Net;
 
 namespace HaircutHistoryApp.Services;
 
 public class AlertService : IAlertService
 {
+    private readonly ILogService? _log;
+    private const string Tag = "AlertService";
+
+    public AlertService(ILogService? logService = null)
+    {
+        _log = logService;
+    }
+
     public async Task ShowErrorAsync(string message, string? title = null)
     {
         await ShowAlertAsync(title ?? "Error", message, "OK");
@@ -16,7 +23,7 @@ public class AlertService : IAlertService
         await ShowAlertAsync("Error", userMessage, "OK");
 
         // Log the full exception for debugging
-        Debug.WriteLine($"[AlertService] Exception: {exception}");
+        _log?.Error($"Exception shown to user: {userMessage}", Tag, exception);
     }
 
     public async Task ShowSuccessAsync(string message, string? title = null)

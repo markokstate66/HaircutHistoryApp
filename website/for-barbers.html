@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary Meta Tags -->
+    <title>HairCut History for Barbers - Client Management App | Free for Barbershops</title>
+    <meta name="title" content="HairCut History for Barbers - Client Management App | Free for Barbershops">
+    <meta name="description" content="Free app for barbers and stylists. Scan client QR codes to instantly see their haircut preferences, measurements, and photos. Add professional notes they'll keep forever.">
+    <meta name="keywords" content="barber app, barbershop software, client management app barbers, barber client profiles, stylist app, salon client app, barbershop management free">
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://haircuthistory.app/for-barbers">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://haircuthistory.app/for-barbers">
+    <meta property="og:title" content="HairCut History for Barbers - Free Client Management App">
+    <meta property="og:description" content="Scan client QR codes to instantly see their haircut preferences. Add professional notes. Build lasting relationships.">
+    <meta property="og:image" content="https://haircuthistory.app/images/barber-og.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HairCut History for Barbers - Free Client Management App">
+    <meta name="twitter:description" content="Scan client QR codes to instantly see their haircut preferences and add professional notes.">
+
+    <!-- Structured Data - Local Business Service -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "HairCut History for Barbers",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": ["iOS", "Android"],
+        "description": "Free app for barbers to view client haircut preferences via QR code and add professional notes",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "featureList": [
+            "Scan client QR codes",
+            "View haircut measurements instantly",
+            "See reference photos",
+            "Add professional notes",
+            "Build client history",
+            "No subscription required"
+        ]
+    }
+    </script>
+
+    <!-- Structured Data - FAQ for Barbers -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Is HairCut History free for barbers?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, HairCut History is completely free for barbers. There's no subscription, no fees, and no hidden costs. Just download the app, switch to Barber Mode, and start scanning client QR codes."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Do I need to create an account as a barber?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "You can scan QR codes and view client profiles without an account. However, creating a free account lets you add notes to client profiles that they'll keep forever, and track your professional history."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How do clients share their haircut profile with me?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Clients open the HairCut History app and tap 'Share with Barber' to generate a QR code. You scan this code with your phone's camera (or the app) to instantly view their complete haircut profile including measurements, photos, and previous barber notes."
+                }
+            }
+        ]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #EC4899;
+            --primary-dark: #DB2777;
+            --secondary: #6366F1;
+            --text: #1E293B;
+            --text-secondary: #64748B;
+            --background: #F8FAFC;
+            --surface: #FFFFFF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        nav {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--text); }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover { background: var(--primary-dark); }
+
+        .btn-outline {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%);
+            padding: 6rem 2rem;
+        }
+
+        .hero .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-content h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .hero-visual {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .scan-demo {
+            text-align: center;
+        }
+
+        .qr-icon {
+            font-size: 6rem;
+            margin-bottom: 1rem;
+        }
+
+        .scan-demo h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .scan-demo p {
+            color: var(--text-secondary);
+        }
+
+        /* Stats */
+        .stats {
+            background: white;
+            padding: 3rem 2rem;
+        }
+
+        .stats .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat h3 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat p {
+            color: var(--text-secondary);
+        }
+
+        /* Features */
+        .features {
+            padding: 5rem 2rem;
+        }
+
+        .features .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #FDF2F8, #FCE7F3);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+        }
+
+        /* How it works */
+        .how-it-works {
+            background: linear-gradient(135deg, var(--text) 0%, #374151 100%);
+            color: white;
+            padding: 5rem 2rem;
+        }
+
+        .how-it-works .section-header h2,
+        .how-it-works .section-header p {
+            color: white;
+        }
+
+        .how-it-works .section-header p {
+            opacity: 0.8;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .step p {
+            opacity: 0.8;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 5rem 2rem;
+        }
+
+        .testimonials .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .testimonial {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .testimonial-content {
+            font-size: 1.1rem;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .author-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .author-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Pricing */
+        .pricing {
+            background: #F8FAFC;
+            padding: 5rem 2rem;
+        }
+
+        .pricing .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .price-card {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            border: 3px solid var(--primary);
+        }
+
+        .price-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .price-card h3 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-card > p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .price-features {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .price-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .price-features li:last-child {
+            border-bottom: none;
+        }
+
+        .check {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* CTA */
+        .cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta .btn {
+            background: white;
+            color: var(--primary);
+            font-size: 1.1rem;
+            padding: 1rem 2.5rem;
+        }
+
+        footer {
+            background: var(--text);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        footer a { color: rgba(255,255,255,0.7); }
+
+        @media (max-width: 992px) {
+            .hero .container { grid-template-columns: 1fr; }
+            .hero-visual { order: -1; }
+            .stats .container { grid-template-columns: repeat(2, 1fr); }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .steps { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero-content h1 { font-size: 2rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .testimonials-grid { grid-template-columns: 1fr; }
+            .stats .container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">HairCut<span>History</span></a>
+            <ul class="nav-links">
+                <li><a href="/">For Clients</a></li>
+                <li><a href="/for-barbers">For Barbers</a></li>
+                <li><a href="/blog/">Blog</a></li>
+            </ul>
+            <a href="/#download" class="btn btn-primary">Download Free</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Give Every Client <span>Their Perfect Cut</span></h1>
+                <p>Scan a QR code, see their exact preferences instantly. No more guessing, no more "a little shorter" - just the cut they want, every time.</p>
+                <div class="hero-buttons">
+                    <a href="/#download" class="btn btn-primary">Download Free App</a>
+                    <a href="#how-it-works" class="btn btn-outline">See How It Works</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="scan-demo">
+                    <div class="qr-icon">&#128247;</div>
+                    <h3>Scan Client QR Code</h3>
+                    <p>Instantly see their measurements, photos, and notes from previous barbers</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container">
+            <div class="stat">
+                <h3>100%</h3>
+                <p>Free Forever</p>
+            </div>
+            <div class="stat">
+                <h3>2 sec</h3>
+                <p>QR Scan Time</p>
+            </div>
+            <div class="stat">
+                <h3>0</h3>
+                <p>Subscription Fees</p>
+            </div>
+            <div class="stat">
+                <h3>4.8</h3>
+                <p>Star Rating</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Built for Professional Barbers</h2>
+                <p>Everything you need to deliver consistent, perfect cuts to every client</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">&#128247;</div>
+                    <h3>Instant QR Scanning</h3>
+                    <p>Client shows their phone, you scan - instantly see their complete haircut profile. No accounts, no login required.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#128207;</div>
+                    <h3>Full Specifications</h3>
+                    <p>Guard sizes for every area, cutting techniques, neckline preferences - everything spelled out clearly.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#128248;</div>
+                    <h3>Reference Photos</h3>
+                    <p>See exactly what they're going for with photos from multiple angles. No more miscommunication.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#9997;</div>
+                    <h3>Add Professional Notes</h3>
+                    <p>"Cowlick on left - blend upward" - your notes sync to their profile for their next visit, anywhere.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#128100;</div>
+                    <h3>Build Your Reputation</h3>
+                    <p>Your shop name appears on every note you add. Great work leads to referrals.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#127942;</div>
+                    <h3>Earn Pro Achievements</h3>
+                    <p>Track your professional milestones and showcase your experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-header">
+            <h2>How It Works</h2>
+            <p>Three simple steps to a perfect cut</p>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Client Shows QR</h3>
+                <p>They open the app and show you their QR code. Takes 3 seconds.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>You See Everything</h3>
+                <p>Measurements, photos, previous barber notes - all on your screen instantly.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Add Your Notes</h3>
+                <p>After the cut, add pro tips that'll help them (and you) next time.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>What Barbers Are Saying</h2>
+                <p>Join thousands of professionals already using HairCut History</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial">
+                    <p class="testimonial-content">"Game changer. New clients walk in, show me their QR code, and I know exactly what they want. No more 'can you just take a little off' conversations."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MJ</div>
+                        <div class="author-info">
+                            <h4>Marcus Johnson</h4>
+                            <p>Classic Cuts Barbershop, Atlanta</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <p class="testimonial-content">"The note feature is brilliant. I add details about cowlicks, growth patterns, whatever will help next time. My clients love that I remember everything."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SR</div>
+                        <div class="author-info">
+                            <h4>Sofia Rodriguez</h4>
+                            <p>Urban Edge Salon, Miami</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Simple Pricing</h2>
+                <p>HairCut History is free for everyone - clients and barbers</p>
+            </div>
+            <div class="price-card">
+                <span class="price-badge">BARBER MODE</span>
+                <h3>$0</h3>
+                <p>Free forever. No hidden fees. No subscriptions.</p>
+                <ul class="price-features">
+                    <li><span class="check">&#10003;</span> Unlimited QR code scans</li>
+                    <li><span class="check">&#10003;</span> View full client profiles</li>
+                    <li><span class="check">&#10003;</span> Add professional notes</li>
+                    <li><span class="check">&#10003;</span> Your shop name on notes</li>
+                    <li><span class="check">&#10003;</span> Pro achievements & badges</li>
+                    <li><span class="check">&#10003;</span> Track client history</li>
+                </ul>
+                <a href="/#download" class="btn btn-primary" style="width: 100%;">Download Free</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Ready to Level Up Your Shop?</h2>
+        <p>Join thousands of barbers delivering perfect cuts with HairCut History. Free to download, free to use, forever.</p>
+        <a href="/#download" class="btn">Download Free App</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 HairCut History. All rights reserved.</p>
+        <p><a href="/privacy.html">Privacy</a> | <a href="/terms.html">Terms</a> | <a href="/">For Clients</a> | <a href="/blog/">Blog</a></p>
+    </footer>
+</body>
+</html>

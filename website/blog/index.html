@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary Meta Tags -->
+    <title>Haircut Tips & Guides | HairCut History Blog</title>
+    <meta name="title" content="Haircut Tips & Guides | HairCut History Blog">
+    <meta name="description" content="Expert haircut guides, barber tips, and styling advice. Learn about clipper guard sizes, fade techniques, how to communicate with your barber, and more.">
+    <meta name="keywords" content="haircut tips, barber advice, clipper guard sizes, fade haircut guide, how to ask for haircut, mens hairstyle tips, hair styling guide">
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://haircuthistory.app/blog/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://haircuthistory.app/blog/">
+    <meta property="og:title" content="Haircut Tips & Guides | HairCut History Blog">
+    <meta property="og:description" content="Expert haircut guides, barber tips, and styling advice. Learn everything about getting the perfect haircut.">
+    <meta property="og:image" content="https://haircuthistory.app/images/blog-og.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Haircut Tips & Guides | HairCut History Blog">
+    <meta name="twitter:description" content="Expert haircut guides, barber tips, and styling advice.">
+
+    <!-- Structured Data - Blog -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "HairCut History Blog",
+        "description": "Expert haircut guides, barber tips, and styling advice",
+        "url": "https://haircuthistory.app/blog/",
+        "publisher": {
+            "@type": "Organization",
+            "name": "HairCut History",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://haircuthistory.app/images/logo.png"
+            }
+        },
+        "blogPost": [
+            {
+                "@type": "BlogPosting",
+                "headline": "Hair Clipper Guard Sizes: The Complete Guide",
+                "url": "https://haircuthistory.app/blog/hair-clipper-guard-sizes-guide",
+                "datePublished": "2025-12-10",
+                "description": "Everything you need to know about clipper guard sizes from #0 to #8 and when to use each one."
+            },
+            {
+                "@type": "BlogPosting",
+                "headline": "How to Ask for a Haircut: The Ultimate Guide",
+                "url": "https://haircuthistory.app/blog/how-to-ask-for-haircut",
+                "datePublished": "2025-12-09",
+                "description": "Learn exactly how to communicate with your barber to get the perfect haircut every time."
+            },
+            {
+                "@type": "BlogPosting",
+                "headline": "Fade vs Taper: What's the Difference?",
+                "url": "https://haircuthistory.app/blog/fade-vs-taper-difference",
+                "datePublished": "2025-12-08",
+                "description": "Understand the key differences between fades and tapers to choose the right style for you."
+            }
+        ]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --text: #1E293B;
+            --text-secondary: #64748B;
+            --background: #F8FAFC;
+            --surface: #FFFFFF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        nav {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--text); }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        .btn-download {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-download:hover { background: var(--primary-dark); }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        header p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .featured {
+            margin-bottom: 4rem;
+        }
+
+        .featured h2 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--text);
+        }
+
+        .featured-post {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .featured-image {
+            background: linear-gradient(135deg, #EEF2FF, #FCE7F3);
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .featured-content {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .featured-content .tag {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            width: fit-content;
+        }
+
+        .featured-content h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .featured-content h3 a {
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .featured-content h3 a:hover { color: var(--primary); }
+
+        .featured-content p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .read-more {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .read-more:hover { text-decoration: underline; }
+
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .post-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .post-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .post-image {
+            height: 160px;
+            background: linear-gradient(135deg, #EEF2FF, #FCE7F3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .post-content {
+            padding: 1.5rem;
+        }
+
+        .post-content .tag {
+            display: inline-block;
+            background: #EEF2FF;
+            color: var(--primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .post-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-content h3 a {
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .post-content h3 a:hover { color: var(--primary); }
+
+        .post-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .post-meta {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 16px;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .cta-box h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-box p {
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-box .btn {
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        footer {
+            background: var(--text);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        footer a { color: rgba(255,255,255,0.7); }
+
+        @media (max-width: 992px) {
+            .featured-post { grid-template-columns: 1fr; }
+            .posts-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .posts-grid { grid-template-columns: 1fr; }
+            header h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">HairCut<span>History</span></a>
+            <ul class="nav-links">
+                <li><a href="/#features">Features</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/for-barbers">For Barbers</a></li>
+            </ul>
+            <a href="/#download" class="btn-download">Download Free</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>Haircut Tips & Guides</h1>
+        <p>Expert advice on haircuts, styling, and communicating with your barber. Never leave the shop disappointed again.</p>
+    </header>
+
+    <main>
+        <section class="featured">
+            <h2>Featured Guide</h2>
+            <article class="featured-post">
+                <div class="featured-image">&#9986;</div>
+                <div class="featured-content">
+                    <span class="tag">ESSENTIAL GUIDE</span>
+                    <h3><a href="/blog/hair-clipper-guard-sizes-guide">Hair Clipper Guard Sizes: The Complete Guide</a></h3>
+                    <p>Understanding clipper guard sizes is the key to getting a consistent haircut every time. Learn what each number means, from a skin-tight #0 to a longer #8, and how to tell your barber exactly what you want.</p>
+                    <a href="/blog/hair-clipper-guard-sizes-guide" class="read-more">Read the full guide &rarr;</a>
+                </div>
+            </article>
+        </section>
+
+        <section class="all-posts">
+            <h2 style="font-size: 1.5rem; margin-bottom: 2rem;">All Articles</h2>
+            <div class="posts-grid">
+                <article class="post-card">
+                    <div class="post-image">&#128172;</div>
+                    <div class="post-content">
+                        <span class="tag">COMMUNICATION</span>
+                        <h3><a href="/blog/how-to-ask-for-haircut">How to Ask for a Haircut: The Ultimate Guide</a></h3>
+                        <p>Learn exactly how to communicate with your barber to get the perfect haircut every time.</p>
+                        <span class="post-meta">5 min read</span>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-image">&#128136;</div>
+                    <div class="post-content">
+                        <span class="tag">TECHNIQUES</span>
+                        <h3><a href="/blog/fade-vs-taper-difference">Fade vs Taper: What's the Difference?</a></h3>
+                        <p>Understand the key differences between fades and tapers to choose the right style.</p>
+                        <span class="post-meta">4 min read</span>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-image">&#128197;</div>
+                    <div class="post-content">
+                        <span class="tag">MAINTENANCE</span>
+                        <h3><a href="/blog/how-often-should-you-get-haircut">How Often Should You Get a Haircut?</a></h3>
+                        <p>Find the ideal haircut schedule based on your hair type, style, and lifestyle.</p>
+                        <span class="post-meta">3 min read</span>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-image">&#128566;</div>
+                    <div class="post-content">
+                        <span class="tag">STYLE GUIDE</span>
+                        <h3><a href="/blog/best-haircut-for-face-shape">Best Haircut for Your Face Shape</a></h3>
+                        <p>Discover which haircut styles complement your face shape for the most flattering look.</p>
+                        <span class="post-meta">6 min read</span>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-image">&#128138;</div>
+                    <div class="post-content">
+                        <span class="tag">TRENDS</span>
+                        <h3><a href="/blog/popular-mens-haircuts-2025">Most Popular Men's Haircuts in 2025</a></h3>
+                        <p>Stay on trend with the most requested haircuts at barbershops this year.</p>
+                        <span class="post-meta">5 min read</span>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-image">&#128247;</div>
+                    <div class="post-content">
+                        <span class="tag">TIPS</span>
+                        <h3><a href="/blog/reference-photos-tips">How to Use Reference Photos at the Barber</a></h3>
+                        <p>Get better results by learning how to effectively use photos when asking for a haircut.</p>
+                        <span class="post-meta">4 min read</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <div class="cta-box">
+            <h2>Save Your Perfect Haircut</h2>
+            <p>Never forget your measurements again. Save them in HairCut History and share with any barber via QR code.</p>
+            <a href="/#download" class="btn">Download Free App</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 HairCut History. All rights reserved.</p>
+        <p><a href="/privacy.html">Privacy</a> | <a href="/terms.html">Terms</a> | <a href="/">Home</a></p>
+    </footer>
+</body>
+</html>

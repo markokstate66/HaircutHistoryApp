@@ -1,16 +1,20 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using HaircutHistoryApp.Services;
-using System.Diagnostics;
 
 namespace HaircutHistoryApp.ViewModels;
 
 public partial class BaseViewModel : ObservableObject
 {
     private static IAlertService? _alertService;
+    private static ILogService? _logService;
 
     protected static IAlertService AlertService =>
         _alertService ??= IPlatformApplication.Current?.Services.GetService<IAlertService>()
                           ?? new AlertService();
+
+    protected static ILogService LogService =>
+        _logService ??= IPlatformApplication.Current?.Services.GetService<ILogService>()
+                        ?? new LogService();
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotBusy))]
@@ -49,7 +53,7 @@ public partial class BaseViewModel : ObservableObject
         catch (Exception ex)
         {
             HasError = true;
-            Debug.WriteLine($"[BaseViewModel] Error in ExecuteAsync: {ex}");
+            LogService.Error($"Error in ExecuteAsync: {ex.Message}", GetType().Name, ex);
             await AlertService.ShowErrorAsync(ex, errorContext);
         }
         finally
@@ -78,7 +82,7 @@ public partial class BaseViewModel : ObservableObject
         catch (Exception ex)
         {
             HasError = true;
-            Debug.WriteLine($"[BaseViewModel] Error in ExecuteAsync<T>: {ex}");
+            LogService.Error($"Error in ExecuteAsync<T>: {ex.Message}", GetType().Name, ex);
             await AlertService.ShowErrorAsync(ex, errorContext);
             return default;
         }

@@ -1,6 +1,5 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using System.Diagnostics;
 
 namespace HaircutHistoryApp.Services;
 
@@ -10,11 +9,15 @@ public class ImageService : IImageService
     private readonly string _localImagePath;
     private readonly string _pendingUploadsPath;
     private readonly HttpClient _httpClient;
+    private readonly ILogService _log;
+
+    private const string Tag = "ImageService";
 
     public bool IsCloudStorageEnabled => _containerClient != null;
 
-    public ImageService()
+    public ImageService(ILogService logService)
     {
+        _log = logService;
         _localImagePath = Path.Combine(FileSystem.AppDataDirectory, "images");
         _pendingUploadsPath = Path.Combine(FileSystem.AppDataDirectory, "pending_uploads.json");
         _httpClient = new HttpClient();
@@ -27,10 +30,11 @@ public class ImageService : IImageService
             {
                 var blobServiceClient = new BlobServiceClient(AzureStorageConfig.ConnectionString);
                 _containerClient = blobServiceClient.GetBlobContainerClient(AzureStorageConfig.ContainerName);
+                _log.Info("Azure Blob Storage initialized successfully", Tag);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[ImageService] Failed to initialize Azure Storage: {ex.Message}");
+                _log.Warning("Failed to initialize Azure Storage", Tag, ex);
                 _containerClient = null;
             }
         }
@@ -61,7 +65,7 @@ public class ImageService : IImageService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[ImageService] Pick image error: {ex.Message}");
+            _log.Error("Failed to pick image", Tag, ex);
             await Shell.Current.DisplayAlert("Error",
                 "Failed to select image. Please try again.", "OK");
         }
@@ -97,7 +101,7 @@ public class ImageService : IImageService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[ImageService] Take photo error: {ex.Message}");
+            _log.Error("Failed to take photo", Tag, ex);
             await Shell.Current.DisplayAlert("Error",
                 "Failed to take photo. Please try again.", "OK");
         }
@@ -109,14 +113,14 @@ public class ImageService : IImageService
     {
         if (string.IsNullOrEmpty(localPath) || !File.Exists(localPath))
         {
-            Debug.WriteLine($"[ImageService] Upload failed: file not found at {localPath}");
+            _log.Warning($"Upload failed: file not found at {localPath}", Tag);
             return null;
         }
 
         // If cloud storage is not configured, save for later sync
         if (!IsCloudStorageEnabled)
         {
-            Debug.WriteLine("[ImageService] Cloud storage not configured, queuing for later sync");
+            _log.Debug("Cloud storage not configured, queuing for later sync", Tag);
             await AddToPendingUploadsAsync(localPath, userId, profileId);
             return localPath;
         }
@@ -133,7 +137,7 @@ public class ImageService : IImageService
             var fileInfo = new FileInfo(localPath);
             if (fileInfo.Length > AzureStorageConfig.MaxImageSizeBytes)
             {
-                Debug.WriteLine($"[ImageService] File too large: {fileInfo.Length} bytes");
+                _log.Warning($"File too large: {fileInfo.Length} bytes (max: {AzureStorageConfig.MaxImageSizeBytes})", Tag);
                 await Shell.Current.DisplayAlert("Image Too Large",
                     "Please select an image smaller than 5 MB.", "OK");
                 return null;
@@ -143,7 +147,7 @@ public class ImageService : IImageService
             var contentType = GetContentType(localPath);
             if (!AzureStorageConfig.AllowedContentTypes.Contains(contentType))
             {
-                Debug.WriteLine($"[ImageService] Invalid content type: {contentType}");
+                _log.Warning($"Invalid content type: {contentType}", Tag);
                 await Shell.Current.DisplayAlert("Invalid Format",
                     "Please select a JPEG, PNG, or WebP image.", "OK");
                 return null;
@@ -163,13 +167,13 @@ public class ImageService : IImageService
             await blobClient.UploadAsync(fileStream, uploadOptions);
 
             var cloudUrl = blobClient.Uri.ToString();
-            Debug.WriteLine($"[ImageService] Uploaded to: {cloudUrl}");
+            _log.Info($"Uploaded image to cloud: {blobName}", Tag);
 
             return cloudUrl;
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[ImageService] Upload error: {ex.Message}");
+            _log.Error("Failed to upload image to cloud", Tag, ex);
             // Queue for retry later
             await AddToPendingUploadsAsync(localPath, userId, profileId);
             return localPath; // Return local path as fallback
@@ -184,7 +188,7 @@ public class ImageService : IImageService
             if (File.Exists(imageUrl))
             {
                 File.Delete(imageUrl);
-                Debug.WriteLine($"[ImageService] Deleted local file: {imageUrl}");
+                _log.Debug($"Deleted local file: {imageUrl}", Tag);
             }
 
             // Delete from cloud if it's a cloud URL
@@ -195,7 +199,7 @@ public class ImageService : IImageService
                 {
                     var blobClient = _containerClient!.GetBlobClient(blobName);
                     await blobClient.DeleteIfExistsAsync();
-                    Debug.WriteLine($"[ImageService] Deleted from cloud: {blobName}");
+                    _log.Debug($"Deleted from cloud: {blobName}", Tag);
                 }
             }
 
@@ -210,7 +214,7 @@ public class ImageService : IImageService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[ImageService] Delete error: {ex.Message}");
+            _log.Error("Failed to delete image", Tag, ex);
             return false;
         }
     }
@@ -252,12 +256,12 @@ public class ImageService : IImageService
             using var fileStream = File.Create(cachedPath);
             await stream.CopyToAsync(fileStream);
 
-            Debug.WriteLine($"[ImageService] Downloaded and cached: {cachedPath}");
+            _log.Debug($"Downloaded and cached image: {cachedPath}", Tag);
             return cachedPath;
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[ImageService] Download error: {ex.Message}");
+            _log.Warning("Failed to download image from cloud", Tag, ex);
             return imageUrl; // Return original URL as fallback
         }
     }
@@ -290,12 +294,12 @@ public class ImageService : IImageService
                 {
                     pending.Remove(item);
                     syncedCount++;
-                    Debug.WriteLine($"[ImageService] Synced pending upload: {item.LocalPath}");
+                    _log.Info($"Synced pending upload: {item.LocalPath}", Tag);
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[ImageService] Failed to sync: {ex.Message}");
+                _log.Warning("Failed to sync pending upload", Tag, ex);
             }
         }
 
@@ -314,7 +318,7 @@ public class ImageService : IImageService
         using var destStream = File.OpenWrite(fullPath);
         await sourceStream.CopyToAsync(destStream);
 
-        Debug.WriteLine($"[ImageService] Saved locally: {fullPath}");
+        _log.Debug($"Saved image locally: {fullPath}", Tag);
         return fullPath;
     }
 
@@ -408,7 +412,7 @@ public class ImageService : IImageService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[ImageService] Error reading pending uploads: {ex.Message}");
+            _log.Warning("Error reading pending uploads", Tag, ex);
         }
         return new List<PendingUpload>();
     }
@@ -422,7 +426,7 @@ public class ImageService : IImageService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[ImageService] Error saving pending uploads: {ex.Message}");
+            _log.Warning("Error saving pending uploads", Tag, ex);
         }
     }
 

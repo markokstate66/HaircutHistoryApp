@@ -32,25 +32,19 @@ public partial class LoginViewModel : BaseViewModel
         PasswordError = null;
         var isValid = true;
 
-        if (string.IsNullOrWhiteSpace(Email))
+        // Validate email
+        var emailResult = InputValidator.ValidateEmail(Email);
+        if (!emailResult.IsValid)
         {
-            EmailError = "Email is required";
-            isValid = false;
-        }
-        else if (!Email.Contains('@') || !Email.Contains('.'))
-        {
-            EmailError = "Please enter a valid email address";
+            EmailError = emailResult.Error;
             isValid = false;
         }
 
-        if (string.IsNullOrWhiteSpace(Password))
+        // For login, use less strict password validation (don't enforce strength)
+        var passwordResult = InputValidator.ValidateLoginPassword(Password);
+        if (!passwordResult.IsValid)
         {
-            PasswordError = "Password is required";
-            isValid = false;
-        }
-        else if (Password.Length < 6)
-        {
-            PasswordError = "Password must be at least 6 characters";
+            PasswordError = passwordResult.Error;
             isValid = false;
         }
 

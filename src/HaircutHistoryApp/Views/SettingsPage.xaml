@@ -23,25 +23,64 @@
 
                     <!-- Profile Info -->
                     <HorizontalStackLayout Spacing="15">
-                        <Frame WidthRequest="60"
-                               HeightRequest="60"
-                               CornerRadius="30"
-                               Padding="0"
-                               BackgroundColor="{StaticResource Primary}">
-                            <Label Text="{Binding DisplayName, Converter={StaticResource NameToInitialsConverter}}"
-                                   FontSize="24"
-                                   FontAttributes="Bold"
-                                   TextColor="White"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"/>
-                        </Frame>
-                        <VerticalStackLayout VerticalOptions="Center">
+                        <!-- Profile Picture with tap to change -->
+                        <Grid WidthRequest="70" HeightRequest="70">
+                            <!-- Profile Picture or Initials -->
+                            <Frame WidthRequest="70"
+                                   HeightRequest="70"
+                                   CornerRadius="35"
+                                   Padding="0"
+                                   IsClippedToBounds="True"
+                                   BackgroundColor="{StaticResource Primary}">
+                                <Grid>
+                                    <!-- Initials (shown when no picture) -->
+                                    <Label Text="{Binding DisplayName, Converter={StaticResource NameToInitialsConverter}}"
+                                           FontSize="24"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           IsVisible="{Binding HasNoProfilePicture}"/>
+                                    <!-- Profile Picture -->
+                                    <Image Source="{Binding ProfilePictureUrl}"
+                                           Aspect="AspectFill"
+                                           IsVisible="{Binding HasProfilePicture}"/>
+                                </Grid>
+                            </Frame>
+
+                            <!-- Edit Badge (only for email auth users) -->
+                            <Frame WidthRequest="24"
+                                   HeightRequest="24"
+                                   CornerRadius="12"
+                                   Padding="0"
+                                   BackgroundColor="{StaticResource Secondary}"
+                                   HorizontalOptions="End"
+                                   VerticalOptions="End"
+                                   IsVisible="{Binding CanUploadProfilePicture}">
+                                <Label Text="+"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="White"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Frame>
+
+                            <!-- Tap Gesture -->
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ChangeProfilePictureCommand}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                        <VerticalStackLayout VerticalOptions="Center" Spacing="2">
                             <Label Text="{Binding DisplayName}"
                                    FontSize="18"
                                    FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
                             <Label Text="{Binding Email}"
                                    FontSize="14"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                            <Label Text="{Binding AuthProviderDisplay}"
+                                   FontSize="11"
                                    TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                         </VerticalStackLayout>
                     </HorizontalStackLayout>

@@ -1,0 +1,29 @@
+namespace HaircutHistoryApp.Services;
+
+/// <summary>
+/// Social authentication configuration for OAuth providers.
+///
+/// SETUP INSTRUCTIONS:
+/// 1. Copy this file to SocialAuthConfig.cs
+/// 2. Replace placeholder values with your actual OAuth credentials
+/// 3. See docs/SOCIAL_AUTH_SETUP.md for detailed setup instructions
+///
+/// IMPORTANT: Never commit the actual SocialAuthConfig.cs file!
+/// </summary>
+public static class SocialAuthConfig
+{
+    // Google OAuth Client ID
+    // Get from: Google Cloud Console > APIs & Services > Credentials
+    public const string GoogleClientId = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+
+    // Facebook App ID
+    // Get from: Facebook Developers > Your App > Settings > Basic
+    public const string FacebookAppId = "YOUR_FACEBOOK_APP_ID";
+
+    // Apple Services ID (for Sign in with Apple)
+    // Get from: Apple Developer Portal > Certificates, Identifiers & Profiles
+    public const string AppleServicesId = "YOUR_APPLE_SERVICES_ID";
+
+    // OAuth callback redirect URI
+    public const string RedirectUri = "com.haircuthistory.app://callback";
+}

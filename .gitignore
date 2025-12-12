@@ -55,6 +55,14 @@ TestResults/
 appsettings.*.json
 secrets.json
 
+# Platform-specific config files with API keys
+**/google-services.json
+**/GoogleService-Info.plist
+
+# Azure/Cloud configuration
+**/AzureStorageConfig.cs
+**/SocialAuthConfig.cs
+
 # User-specific
 *.rsuser
 *.suo

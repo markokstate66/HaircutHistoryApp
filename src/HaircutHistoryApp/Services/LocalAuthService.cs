@@ -37,9 +37,9 @@ public class LocalAuthService : IAuthService
             users.Add(user);
             await SaveUsersAsync(users);
 
-            // Store password hash (simplified for demo - use proper hashing in production)
-            await SecureStorage.SetAsync($"pwd_{user.Id}", Convert.ToBase64String(
-                System.Text.Encoding.UTF8.GetBytes(password)));
+            // Store password hash using PBKDF2-SHA256
+            var hashedPassword = PasswordHasher.HashPassword(password);
+            await SecureStorage.SetAsync($"pwd_{user.Id}", hashedPassword);
 
             _currentUser = user;
             await SaveCurrentUserAsync();
@@ -64,12 +64,18 @@ public class LocalAuthService : IAuthService
                 return (false, "No account found with this email.");
             }
 
-            var storedPwd = await SecureStorage.GetAsync($"pwd_{user.Id}");
-            var inputPwd = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
+            var storedHash = await SecureStorage.GetAsync($"pwd_{user.Id}");
 
-            if (storedPwd != inputPwd)
+            if (string.IsNullOrEmpty(storedHash) || !PasswordHasher.VerifyPassword(password, storedHash))
             {
                 return (false, "Incorrect password.");
+            }
+
+            // Migrate legacy passwords to new hash format on successful login
+            if (PasswordHasher.NeedsRehash(storedHash))
+            {
+                var newHash = PasswordHasher.HashPassword(password);
+                await SecureStorage.SetAsync($"pwd_{user.Id}", newHash);
             }
 
             _currentUser = user;

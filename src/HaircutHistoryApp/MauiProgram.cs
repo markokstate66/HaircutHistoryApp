@@ -25,7 +25,9 @@ public static class MauiProgram
 
         // Register Services
         builder.Services.AddSingleton<IAnalyticsService, AnalyticsService>();
+        builder.Services.AddSingleton<ILogService, LogService>();
         builder.Services.AddSingleton<IPlayFabService, PlayFabService>();
+        builder.Services.AddSingleton<IProfilePictureService, ProfilePictureService>();
         builder.Services.AddSingleton<IAuthService, PlayFabAuthService>();
         builder.Services.AddSingleton<IDataService, PlayFabDataService>();
         builder.Services.AddSingleton<IImageService, ImageService>();

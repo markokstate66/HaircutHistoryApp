@@ -1,17 +1,18 @@
-using System.Diagnostics;
-
 namespace HaircutHistoryApp.Services;
 
 public class ThemeService : IThemeService
 {
+    private readonly ILogService _log;
     private const string ThemePreferenceKey = "app_theme";
+    private const string Tag = "ThemeService";
 
     public AppTheme CurrentTheme { get; private set; }
 
     public event EventHandler<AppTheme>? ThemeChanged;
 
-    public ThemeService()
+    public ThemeService(ILogService logService)
     {
+        _log = logService;
         CurrentTheme = LoadSavedTheme();
         ApplyTheme(CurrentTheme);
     }
@@ -26,7 +27,7 @@ public class ThemeService : IThemeService
         ApplyTheme(theme);
         ThemeChanged?.Invoke(this, theme);
 
-        Debug.WriteLine($"[ThemeService] Theme changed to: {theme}");
+        _log.Info($"Theme changed to: {theme}", Tag);
     }
 
     public AppTheme LoadSavedTheme()
@@ -41,7 +42,7 @@ public class ThemeService : IThemeService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[ThemeService] Error loading theme: {ex.Message}");
+            _log.Warning("Error loading theme preference", Tag, ex);
         }
 
         return AppTheme.System;
@@ -55,7 +56,7 @@ public class ThemeService : IThemeService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[ThemeService] Error saving theme: {ex.Message}");
+            _log.Warning("Error saving theme preference", Tag, ex);
         }
     }
 

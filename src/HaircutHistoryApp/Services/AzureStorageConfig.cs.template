@@ -2,6 +2,13 @@ namespace HaircutHistoryApp.Services;
 
 /// <summary>
 /// Azure Blob Storage configuration for image uploads.
+///
+/// SETUP INSTRUCTIONS:
+/// 1. Copy this file to AzureStorageConfig.cs
+/// 2. Replace YOUR_AZURE_STORAGE_CONNECTION_STRING with your actual connection string
+/// 3. Get from: Azure Portal > Storage Account > Access keys
+///
+/// IMPORTANT: Never commit the actual AzureStorageConfig.cs file!
 /// </summary>
 public static class AzureStorageConfig
 {

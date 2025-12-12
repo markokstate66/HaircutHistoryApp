@@ -6,14 +6,16 @@ namespace HaircutHistoryApp.Services;
 public class PlayFabAuthService : IAuthService
 {
     private readonly IPlayFabService _playFabService;
+    private readonly IProfilePictureService _profilePictureService;
     private User? _currentUser;
 
     public User? CurrentUser => _currentUser;
     public bool IsAuthenticated => _playFabService.IsLoggedIn && _currentUser != null;
 
-    public PlayFabAuthService(IPlayFabService playFabService)
+    public PlayFabAuthService(IPlayFabService playFabService, IProfilePictureService profilePictureService)
     {
         _playFabService = playFabService;
+        _profilePictureService = profilePictureService;
     }
 
     public async Task<(bool Success, string? Error)> SignUpAsync(string email, string password, string displayName, UserMode mode, string? shopName = null)
@@ -30,6 +32,7 @@ public class PlayFabAuthService : IAuthService
             DisplayName = displayName,
             Mode = mode,
             ShopName = shopName,
+            AuthProvider = AuthProvider.Email,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -59,6 +62,7 @@ public class PlayFabAuthService : IAuthService
                 Email = email,
                 DisplayName = email.Split('@')[0],
                 Mode = UserMode.Client,
+                AuthProvider = AuthProvider.Email,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -87,6 +91,9 @@ public class PlayFabAuthService : IAuthService
             if (!success)
                 return (false, error);
 
+            // Get profile picture from Google
+            var profilePictureUrl = await _profilePictureService.GetGoogleProfilePictureAsync(accessToken);
+
             _currentUser = await LoadUserProfileAsync();
 
             if (_currentUser == null)
@@ -98,9 +105,19 @@ public class PlayFabAuthService : IAuthService
                     Email = "google-user",
                     DisplayName = "Google User",
                     Mode = UserMode.Client,
+                    AuthProvider = AuthProvider.Google,
+                    ProfilePictureUrl = profilePictureUrl,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
+                await SaveUserAsync(_currentUser);
+            }
+            else if (!string.IsNullOrEmpty(profilePictureUrl) && _currentUser.ProfilePictureUrl != profilePictureUrl)
+            {
+                // Update profile picture if it changed
+                _currentUser.ProfilePictureUrl = profilePictureUrl;
+                _currentUser.AuthProvider = AuthProvider.Google;
+                _currentUser.UpdatedAt = DateTime.UtcNow;
                 await SaveUserAsync(_currentUser);
             }
 
@@ -135,6 +152,9 @@ public class PlayFabAuthService : IAuthService
             if (!success)
                 return (false, error);
 
+            // Get profile picture from Facebook
+            var profilePictureUrl = await _profilePictureService.GetFacebookProfilePictureAsync(accessToken);
+
             _currentUser = await LoadUserProfileAsync();
 
             if (_currentUser == null)
@@ -145,9 +165,19 @@ public class PlayFabAuthService : IAuthService
                     Email = "facebook-user",
                     DisplayName = "Facebook User",
                     Mode = UserMode.Client,
+                    AuthProvider = AuthProvider.Facebook,
+                    ProfilePictureUrl = profilePictureUrl,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
+                await SaveUserAsync(_currentUser);
+            }
+            else if (!string.IsNullOrEmpty(profilePictureUrl) && _currentUser.ProfilePictureUrl != profilePictureUrl)
+            {
+                // Update profile picture if it changed
+                _currentUser.ProfilePictureUrl = profilePictureUrl;
+                _currentUser.AuthProvider = AuthProvider.Facebook;
+                _currentUser.UpdatedAt = DateTime.UtcNow;
                 await SaveUserAsync(_currentUser);
             }
 
@@ -191,15 +221,24 @@ public class PlayFabAuthService : IAuthService
 
             if (_currentUser == null)
             {
+                // Apple doesn't provide a profile picture by default
                 _currentUser = new User
                 {
                     Id = _playFabService.PlayFabId ?? Guid.NewGuid().ToString(),
                     Email = "apple-user",
                     DisplayName = "Apple User",
                     Mode = UserMode.Client,
+                    AuthProvider = AuthProvider.Apple,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
+                await SaveUserAsync(_currentUser);
+            }
+            else
+            {
+                // Ensure auth provider is set
+                _currentUser.AuthProvider = AuthProvider.Apple;
+                _currentUser.UpdatedAt = DateTime.UtcNow;
                 await SaveUserAsync(_currentUser);
             }
 

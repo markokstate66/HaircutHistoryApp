@@ -112,7 +112,7 @@ public partial class QRShareViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"QR Generation error: {ex.Message}");
+            LogService.Error("QR code generation failed", "QRShareViewModel", ex);
         }
     }
 

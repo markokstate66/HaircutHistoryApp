@@ -27,40 +27,99 @@ public partial class RegisterViewModel : BaseViewModel
     [ObservableProperty]
     private string _shopName = string.Empty;
 
+    [ObservableProperty]
+    private string? _emailError;
+
+    [ObservableProperty]
+    private string? _passwordError;
+
+    [ObservableProperty]
+    private string? _confirmPasswordError;
+
+    [ObservableProperty]
+    private string? _displayNameError;
+
+    [ObservableProperty]
+    private string? _shopNameError;
+
     public RegisterViewModel(IAuthService authService)
     {
         _authService = authService;
         Title = "Create Account";
     }
 
+    private bool ValidateInput()
+    {
+        // Clear all errors
+        EmailError = null;
+        PasswordError = null;
+        ConfirmPasswordError = null;
+        DisplayNameError = null;
+        ShopNameError = null;
+
+        var isValid = true;
+
+        // Validate email
+        var emailResult = InputValidator.ValidateEmail(Email);
+        if (!emailResult.IsValid)
+        {
+            EmailError = emailResult.Error;
+            isValid = false;
+        }
+
+        // Validate display name
+        var displayNameResult = InputValidator.ValidateDisplayName(DisplayName);
+        if (!displayNameResult.IsValid)
+        {
+            DisplayNameError = displayNameResult.Error;
+            isValid = false;
+        }
+
+        // Validate password strength
+        var passwordResult = InputValidator.ValidatePassword(Password);
+        if (!passwordResult.IsValid)
+        {
+            PasswordError = passwordResult.Error;
+            isValid = false;
+        }
+
+        // Validate passwords match
+        var matchResult = InputValidator.ValidatePasswordsMatch(Password, ConfirmPassword);
+        if (!matchResult.IsValid)
+        {
+            ConfirmPasswordError = matchResult.Error;
+            isValid = false;
+        }
+
+        // Validate shop name if barber mode
+        if (IsBarberMode)
+        {
+            var shopNameResult = InputValidator.ValidateShopName(ShopName);
+            if (!shopNameResult.IsValid)
+            {
+                ShopNameError = shopNameResult.Error;
+                isValid = false;
+            }
+        }
+
+        return isValid;
+    }
+
     [RelayCommand]
     private async Task SignUpAsync()
     {
-        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password) ||
-            string.IsNullOrWhiteSpace(DisplayName))
-        {
-            await Shell.Current.DisplayAlert("Validation", "Please fill in all required fields.", "OK");
+        if (!ValidateInput())
             return;
-        }
-
-        if (Password != ConfirmPassword)
-        {
-            await Shell.Current.DisplayAlert("Validation", "Passwords do not match.", "OK");
-            return;
-        }
-
-        if (Password.Length < 6)
-        {
-            await Shell.Current.DisplayAlert("Validation", "Password must be at least 6 characters.", "OK");
-            return;
-        }
 
         await ExecuteAsync(async () =>
         {
             var mode = IsBarberMode ? UserMode.Barber : UserMode.Client;
+            var sanitizedEmail = InputValidator.Sanitize(Email, 254);
+            var sanitizedDisplayName = InputValidator.Sanitize(DisplayName, 50);
+            var sanitizedShopName = IsBarberMode ? InputValidator.Sanitize(ShopName, 100) : null;
+
             var (success, error) = await _authService.SignUpAsync(
-                Email, Password, DisplayName, mode,
-                IsBarberMode ? ShopName : null);
+                sanitizedEmail, Password, sanitizedDisplayName, mode, sanitizedShopName);
 
             if (success)
             {

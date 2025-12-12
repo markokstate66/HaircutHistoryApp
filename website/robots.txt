@@ -1,0 +1,45 @@
+# robots.txt for HairCut History
+# https://haircuthistory.app
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://haircuthistory.app/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Block sensitive directories (if any)
+Disallow: /api/
+Disallow: /admin/
+Disallow: /*.json$
+
+# Allow important resources
+Allow: /images/
+Allow: /css/
+Allow: /js/
+
+# Google specific
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing specific
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# Host directive
+Host: https://haircuthistory.app
