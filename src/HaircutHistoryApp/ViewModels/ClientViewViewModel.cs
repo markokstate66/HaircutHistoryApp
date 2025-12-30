@@ -72,7 +72,7 @@ public partial class ClientViewViewModel : BaseViewModel
 
             if (profile == null || session == null)
             {
-                await Shell.Current.DisplayAlert("Error",
+                await Shell.Current.DisplayAlertAsync("Error",
                     "Profile not found or share link has expired.", "OK");
                 await Shell.Current.GoToAsync("..");
                 return;
@@ -140,7 +140,7 @@ public partial class ClientViewViewModel : BaseViewModel
     {
         if (string.IsNullOrWhiteSpace(NewNote))
         {
-            await Shell.Current.DisplayAlert("Validation", "Please enter a note.", "OK");
+            await Shell.Current.DisplayAlertAsync("Validation", "Please enter a note.", "OK");
             return;
         }
 
@@ -173,11 +173,11 @@ public partial class ClientViewViewModel : BaseViewModel
                 HasBarberNotes = true;
                 IsAddingNote = false;
                 NewNote = string.Empty;
-                await Shell.Current.DisplayAlert("Success", "Note added successfully!", "OK");
+                await Shell.Current.DisplayAlertAsync("Success", "Note added successfully!", "OK");
             }
             else
             {
-                await Shell.Current.DisplayAlert("Error", "Failed to add note.", "OK");
+                await Shell.Current.DisplayAlertAsync("Error", "Failed to add note.", "OK");
             }
         });
     }

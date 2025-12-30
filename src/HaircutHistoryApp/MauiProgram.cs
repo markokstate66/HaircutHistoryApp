@@ -4,6 +4,7 @@ using HaircutHistoryApp.Services.Analytics;
 using HaircutHistoryApp.ViewModels;
 using HaircutHistoryApp.Views;
 using Microsoft.Extensions.Logging;
+using Plugin.MauiMTAdmob;
 using ZXing.Net.Maui.Controls;
 
 namespace HaircutHistoryApp;
@@ -17,11 +18,15 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
             .UseBarcodeReader()
+            .UseMauiMTAdmob()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+
+        // Register HttpClientFactory for proper HTTP client lifecycle management
+        builder.Services.AddHttpClient();
 
         // Register Services
         builder.Services.AddSingleton<IAnalyticsService, AnalyticsService>();
@@ -34,6 +39,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<IQRService, QRService>();
         builder.Services.AddSingleton<IThemeService, ThemeService>();
         builder.Services.AddSingleton<IAlertService, AlertService>();
+        builder.Services.AddSingleton<ISubscriptionService, SubscriptionService>();
+        builder.Services.AddSingleton<IAdService, AdService>();
 
         // Register ViewModels
         builder.Services.AddTransient<LoginViewModel>();
@@ -48,6 +55,7 @@ public static class MauiProgram
         builder.Services.AddTransient<SettingsViewModel>();
         builder.Services.AddTransient<ImageViewerViewModel>();
         builder.Services.AddTransient<AchievementsViewModel>();
+        builder.Services.AddTransient<PremiumViewModel>();
 
         // Register Pages
         builder.Services.AddTransient<LoginPage>();
@@ -63,6 +71,7 @@ public static class MauiProgram
         builder.Services.AddTransient<SettingsPage>();
         builder.Services.AddTransient<ImageViewerPage>();
         builder.Services.AddTransient<AchievementsPage>();
+        builder.Services.AddTransient<PremiumPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

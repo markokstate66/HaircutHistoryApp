@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:HaircutHistoryApp.ViewModels"
              xmlns:models="clr-namespace:HaircutHistoryApp.Models"
+             xmlns:mtadmob="clr-namespace:Plugin.MauiMTAdmob.Controls;assembly=Plugin.MauiMTAdmob"
              x:Class="HaircutHistoryApp.Views.ProfileListPage"
              x:DataType="vm:ProfileListViewModel"
              Title="{Binding Title}"
@@ -12,9 +13,40 @@
         <ToolbarItem Text="Settings" Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.GoToSettingsCommand}" IconImageSource="settings.png"/>
     </ContentPage.ToolbarItems>
 
-    <Grid>
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Upgrade Banner for Free Users -->
+        <Frame Grid.Row="0"
+               Padding="10"
+               Margin="15,10,15,0"
+               BackgroundColor="{StaticResource Primary}"
+               BorderColor="Transparent"
+               CornerRadius="8"
+               IsVisible="{Binding ShowUpgradeBanner}">
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoToPremiumCommand}"/>
+            </Frame.GestureRecognizers>
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout>
+                    <Label Text="Upgrade to Premium"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="White"/>
+                    <Label Text="{Binding RemainingProfiles, StringFormat='{0} profiles remaining'}"
+                           FontSize="11"
+                           TextColor="White"
+                           Opacity="0.9"/>
+                </VerticalStackLayout>
+                <Label Grid.Column="1"
+                       Text=">"
+                       FontSize="20"
+                       TextColor="White"
+                       VerticalOptions="Center"/>
+            </Grid>
+        </Frame>
+
         <!-- Empty State -->
-        <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+        <VerticalStackLayout Grid.Row="1"
+                           IsVisible="{Binding IsEmpty}"
                            VerticalOptions="Center"
                            HorizontalOptions="Center"
                            Spacing="20"
@@ -37,7 +69,8 @@
         </VerticalStackLayout>
 
         <!-- Profile List -->
-        <RefreshView IsRefreshing="{Binding IsRefreshing}"
+        <RefreshView Grid.Row="1"
+                    IsRefreshing="{Binding IsRefreshing}"
                     Command="{Binding RefreshCommand}"
                     IsVisible="{Binding IsEmpty, Converter={StaticResource InvertedBoolConverter}}">
             <CollectionView ItemsSource="{Binding Profiles}"
@@ -103,7 +136,8 @@
         </RefreshView>
 
         <!-- FAB -->
-        <Button Text="+"
+        <Button Grid.Row="1"
+                Text="+"
                 Command="{Binding AddProfileCommand}"
                 IsVisible="{Binding IsEmpty, Converter={StaticResource InvertedBoolConverter}}"
                 WidthRequest="60"
@@ -117,10 +151,17 @@
                 Margin="20"/>
 
         <!-- Loading -->
-        <ActivityIndicator IsRunning="{Binding IsBusy}"
+        <ActivityIndicator Grid.Row="1"
+                         IsRunning="{Binding IsBusy}"
                          IsVisible="{Binding IsBusy}"
                          Color="{StaticResource Primary}"
                          VerticalOptions="Center"
                          HorizontalOptions="Center"/>
+
+        <!-- Ad Banner (for free users) -->
+        <mtadmob:MTAdView Grid.Row="2"
+                          AdsId="{Binding BannerAdUnitId}"
+                          HeightRequest="50"
+                          IsVisible="{Binding ShowAds}"/>
     </Grid>
 </ContentPage>

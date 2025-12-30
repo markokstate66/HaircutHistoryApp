@@ -45,6 +45,32 @@ public class User
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     /// <summary>
+    /// The user's subscription tier (Free or Premium)
+    /// </summary>
+    public SubscriptionTier SubscriptionTier { get; set; } = SubscriptionTier.Free;
+
+    /// <summary>
+    /// When the premium subscription expires (null for free tier or lifetime)
+    /// </summary>
+    public DateTime? SubscriptionExpirationDate { get; set; }
+
+    /// <summary>
+    /// Transaction ID from the last successful subscription purchase
+    /// </summary>
+    public string? SubscriptionTransactionId { get; set; }
+
+    /// <summary>
+    /// Returns true if the user has an active premium subscription
+    /// </summary>
+    public bool IsPremium => SubscriptionTier == SubscriptionTier.Premium &&
+        (!SubscriptionExpirationDate.HasValue || SubscriptionExpirationDate.Value > DateTime.UtcNow);
+
+    /// <summary>
+    /// Returns true if the user can add photos to profiles (premium feature)
+    /// </summary>
+    public bool CanAddPhotos => IsPremium;
+
+    /// <summary>
     /// Gets the effective profile picture URL to display.
     /// Returns custom picture if available, otherwise the provider's default.
     /// </summary>

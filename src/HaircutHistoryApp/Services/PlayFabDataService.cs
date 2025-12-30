@@ -6,12 +6,15 @@ namespace HaircutHistoryApp.Services;
 public class PlayFabDataService : IDataService
 {
     private readonly IPlayFabService _playFabService;
+    private readonly ILogService _log;
     private const string ProfilesKey = "haircut_profiles";
     private const string ShareSessionsKey = "share_sessions";
+    private const string Tag = "PlayFabDataService";
 
-    public PlayFabDataService(IPlayFabService playFabService)
+    public PlayFabDataService(IPlayFabService playFabService, ILogService logService)
     {
         _playFabService = playFabService;
+        _log = logService;
     }
 
     #region Profile Operations
@@ -29,8 +32,9 @@ public class PlayFabDataService : IDataService
             return profiles?.Where(p => p.UserId == userId).OrderByDescending(p => p.UpdatedAt).ToList()
                    ?? new List<HaircutProfile>();
         }
-        catch
+        catch (Exception ex)
         {
+            _log.Error("Failed to deserialize profiles", Tag, ex);
             return new List<HaircutProfile>();
         }
     }
@@ -47,8 +51,9 @@ public class PlayFabDataService : IDataService
             var profiles = JsonConvert.DeserializeObject<List<HaircutProfile>>(json);
             return profiles?.FirstOrDefault(p => p.Id == profileId);
         }
-        catch
+        catch (Exception ex)
         {
+            _log.Error($"Failed to get profile {profileId}", Tag, ex);
             return null;
         }
     }
@@ -83,8 +88,9 @@ public class PlayFabDataService : IDataService
 
             return success;
         }
-        catch
+        catch (Exception ex)
         {
+            _log.Error($"Failed to save profile {profile.Id}", Tag, ex);
             return false;
         }
     }
@@ -99,8 +105,9 @@ public class PlayFabDataService : IDataService
             var json = JsonConvert.SerializeObject(profiles);
             return await _playFabService.SavePlayerDataAsync(ProfilesKey, json);
         }
-        catch
+        catch (Exception ex)
         {
+            _log.Error($"Failed to delete profile {profileId}", Tag, ex);
             return false;
         }
     }
@@ -116,8 +123,9 @@ public class PlayFabDataService : IDataService
         {
             return JsonConvert.DeserializeObject<List<HaircutProfile>>(json) ?? new List<HaircutProfile>();
         }
-        catch
+        catch (Exception ex)
         {
+            _log.Error("Failed to deserialize all profiles", Tag, ex);
             return new List<HaircutProfile>();
         }
     }
@@ -185,8 +193,9 @@ public class PlayFabDataService : IDataService
             sessions.RemoveAll(s => s.IsExpired);
             return sessions;
         }
-        catch
+        catch (Exception ex)
         {
+            _log.Error("Failed to deserialize share sessions", Tag, ex);
             return new List<ShareSession>();
         }
     }
@@ -230,8 +239,9 @@ public class PlayFabDataService : IDataService
             var clients = JsonConvert.DeserializeObject<List<RecentClient>>(json) ?? new List<RecentClient>();
             return clients.OrderByDescending(c => c.ViewedAt).Take(20).ToList();
         }
-        catch
+        catch (Exception ex)
         {
+            _log.Error($"Failed to get recent clients for barber {barberId}", Tag, ex);
             return new List<RecentClient>();
         }
     }

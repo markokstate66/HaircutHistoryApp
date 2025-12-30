@@ -19,5 +19,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("settings", typeof(SettingsPage));
         Routing.RegisterRoute("imageViewer", typeof(ImageViewerPage));
         Routing.RegisterRoute("achievements", typeof(AchievementsPage));
+        Routing.RegisterRoute("premium", typeof(PremiumPage));
     }
 }

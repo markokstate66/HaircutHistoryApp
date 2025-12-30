@@ -109,7 +109,7 @@ public partial class SettingsViewModel : BaseViewModel
                 _ => "your account provider"
             };
 
-            await Shell.Current.DisplayAlert(
+            await Shell.Current.DisplayAlertAsync(
                 "Profile Picture",
                 $"Your profile picture is synced from {providerName}. To change it, update your picture in {providerName}.",
                 "OK");
@@ -117,7 +117,7 @@ public partial class SettingsViewModel : BaseViewModel
         }
 
         // For email users, show options to upload
-        var action = await Shell.Current.DisplayActionSheet(
+        var action = await Shell.Current.DisplayActionSheetAsync(
             "Change Profile Picture",
             "Cancel",
             HasProfilePicture ? "Remove Picture" : null,
@@ -173,11 +173,11 @@ public partial class SettingsViewModel : BaseViewModel
 
                 ProfilePictureUrl = CurrentUser.EffectiveProfilePictureUrl;
 
-                await Shell.Current.DisplayAlert("Success", "Profile picture updated!", "OK");
+                await Shell.Current.DisplayAlertAsync("Success", "Profile picture updated!", "OK");
             }
             else
             {
-                await Shell.Current.DisplayAlert("Error", "Failed to upload picture. Please try again.", "OK");
+                await Shell.Current.DisplayAlertAsync("Error", "Failed to upload picture. Please try again.", "OK");
             }
         });
     }
@@ -189,7 +189,7 @@ public partial class SettingsViewModel : BaseViewModel
             if (CurrentUser == null || string.IsNullOrEmpty(CurrentUser.CustomProfilePictureUrl))
                 return;
 
-            var confirm = await Shell.Current.DisplayAlert(
+            var confirm = await Shell.Current.DisplayAlertAsync(
                 "Remove Picture",
                 "Are you sure you want to remove your profile picture?",
                 "Remove", "Cancel");
@@ -233,7 +233,7 @@ public partial class SettingsViewModel : BaseViewModel
 
             if (success)
             {
-                await Shell.Current.DisplayAlert("Mode Changed",
+                await Shell.Current.DisplayAlertAsync("Mode Changed",
                     $"You are now in {(IsBarberMode ? "Barber" : "Client")} mode.", "OK");
 
                 // Refresh the main page
@@ -243,7 +243,7 @@ public partial class SettingsViewModel : BaseViewModel
             {
                 // Revert the toggle
                 IsBarberMode = !IsBarberMode;
-                await Shell.Current.DisplayAlert("Error", error ?? "Failed to change mode.", "OK");
+                await Shell.Current.DisplayAlertAsync("Error", error ?? "Failed to change mode.", "OK");
             }
         });
     }
@@ -272,7 +272,7 @@ public partial class SettingsViewModel : BaseViewModel
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlert("Error", error ?? "Failed to update shop name.", "OK");
+                    await Shell.Current.DisplayAlertAsync("Error", error ?? "Failed to update shop name.", "OK");
                 }
             });
         }
@@ -287,7 +287,7 @@ public partial class SettingsViewModel : BaseViewModel
     [RelayCommand]
     private async Task SignOutAsync()
     {
-        var confirm = await Shell.Current.DisplayAlert(
+        var confirm = await Shell.Current.DisplayAlertAsync(
             "Sign Out",
             "Are you sure you want to sign out?",
             "Sign Out", "Cancel");

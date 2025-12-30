@@ -64,7 +64,7 @@ public partial class QRShareViewModel : BaseViewModel
             Profile = await _dataService.GetProfileAsync(ProfileId);
             if (Profile == null)
             {
-                await Shell.Current.DisplayAlert("Error", "Profile not found.", "OK");
+                await Shell.Current.DisplayAlertAsync("Error", "Profile not found.", "OK");
                 await Shell.Current.GoToAsync("..");
                 return;
             }
@@ -122,7 +122,7 @@ public partial class QRShareViewModel : BaseViewModel
         if (!string.IsNullOrEmpty(ShareCode))
         {
             await Clipboard.SetTextAsync(ShareCode);
-            await Shell.Current.DisplayAlert("Copied", "Share code copied to clipboard!", "OK");
+            await Shell.Current.DisplayAlertAsync("Copied", "Share code copied to clipboard!", "OK");
         }
     }
 

@@ -127,7 +127,7 @@ public partial class RegisterViewModel : BaseViewModel
             }
             else
             {
-                await Shell.Current.DisplayAlert("Registration Failed", error ?? "Unable to create account.", "OK");
+                await Shell.Current.DisplayAlertAsync("Registration Failed", error ?? "Unable to create account.", "OK");
             }
         });
     }

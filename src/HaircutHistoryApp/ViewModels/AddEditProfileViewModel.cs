@@ -12,6 +12,7 @@ public partial class AddEditProfileViewModel : BaseViewModel
     private readonly IAuthService _authService;
     private readonly IDataService _dataService;
     private readonly IImageService _imageService;
+    private readonly ISubscriptionService _subscriptionService;
 
     private bool _isEditMode;
 
@@ -33,17 +34,31 @@ public partial class AddEditProfileViewModel : BaseViewModel
     [ObservableProperty]
     private ObservableCollection<string> _images = new();
 
+    [ObservableProperty]
+    private bool _canAddPhotos;
+
     public List<string> AvailableAreas => HaircutMeasurement.CommonAreas;
     public List<string> AvailableGuardSizes => HaircutMeasurement.CommonGuardSizes;
     public List<string> AvailableTechniques => HaircutMeasurement.CommonTechniques;
 
-    public AddEditProfileViewModel(IAuthService authService, IDataService dataService, IImageService imageService)
+    public AddEditProfileViewModel(
+        IAuthService authService,
+        IDataService dataService,
+        IImageService imageService,
+        ISubscriptionService subscriptionService)
     {
         _authService = authService;
         _dataService = dataService;
         _imageService = imageService;
+        _subscriptionService = subscriptionService;
         Title = "New Haircut Profile";
         InitializeDefaultMeasurements();
+        _ = CheckPhotoPermissionAsync();
+    }
+
+    private async Task CheckPhotoPermissionAsync()
+    {
+        CanAddPhotos = await _subscriptionService.CanAddPhotosAsync();
     }
 
     partial void OnProfileIdChanged(string value)
@@ -77,7 +92,7 @@ public partial class AddEditProfileViewModel : BaseViewModel
             var profile = await _dataService.GetProfileAsync(ProfileId);
             if (profile == null)
             {
-                await Shell.Current.DisplayAlert("Error", "Profile not found.", "OK");
+                await Shell.Current.DisplayAlertAsync("Error", "Profile not found.", "OK");
                 await Shell.Current.GoToAsync("..");
                 return;
             }
@@ -135,6 +150,12 @@ public partial class AddEditProfileViewModel : BaseViewModel
     [RelayCommand]
     private async Task AddImageFromGalleryAsync()
     {
+        if (!CanAddPhotos)
+        {
+            await ShowPremiumUpsellAsync();
+            return;
+        }
+
         var path = await _imageService.PickImageAsync();
         if (!string.IsNullOrEmpty(path))
         {
@@ -145,10 +166,30 @@ public partial class AddEditProfileViewModel : BaseViewModel
     [RelayCommand]
     private async Task TakePhotoAsync()
     {
+        if (!CanAddPhotos)
+        {
+            await ShowPremiumUpsellAsync();
+            return;
+        }
+
         var path = await _imageService.TakePhotoAsync();
         if (!string.IsNullOrEmpty(path))
         {
             Images.Add(path);
+        }
+    }
+
+    private async Task ShowPremiumUpsellAsync()
+    {
+        var upgrade = await Shell.Current.DisplayAlertAsync(
+            "Premium Feature",
+            "Adding photos requires a Premium subscription. " +
+            "Upgrade now to attach reference photos to your haircut profiles!",
+            "Upgrade", "Not Now");
+
+        if (upgrade)
+        {
+            await Shell.Current.GoToAsync("premium");
         }
     }
 
@@ -166,7 +207,7 @@ public partial class AddEditProfileViewModel : BaseViewModel
     {
         if (string.IsNullOrWhiteSpace(ProfileName))
         {
-            await Shell.Current.DisplayAlert("Validation", "Please enter a profile name.", "OK");
+            await Shell.Current.DisplayAlertAsync("Validation", "Please enter a profile name.", "OK");
             return;
         }
 
@@ -222,7 +263,7 @@ public partial class AddEditProfileViewModel : BaseViewModel
             }
             else
             {
-                await Shell.Current.DisplayAlert("Error", "Failed to save profile.", "OK");
+                await Shell.Current.DisplayAlertAsync("Error", "Failed to save profile.", "OK");
             }
         });
     }

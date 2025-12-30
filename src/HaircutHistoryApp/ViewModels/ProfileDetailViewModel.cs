@@ -54,7 +54,7 @@ public partial class ProfileDetailViewModel : BaseViewModel
 
             if (Profile == null)
             {
-                await Shell.Current.DisplayAlert("Error", "Profile not found.", "OK");
+                await Shell.Current.DisplayAlertAsync("Error", "Profile not found.", "OK");
                 await Shell.Current.GoToAsync("..");
                 return;
             }

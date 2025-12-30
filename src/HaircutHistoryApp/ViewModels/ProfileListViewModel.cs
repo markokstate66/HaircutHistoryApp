@@ -12,6 +12,7 @@ public partial class ProfileListViewModel : BaseViewModel
     private readonly IAuthService _authService;
     private readonly IDataService _dataService;
     private readonly IAnalyticsService _analytics;
+    private readonly ISubscriptionService _subscriptionService;
 
     [ObservableProperty]
     private ObservableCollection<HaircutProfile> _profiles = new();
@@ -22,11 +23,32 @@ public partial class ProfileListViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isRefreshing;
 
-    public ProfileListViewModel(IAuthService authService, IDataService dataService, IAnalyticsService analytics)
+    [ObservableProperty]
+    private bool _showUpgradeBanner;
+
+    [ObservableProperty]
+    private int _remainingProfiles;
+
+    [ObservableProperty]
+    private bool _showAds;
+
+    public string BannerAdUnitId =>
+#if DEBUG
+        SubscriptionConfig.GetBannerAdUnitId(useTestAds: true);
+#else
+        SubscriptionConfig.GetBannerAdUnitId(useTestAds: false);
+#endif
+
+    public ProfileListViewModel(
+        IAuthService authService,
+        IDataService dataService,
+        IAnalyticsService analytics,
+        ISubscriptionService subscriptionService)
     {
         _authService = authService;
         _dataService = dataService;
         _analytics = analytics;
+        _subscriptionService = subscriptionService;
         Title = "My Haircuts";
 
         _analytics.TrackScreen(AnalyticsScreens.ProfileList);
@@ -58,10 +80,13 @@ public partial class ProfileListViewModel : BaseViewModel
             }
 
             IsEmpty = Profiles.Count == 0;
+
+            // Update subscription status
+            await UpdateSubscriptionStatusAsync();
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
         }
         finally
         {
@@ -80,7 +105,38 @@ public partial class ProfileListViewModel : BaseViewModel
     [RelayCommand]
     private async Task AddProfileAsync()
     {
+        var canAdd = await _subscriptionService.CanAddProfileAsync(Profiles.Count);
+
+        if (!canAdd)
+        {
+            var upgrade = await Shell.Current.DisplayAlertAsync(
+                "Profile Limit Reached",
+                $"Free accounts can only have {SubscriptionConfig.FreeProfileLimit} profiles. " +
+                "Upgrade to Premium for unlimited profiles!",
+                "Upgrade", "Cancel");
+
+            if (upgrade)
+            {
+                await Shell.Current.GoToAsync("premium");
+            }
+            return;
+        }
+
         await Shell.Current.GoToAsync("addProfile");
+    }
+
+    private async Task UpdateSubscriptionStatusAsync()
+    {
+        var isPremium = _subscriptionService.IsPremium;
+        ShowUpgradeBanner = !isPremium;
+        ShowAds = !isPremium;
+        RemainingProfiles = isPremium ? -1 : SubscriptionConfig.FreeProfileLimit - Profiles.Count;
+    }
+
+    [RelayCommand]
+    private async Task GoToPremiumAsync()
+    {
+        await Shell.Current.GoToAsync("premium");
     }
 
     [RelayCommand]
@@ -113,7 +169,7 @@ public partial class ProfileListViewModel : BaseViewModel
         if (profile == null)
             return;
 
-        var confirm = await Shell.Current.DisplayAlert(
+        var confirm = await Shell.Current.DisplayAlertAsync(
             "Delete Profile",
             $"Are you sure you want to delete \"{profile.Name}\"?",
             "Delete", "Cancel");

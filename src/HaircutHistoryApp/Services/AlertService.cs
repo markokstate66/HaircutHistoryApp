@@ -41,7 +41,7 @@ public class AlertService : IAlertService
         if (Shell.Current?.CurrentPage == null)
             return false;
 
-        return await Shell.Current.CurrentPage.DisplayAlert(
+        return await Shell.Current.CurrentPage.DisplayAlertAsync(
             title ?? "Confirm",
             message,
             accept,
@@ -69,7 +69,7 @@ public class AlertService : IAlertService
         if (Shell.Current?.CurrentPage == null)
             return;
 
-        await Shell.Current.CurrentPage.DisplayAlert(title, message, cancel);
+        await Shell.Current.CurrentPage.DisplayAlertAsync(title, message, cancel);
     }
 
     private static string GetUserFriendlyMessage(Exception exception, string? context)

@@ -45,7 +45,7 @@ public partial class QRScanViewModel : BaseViewModel
         var sessionId = _qrService.ParseQRContent(qrContent);
         if (string.IsNullOrEmpty(sessionId))
         {
-            await Shell.Current.DisplayAlert("Invalid Code", "The scanned code is not valid.", "OK");
+            await Shell.Current.DisplayAlertAsync("Invalid Code", "The scanned code is not valid.", "OK");
             ResetScanner();
             return;
         }
@@ -68,7 +68,7 @@ public partial class QRScanViewModel : BaseViewModel
     {
         if (string.IsNullOrWhiteSpace(ManualCode))
         {
-            await Shell.Current.DisplayAlert("Validation", "Please enter a share code.", "OK");
+            await Shell.Current.DisplayAlertAsync("Validation", "Please enter a share code.", "OK");
             return;
         }
 
@@ -89,7 +89,7 @@ public partial class QRScanViewModel : BaseViewModel
 
             if (profile == null || session == null)
             {
-                await Shell.Current.DisplayAlert("Not Found",
+                await Shell.Current.DisplayAlertAsync("Not Found",
                     "This share code is invalid or has expired.", "OK");
                 ResetScanner();
                 return;

@@ -7,15 +7,18 @@ public class PlayFabAuthService : IAuthService
 {
     private readonly IPlayFabService _playFabService;
     private readonly IProfilePictureService _profilePictureService;
+    private readonly ILogService _log;
     private User? _currentUser;
+    private const string Tag = "PlayFabAuthService";
 
     public User? CurrentUser => _currentUser;
     public bool IsAuthenticated => _playFabService.IsLoggedIn && _currentUser != null;
 
-    public PlayFabAuthService(IPlayFabService playFabService, IProfilePictureService profilePictureService)
+    public PlayFabAuthService(IPlayFabService playFabService, IProfilePictureService profilePictureService, ILogService logService)
     {
         _playFabService = playFabService;
         _profilePictureService = profilePictureService;
+        _log = logService;
     }
 
     public async Task<(bool Success, string? Error)> SignUpAsync(string email, string password, string displayName, UserMode mode, string? shopName = null)
@@ -316,8 +319,9 @@ public class PlayFabAuthService : IAuthService
         {
             return JsonConvert.DeserializeObject<User>(json);
         }
-        catch
+        catch (Exception ex)
         {
+            _log.Error("Failed to deserialize user profile", Tag, ex);
             return null;
         }
     }

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HaircutHistoryApp.ViewModels"
+             xmlns:models="clr-namespace:HaircutHistoryApp.Models"
+             x:Class="HaircutHistoryApp.Views.PremiumPage"
+             x:DataType="vm:PremiumViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Close" Command="{Binding CloseCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Already Premium Banner -->
+            <Frame Padding="20"
+                   BackgroundColor="{StaticResource Success}"
+                   BorderColor="Transparent"
+                   CornerRadius="12"
+                   IsVisible="{Binding IsPremium}">
+                <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Label Text="You're Premium!"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                    <Label Text="You have access to all premium features"
+                           FontSize="14"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{Binding ExpirationDate, StringFormat='Renews: {0:MMM dd, yyyy}'}"
+                           FontSize="12"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           IsVisible="{Binding ExpirationDate, Converter={StaticResource StringToBoolConverter}}"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Premium Features List -->
+            <Frame Padding="20"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
+                   BorderColor="Transparent"
+                   CornerRadius="12"
+                   IsVisible="{Binding IsPremium, Converter={StaticResource InvertedBoolConverter}}">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Premium Features"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+
+                    <CollectionView ItemsSource="{Binding PremiumFeatures}"
+                                    SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <HorizontalStackLayout Spacing="12" Padding="0,8">
+                                    <Frame WidthRequest="24"
+                                           HeightRequest="24"
+                                           CornerRadius="12"
+                                           Padding="0"
+                                           BackgroundColor="{StaticResource Success}"
+                                           BorderColor="Transparent">
+                                        <Label Text="✓"
+                                               FontSize="14"
+                                               TextColor="White"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Frame>
+                                    <Label Text="{Binding .}"
+                                           FontSize="16"
+                                           VerticalOptions="Center"
+                                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                                </HorizontalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Subscription Options -->
+            <Frame Padding="20"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
+                   BorderColor="Transparent"
+                   CornerRadius="12"
+                   IsVisible="{Binding IsPremium, Converter={StaticResource InvertedBoolConverter}}">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Choose Your Plan"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+
+                    <CollectionView ItemsSource="{Binding Products}"
+                                    SelectionMode="Single"
+                                    SelectedItem="{Binding SelectedProduct}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:ProductInfo">
+                                <Frame Padding="15"
+                                       Margin="0,5"
+                                       BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
+                                       BorderColor="{StaticResource Primary}"
+                                       CornerRadius="10">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <VerticalStackLayout>
+                                            <Label Text="{Binding Name}"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                                            <Label Text="{Binding Description}"
+                                                   FontSize="12"
+                                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Price}"
+                                               FontSize="18"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource Primary}"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!-- Fallback when no products loaded -->
+                    <Label Text="Loading subscription options..."
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                           HorizontalOptions="Center"
+                           IsVisible="{Binding Products.Count, Converter={StaticResource IntToBoolConverter}, ConverterParameter=invert}"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Purchase Button -->
+            <Button Text="Subscribe Now"
+                    Command="{Binding PurchaseCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    HeightRequest="50"
+                    IsVisible="{Binding IsPremium, Converter={StaticResource InvertedBoolConverter}}"
+                    IsEnabled="{Binding IsNotBusy}"/>
+
+            <!-- Restore Purchases -->
+            <Button Text="{Binding IsRestoring, Converter={StaticResource BoolToModeConverter}, ConverterParameter='Restoring...|Restore Purchases'}"
+                    Command="{Binding RestorePurchasesCommand}"
+                    Style="{StaticResource SecondaryButton}"
+                    IsVisible="{Binding IsPremium, Converter={StaticResource InvertedBoolConverter}}"
+                    IsEnabled="{Binding IsRestoring, Converter={StaticResource InvertedBoolConverter}}"/>
+
+            <!-- Legal Text -->
+            <Label Text="Subscriptions automatically renew unless cancelled at least 24 hours before the end of the current period. You can manage and cancel subscriptions in your device's account settings. By subscribing, you agree to our Terms of Service and Privacy Policy."
+                   FontSize="10"
+                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="{Binding IsPremium, Converter={StaticResource InvertedBoolConverter}}"
+                   Margin="0,10"/>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{StaticResource Primary}"
+                               HeightRequest="40"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

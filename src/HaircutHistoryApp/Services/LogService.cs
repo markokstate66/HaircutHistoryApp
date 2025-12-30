@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text;
+using HaircutHistoryApp.Services.Analytics;
 
 namespace HaircutHistoryApp.Services;
 

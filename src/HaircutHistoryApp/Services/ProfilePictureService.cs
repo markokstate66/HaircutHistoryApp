@@ -123,7 +123,7 @@ public class ProfilePictureService : IProfilePictureService
         if (fileInfo.Length > AzureStorageConfig.MaxImageSizeBytes)
         {
             _log.Warning($"File too large: {fileInfo.Length} bytes (max: {AzureStorageConfig.MaxImageSizeBytes})", Tag);
-            await Shell.Current.DisplayAlert("Image Too Large",
+            await Shell.Current.DisplayAlertAsync("Image Too Large",
                 "Please select an image smaller than 5 MB.", "OK");
             return null;
         }
@@ -132,7 +132,7 @@ public class ProfilePictureService : IProfilePictureService
         var contentType = GetContentType(localPath);
         if (!AzureStorageConfig.AllowedContentTypes.Contains(contentType))
         {
-            await Shell.Current.DisplayAlert("Invalid Format",
+            await Shell.Current.DisplayAlertAsync("Invalid Format",
                 "Please select a JPEG, PNG, or WebP image.", "OK");
             return null;
         }
@@ -219,11 +219,12 @@ public class ProfilePictureService : IProfilePictureService
     {
         try
         {
-            var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions
+            var results = await MediaPicker.PickPhotosAsync(new MediaPickerOptions
             {
                 Title = "Select Profile Picture"
             });
 
+            var result = results?.FirstOrDefault();
             if (result != null)
             {
                 return await SaveTempImageAsync(result);
@@ -231,13 +232,13 @@ public class ProfilePictureService : IProfilePictureService
         }
         catch (PermissionException)
         {
-            await Shell.Current.DisplayAlert("Permission Denied",
+            await Shell.Current.DisplayAlertAsync("Permission Denied",
                 "Please grant photo library access in settings.", "OK");
         }
         catch (Exception ex)
         {
             _log.Error("Failed to pick profile picture", Tag, ex);
-            await Shell.Current.DisplayAlert("Error",
+            await Shell.Current.DisplayAlertAsync("Error",
                 "Failed to select image. Please try again.", "OK");
         }
 
@@ -250,7 +251,7 @@ public class ProfilePictureService : IProfilePictureService
         {
             if (!MediaPicker.IsCaptureSupported)
             {
-                await Shell.Current.DisplayAlert("Not Supported",
+                await Shell.Current.DisplayAlertAsync("Not Supported",
                     "Camera capture is not supported on this device.", "OK");
                 return null;
             }
@@ -267,13 +268,13 @@ public class ProfilePictureService : IProfilePictureService
         }
         catch (PermissionException)
         {
-            await Shell.Current.DisplayAlert("Permission Denied",
+            await Shell.Current.DisplayAlertAsync("Permission Denied",
                 "Please grant camera access in settings.", "OK");
         }
         catch (Exception ex)
         {
             _log.Error("Failed to take profile picture", Tag, ex);
-            await Shell.Current.DisplayAlert("Error",
+            await Shell.Current.DisplayAlertAsync("Error",
                 "Failed to take photo. Please try again.", "OK");
         }
 

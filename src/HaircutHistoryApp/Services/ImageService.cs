@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 
@@ -8,19 +10,20 @@ public class ImageService : IImageService
     private readonly BlobContainerClient? _containerClient;
     private readonly string _localImagePath;
     private readonly string _pendingUploadsPath;
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogService _log;
 
     private const string Tag = "ImageService";
+    private const string HttpClientName = "ImageService";
 
     public bool IsCloudStorageEnabled => _containerClient != null;
 
-    public ImageService(ILogService logService)
+    public ImageService(ILogService logService, IHttpClientFactory httpClientFactory)
     {
         _log = logService;
+        _httpClientFactory = httpClientFactory;
         _localImagePath = Path.Combine(FileSystem.AppDataDirectory, "images");
         _pendingUploadsPath = Path.Combine(FileSystem.AppDataDirectory, "pending_uploads.json");
-        _httpClient = new HttpClient();
 
         // Initialize Azure Blob Storage client if configured
         if (!string.IsNullOrEmpty(AzureStorageConfig.ConnectionString) &&
@@ -48,11 +51,12 @@ public class ImageService : IImageService
     {
         try
         {
-            var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions
+            var results = await MediaPicker.PickPhotosAsync(new MediaPickerOptions
             {
                 Title = "Select a haircut photo"
             });
 
+            var result = results?.FirstOrDefault();
             if (result != null)
             {
                 return await SaveImageLocallyAsync(result);
@@ -60,13 +64,13 @@ public class ImageService : IImageService
         }
         catch (PermissionException)
         {
-            await Shell.Current.DisplayAlert("Permission Denied",
+            await Shell.Current.DisplayAlertAsync("Permission Denied",
                 "Please grant photo library access in settings.", "OK");
         }
         catch (Exception ex)
         {
             _log.Error("Failed to pick image", Tag, ex);
-            await Shell.Current.DisplayAlert("Error",
+            await Shell.Current.DisplayAlertAsync("Error",
                 "Failed to select image. Please try again.", "OK");
         }
 
@@ -79,7 +83,7 @@ public class ImageService : IImageService
         {
             if (!MediaPicker.IsCaptureSupported)
             {
-                await Shell.Current.DisplayAlert("Not Supported",
+                await Shell.Current.DisplayAlertAsync("Not Supported",
                     "Camera capture is not supported on this device.", "OK");
                 return null;
             }
@@ -96,13 +100,13 @@ public class ImageService : IImageService
         }
         catch (PermissionException)
         {
-            await Shell.Current.DisplayAlert("Permission Denied",
+            await Shell.Current.DisplayAlertAsync("Permission Denied",
                 "Please grant camera access in settings.", "OK");
         }
         catch (Exception ex)
         {
             _log.Error("Failed to take photo", Tag, ex);
-            await Shell.Current.DisplayAlert("Error",
+            await Shell.Current.DisplayAlertAsync("Error",
                 "Failed to take photo. Please try again.", "OK");
         }
 
@@ -138,7 +142,7 @@ public class ImageService : IImageService
             if (fileInfo.Length > AzureStorageConfig.MaxImageSizeBytes)
             {
                 _log.Warning($"File too large: {fileInfo.Length} bytes (max: {AzureStorageConfig.MaxImageSizeBytes})", Tag);
-                await Shell.Current.DisplayAlert("Image Too Large",
+                await Shell.Current.DisplayAlertAsync("Image Too Large",
                     "Please select an image smaller than 5 MB.", "OK");
                 return null;
             }
@@ -148,7 +152,7 @@ public class ImageService : IImageService
             if (!AzureStorageConfig.AllowedContentTypes.Contains(contentType))
             {
                 _log.Warning($"Invalid content type: {contentType}", Tag);
-                await Shell.Current.DisplayAlert("Invalid Format",
+                await Shell.Current.DisplayAlertAsync("Invalid Format",
                     "Please select a JPEG, PNG, or WebP image.", "OK");
                 return null;
             }
@@ -249,7 +253,8 @@ public class ImageService : IImageService
                 Directory.CreateDirectory(cacheDir);
             }
 
-            using var response = await _httpClient.GetAsync(imageUrl);
+            using var httpClient = _httpClientFactory.CreateClient(HttpClientName);
+            using var response = await httpClient.GetAsync(imageUrl);
             response.EnsureSuccessStatusCode();
 
             using var stream = await response.Content.ReadAsStreamAsync();
@@ -379,12 +384,20 @@ public class ImageService : IImageService
 
     private string GetCachedPath(string url)
     {
-        var hash = url.GetHashCode().ToString("X8");
+        // Use SHA256 for deterministic hash across app restarts and platforms
+        var hash = ComputeSha256Hash(url);
         var extension = Path.GetExtension(new Uri(url).AbsolutePath);
         if (string.IsNullOrEmpty(extension))
             extension = ".jpg";
 
         return Path.Combine(_localImagePath, "cache", $"{hash}{extension}");
+    }
+
+    private static string ComputeSha256Hash(string input)
+    {
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(input));
+        // Take first 16 characters (64 bits) for a reasonable cache key length
+        return Convert.ToHexString(bytes)[..16];
     }
 
     private async Task AddToPendingUploadsAsync(string localPath, string userId, string profileId)
