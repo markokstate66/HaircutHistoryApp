@@ -27,7 +27,7 @@ public partial class PremiumViewModel : BaseViewModel
 
     public List<string> PremiumFeatures { get; } = new()
     {
-        "Unlimited haircut profiles",
+        "Up to 5 haircut profiles",
         "Attach reference photos to profiles",
         "No advertisements",
         "Cloud backup of all data",
@@ -59,6 +59,25 @@ public partial class PremiumViewModel : BaseViewModel
                 Products.Add(product);
             }
 
+            // Add placeholder products for non-mobile platforms (Windows)
+            if (Products.Count == 0)
+            {
+                Products.Add(new ProductInfo
+                {
+                    ProductId = "com.haircuthistory.premium.monthly",
+                    Name = "Monthly Premium",
+                    Description = "Billed monthly",
+                    Price = "$2.99/month"
+                });
+                Products.Add(new ProductInfo
+                {
+                    ProductId = "com.haircuthistory.premium.yearly",
+                    Name = "Yearly Premium",
+                    Description = "Save 50% - Best value!",
+                    Price = "$17.99/year"
+                });
+            }
+
             // Default to first product (usually monthly)
             SelectedProduct = Products.FirstOrDefault();
         }, "Loading subscription options...");
@@ -78,6 +97,14 @@ public partial class PremiumViewModel : BaseViewModel
             await Shell.Current.DisplayAlertAsync("Select a Plan", "Please select a subscription plan to continue.", "OK");
             return;
         }
+
+#if WINDOWS
+        await Shell.Current.DisplayAlertAsync(
+            "Purchase on Mobile",
+            "In-app purchases are only available on the iOS and Android versions of the app. Please download the app on your mobile device to subscribe.",
+            "OK");
+        return;
+#endif
 
         await ExecuteAsync(async () =>
         {

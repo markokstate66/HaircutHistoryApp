@@ -42,9 +42,15 @@ public class IntToBoolConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
+        var result = false;
         if (value is int intValue)
-            return intValue > 0;
-        return false;
+            result = intValue > 0;
+
+        // Support invert parameter
+        if (parameter is string param && param.Equals("invert", StringComparison.OrdinalIgnoreCase))
+            return !result;
+
+        return result;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
