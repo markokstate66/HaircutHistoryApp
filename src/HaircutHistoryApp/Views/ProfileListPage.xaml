@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:HaircutHistoryApp.ViewModels"
              xmlns:models="clr-namespace:HaircutHistoryApp.Models"
-             xmlns:mtadmob="clr-namespace:Plugin.MauiMTAdmob.Controls;assembly=Plugin.MauiMTAdmob"
              x:Class="HaircutHistoryApp.Views.ProfileListPage"
              x:DataType="vm:ProfileListViewModel"
              Title="{Binding Title}"
@@ -90,30 +89,49 @@
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileListViewModel}}, Path=ViewProfileCommand}"
                                                     CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
-                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                            <Grid ColumnDefinitions="60,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12">
+                                <!-- Thumbnail Image -->
+                                <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+                                        StrokeShape="RoundRectangle 8"
+                                        Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
+                                        WidthRequest="60"
+                                        HeightRequest="60"
+                                        VerticalOptions="Start">
+                                    <Image Source="{Binding ThumbnailUrl}"
+                                           Aspect="AspectFill"
+                                           IsVisible="{Binding ThumbnailUrl, Converter={StaticResource StringToBoolConverter}}"/>
+                                    <Label Text="S"
+                                           FontSize="24"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
+                                           IsVisible="{Binding ThumbnailUrl, Converter={StaticResource StringToBoolConverter}, ConverterParameter=invert}"/>
+                                </Border>
+
                                 <!-- Profile Name -->
-                                <Label Grid.Row="0" Grid.Column="0"
+                                <Label Grid.Row="0" Grid.Column="1"
                                        Text="{Binding Name}"
                                        FontSize="18"
                                        FontAttributes="Bold"
                                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
 
                                 <!-- Favorite Indicator -->
-                                <Label Grid.Row="0" Grid.Column="1"
+                                <Label Grid.Row="0" Grid.Column="2"
                                        Text="*"
                                        IsVisible="{Binding IsFavorite}"
                                        FontSize="16"
                                        TextColor="{StaticResource Warning}"/>
 
                                 <!-- Summary -->
-                                <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                                        Text="{Binding DisplaySummary}"
                                        FontSize="14"
                                        TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                        Margin="0,5,0,0"/>
 
                                 <!-- Action Buttons -->
-                                <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
                                                       Spacing="10" Margin="0,15,0,0">
                                     <Button Text="Share"
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileListViewModel}}, Path=ShareProfileCommand}"
@@ -158,10 +176,10 @@
                          VerticalOptions="Center"
                          HorizontalOptions="Center"/>
 
-        <!-- Ad Banner (for free users) -->
-        <mtadmob:MTAdView Grid.Row="2"
-                          AdsId="{Binding BannerAdUnitId}"
-                          HeightRequest="50"
-                          IsVisible="{Binding ShowAds}"/>
+        <!-- Ad Banner (for free users - mobile only) -->
+        <ContentView x:Name="AdBannerContainer"
+                     Grid.Row="2"
+                     HeightRequest="50"
+                     IsVisible="{Binding ShowAds}"/>
     </Grid>
 </ContentPage>

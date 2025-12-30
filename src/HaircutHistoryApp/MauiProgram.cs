@@ -4,8 +4,10 @@ using HaircutHistoryApp.Services.Analytics;
 using HaircutHistoryApp.ViewModels;
 using HaircutHistoryApp.Views;
 using Microsoft.Extensions.Logging;
-using Plugin.MauiMTAdmob;
 using ZXing.Net.Maui.Controls;
+#if ANDROID || IOS
+using Plugin.MauiMTAdmob;
+#endif
 
 namespace HaircutHistoryApp;
 
@@ -18,7 +20,9 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
             .UseBarcodeReader()
+#if ANDROID || IOS
             .UseMauiMTAdmob()
+#endif
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

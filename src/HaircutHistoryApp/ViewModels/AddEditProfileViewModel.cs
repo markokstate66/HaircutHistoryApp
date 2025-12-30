@@ -255,6 +255,10 @@ public partial class AddEditProfileViewModel : BaseViewModel
             profile.LocalImagePaths = Images.ToList();
             profile.UpdatedAt = DateTime.UtcNow;
 
+            // Set thumbnail from first available image
+            profile.ThumbnailUrl = profile.ImageUrls.FirstOrDefault()
+                ?? profile.LocalImagePaths.FirstOrDefault();
+
             var success = await _dataService.SaveProfileAsync(profile);
 
             if (success)

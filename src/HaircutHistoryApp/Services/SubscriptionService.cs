@@ -1,6 +1,8 @@
 using HaircutHistoryApp.Models;
 using Newtonsoft.Json;
+#if ANDROID || IOS
 using Plugin.InAppBilling;
+#endif
 using AppPurchaseState = HaircutHistoryApp.Models.PurchaseState;
 
 namespace HaircutHistoryApp.Services;
@@ -31,7 +33,9 @@ public class SubscriptionService : ISubscriptionService
         try
         {
             await GetSubscriptionInfoAsync();
+#if ANDROID || IOS
             await ValidateAndSyncSubscriptionAsync();
+#endif
             _logService.Info($"SubscriptionService initialized. Tier: {CurrentTier}");
         }
         catch (Exception ex)
@@ -67,7 +71,7 @@ public class SubscriptionService : ISubscriptionService
     {
         var subscription = await GetSubscriptionInfoAsync();
         if (subscription.IsActive)
-            return true;
+            return currentProfileCount < SubscriptionConfig.PremiumProfileLimit;
 
         return currentProfileCount < SubscriptionConfig.FreeProfileLimit;
     }
@@ -82,6 +86,7 @@ public class SubscriptionService : ISubscriptionService
     {
         var products = new List<ProductInfo>();
 
+#if ANDROID || IOS
         try
         {
             var connected = await CrossInAppBilling.Current.ConnectAsync();
@@ -118,12 +123,17 @@ public class SubscriptionService : ISubscriptionService
         {
             await DisconnectBillingAsync();
         }
+#else
+        _logService.Info("In-app purchases not available on this platform");
+        await Task.CompletedTask;
+#endif
 
         return products;
     }
 
     public async Task<PurchaseResult> PurchasePremiumAsync(string productId)
     {
+#if ANDROID || IOS
         try
         {
             var connected = await CrossInAppBilling.Current.ConnectAsync();
@@ -214,10 +224,21 @@ public class SubscriptionService : ISubscriptionService
         {
             await DisconnectBillingAsync();
         }
+#else
+        await Task.CompletedTask;
+        _logService.Warning("In-app purchases not available on this platform");
+        return new PurchaseResult
+        {
+            Success = false,
+            Error = "In-app purchases are not available on this platform",
+            State = AppPurchaseState.Failed
+        };
+#endif
     }
 
     public async Task<PurchaseResult> RestorePurchasesAsync()
     {
+#if ANDROID || IOS
         try
         {
             var connected = await CrossInAppBilling.Current.ConnectAsync();
@@ -288,6 +309,16 @@ public class SubscriptionService : ISubscriptionService
         {
             await DisconnectBillingAsync();
         }
+#else
+        await Task.CompletedTask;
+        _logService.Warning("In-app purchases not available on this platform");
+        return new PurchaseResult
+        {
+            Success = false,
+            Error = "In-app purchases are not available on this platform",
+            State = AppPurchaseState.Failed
+        };
+#endif
     }
 
     public async Task<bool> ValidateAndSyncSubscriptionAsync()
@@ -307,6 +338,7 @@ public class SubscriptionService : ISubscriptionService
                 await SaveSubscriptionAsync(_cachedSubscription);
             }
 
+#if ANDROID || IOS
             // Try to validate with store
             try
             {
@@ -354,6 +386,7 @@ public class SubscriptionService : ISubscriptionService
                 // Store validation is optional, don't fail if it doesn't work
                 _logService.Warning($"Could not validate with store: {ex.Message}");
             }
+#endif
 
             // Fire event if tier changed
             if (oldTier != CurrentTier)
@@ -402,6 +435,7 @@ public class SubscriptionService : ISubscriptionService
         }
     }
 
+#if ANDROID || IOS
     private async Task DisconnectBillingAsync()
     {
         try
@@ -436,4 +470,5 @@ public class SubscriptionService : ISubscriptionService
             _ => "An unexpected error occurred"
         };
     }
+#endif
 }

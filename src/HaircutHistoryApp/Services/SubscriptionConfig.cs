@@ -30,13 +30,18 @@ public static class SubscriptionConfig
     };
 
     // ============================================
-    // FREE TIER LIMITS
+    // PROFILE LIMITS
     // ============================================
 
     /// <summary>
     /// Maximum number of haircut profiles for free tier users
     /// </summary>
-    public const int FreeProfileLimit = 5;
+    public const int FreeProfileLimit = 1;
+
+    /// <summary>
+    /// Maximum number of haircut profiles for premium tier users
+    /// </summary>
+    public const int PremiumProfileLimit = 5;
 
     // ============================================
     // PLAYFAB DATA KEYS

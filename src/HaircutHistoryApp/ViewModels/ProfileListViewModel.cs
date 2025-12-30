@@ -106,18 +106,29 @@ public partial class ProfileListViewModel : BaseViewModel
     private async Task AddProfileAsync()
     {
         var canAdd = await _subscriptionService.CanAddProfileAsync(Profiles.Count);
+        var isPremium = _subscriptionService.IsPremium;
 
         if (!canAdd)
         {
-            var upgrade = await Shell.Current.DisplayAlertAsync(
-                "Profile Limit Reached",
-                $"Free accounts can only have {SubscriptionConfig.FreeProfileLimit} profiles. " +
-                "Upgrade to Premium for unlimited profiles!",
-                "Upgrade", "Cancel");
-
-            if (upgrade)
+            if (isPremium)
             {
-                await Shell.Current.GoToAsync("premium");
+                await Shell.Current.DisplayAlertAsync(
+                    "Profile Limit Reached",
+                    $"You've reached the maximum of {SubscriptionConfig.PremiumProfileLimit} profiles.",
+                    "OK");
+            }
+            else
+            {
+                var upgrade = await Shell.Current.DisplayAlertAsync(
+                    "Profile Limit Reached",
+                    $"Free accounts can only have {SubscriptionConfig.FreeProfileLimit} profile. " +
+                    $"Upgrade to Premium for up to {SubscriptionConfig.PremiumProfileLimit} profiles!",
+                    "Upgrade", "Cancel");
+
+                if (upgrade)
+                {
+                    await Shell.Current.GoToAsync("premium");
+                }
             }
             return;
         }
@@ -130,7 +141,11 @@ public partial class ProfileListViewModel : BaseViewModel
         var isPremium = _subscriptionService.IsPremium;
         ShowUpgradeBanner = !isPremium;
         ShowAds = !isPremium;
-        RemainingProfiles = isPremium ? -1 : SubscriptionConfig.FreeProfileLimit - Profiles.Count;
+
+        if (isPremium)
+            RemainingProfiles = SubscriptionConfig.PremiumProfileLimit - Profiles.Count;
+        else
+            RemainingProfiles = SubscriptionConfig.FreeProfileLimit - Profiles.Count;
     }
 
     [RelayCommand]

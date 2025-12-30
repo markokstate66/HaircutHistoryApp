@@ -37,31 +37,15 @@ public static partial class InputValidator
     }
 
     /// <summary>
-    /// Validates a password for strength requirements.
+    /// Validates a password (PlayFab requires minimum 6 characters).
     /// </summary>
     public static (bool IsValid, string? Error) ValidatePassword(string? password)
     {
         if (string.IsNullOrEmpty(password))
             return (false, "Password is required");
 
-        if (password.Length < 8)
-            return (false, "Password must be at least 8 characters");
-
-        if (password.Length > 128)
-            return (false, "Password is too long");
-
-        bool hasUpper = password.Any(char.IsUpper);
-        bool hasLower = password.Any(char.IsLower);
-        bool hasDigit = password.Any(char.IsDigit);
-
-        if (!hasUpper || !hasLower || !hasDigit)
-            return (false, "Password must contain uppercase, lowercase, and a number");
-
-        // Check for common weak passwords
-        var lowerPassword = password.ToLowerInvariant();
-        string[] weakPasswords = { "password", "12345678", "qwerty", "letmein", "welcome" };
-        if (weakPasswords.Any(weak => lowerPassword.Contains(weak)))
-            return (false, "Password is too common. Please choose a stronger password");
+        if (password.Length < 6)
+            return (false, "Password must be at least 6 characters");
 
         return (true, null);
     }

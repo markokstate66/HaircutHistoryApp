@@ -23,7 +23,13 @@ public class StringToBoolConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return !string.IsNullOrEmpty(value as string);
+        var hasValue = !string.IsNullOrEmpty(value as string);
+
+        // Support invert parameter
+        if (parameter is string param && param.Equals("invert", StringComparison.OrdinalIgnoreCase))
+            return !hasValue;
+
+        return hasValue;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

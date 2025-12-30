@@ -9,6 +9,7 @@ public class HaircutProfile
     public List<HaircutMeasurement> Measurements { get; set; } = new();
     public List<string> ImageUrls { get; set; } = new();
     public List<string> LocalImagePaths { get; set; } = new();
+    public string? ThumbnailUrl { get; set; }
     public string GeneralNotes { get; set; } = string.Empty;
     public List<BarberNote> BarberNotes { get; set; } = new();
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

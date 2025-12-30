@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!-- Target iOS and Android for App Stores -->
-		<TargetFrameworks>net10.0-android;net10.0-ios</TargetFrameworks>
+		<!-- Target iOS, Android, and Windows -->
+		<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-windows10.0.19041.0</TargetFrameworks>
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>HaircutHistoryApp</RootNamespace>
@@ -23,6 +23,7 @@
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -54,12 +55,11 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="PlayFabAllSDK" Version="1.205.250718" />
 		<PackageReference Include="ZXing.Net.Maui.Controls" Version="0.7.0" />
-		<!-- In-App Purchases -->
-		<PackageReference Include="Plugin.InAppBilling" Version="7.1.0" />
 	</ItemGroup>
 
-	<!-- AdMob - Cross-platform MAUI plugin -->
-	<ItemGroup>
+	<!-- Mobile-only packages (In-App Purchases and AdMob) -->
+	<ItemGroup Condition="$(TargetFramework.Contains('-android')) OR $(TargetFramework.Contains('-ios'))">
+		<PackageReference Include="Plugin.InAppBilling" Version="7.1.0" />
 		<PackageReference Include="Plugin.MauiMTAdmob" Version="1.6.3" />
 	</ItemGroup>
 

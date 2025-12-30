@@ -23,6 +23,10 @@
                        Text="{Binding DisplayName}"
                        ReturnType="Next"
                        Style="{StaticResource EntryStyle}"/>
+                <Label Text="{Binding DisplayNameError}"
+                       TextColor="{StaticResource Danger}"
+                       FontSize="12"
+                       IsVisible="{Binding DisplayNameError, Converter={StaticResource StringToBoolConverter}}"/>
             </VerticalStackLayout>
 
             <!-- Email -->
@@ -33,6 +37,10 @@
                        Keyboard="Email"
                        ReturnType="Next"
                        Style="{StaticResource EntryStyle}"/>
+                <Label Text="{Binding EmailError}"
+                       TextColor="{StaticResource Danger}"
+                       FontSize="12"
+                       IsVisible="{Binding EmailError, Converter={StaticResource StringToBoolConverter}}"/>
             </VerticalStackLayout>
 
             <!-- Password -->
@@ -43,6 +51,10 @@
                        IsPassword="True"
                        ReturnType="Next"
                        Style="{StaticResource EntryStyle}"/>
+                <Label Text="{Binding PasswordError}"
+                       TextColor="{StaticResource Danger}"
+                       FontSize="12"
+                       IsVisible="{Binding PasswordError, Converter={StaticResource StringToBoolConverter}}"/>
             </VerticalStackLayout>
 
             <!-- Confirm Password -->
@@ -53,6 +65,10 @@
                        IsPassword="True"
                        ReturnType="Done"
                        Style="{StaticResource EntryStyle}"/>
+                <Label Text="{Binding ConfirmPasswordError}"
+                       TextColor="{StaticResource Danger}"
+                       FontSize="12"
+                       IsVisible="{Binding ConfirmPasswordError, Converter={StaticResource StringToBoolConverter}}"/>
             </VerticalStackLayout>
 
             <!-- Mode Selection -->
