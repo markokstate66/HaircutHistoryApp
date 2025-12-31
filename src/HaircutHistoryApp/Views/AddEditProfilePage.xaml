@@ -5,7 +5,7 @@
              x:Class="HaircutHistoryApp.Views.AddEditProfilePage"
              x:DataType="vm:AddEditProfileViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{StaticResource Background}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Save" Command="{Binding SaveCommand}"/>
@@ -16,21 +16,22 @@
 
             <!-- Basic Info -->
             <Frame Padding="15"
-                   BackgroundColor="{StaticResource Surface}"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                    BorderColor="Transparent"
                    CornerRadius="12">
                 <VerticalStackLayout Spacing="15">
-                    <Label Text="Profile Info" FontSize="18" FontAttributes="Bold"/>
+                    <Label Text="Profile Info" FontSize="18" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
 
                     <VerticalStackLayout Spacing="5">
-                        <Label Text="Profile Name *" FontSize="14" TextColor="{StaticResource Gray600}"/>
+                        <Label Text="Profile Name *" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                         <Entry Placeholder="e.g., My Regular Cut, Summer Style"
                                Text="{Binding ProfileName}"
                                Style="{StaticResource EntryStyle}"/>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="5">
-                        <Label Text="Description" FontSize="14" TextColor="{StaticResource Gray600}"/>
+                        <Label Text="Description" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                         <Editor Placeholder="Brief description of this style..."
                                 Text="{Binding Description}"
                                 HeightRequest="80"
@@ -41,13 +42,14 @@
 
             <!-- Photos -->
             <Frame Padding="15"
-                   BackgroundColor="{StaticResource Surface}"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                    BorderColor="Transparent"
                    CornerRadius="12">
                 <VerticalStackLayout Spacing="15">
-                    <Label Text="Reference Photos" FontSize="18" FontAttributes="Bold"/>
+                    <Label Text="Reference Photos" FontSize="18" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
                     <Label Text="Add photos to show your barber exactly what you want"
-                           FontSize="12" TextColor="{StaticResource Gray500}"/>
+                           FontSize="12" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
 
                     <!-- Image Gallery -->
                     <CollectionView ItemsSource="{Binding Images}"
@@ -101,7 +103,7 @@
 
             <!-- Measurements -->
             <Frame Padding="15"
-                   BackgroundColor="{StaticResource Surface}"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                    BorderColor="Transparent"
                    CornerRadius="12">
                 <VerticalStackLayout Spacing="15">
@@ -109,6 +111,7 @@
                         <Label Text="Measurements"
                                FontSize="18"
                                FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                HorizontalOptions="StartAndExpand"/>
                         <Button Text="+ Add Area"
                                 Command="{Binding AddMeasurementCommand}"
@@ -123,7 +126,7 @@
                             <DataTemplate x:DataType="vm:MeasurementEntry">
                                 <Frame Padding="12"
                                        Margin="0,0,0,10"
-                                       BackgroundColor="{StaticResource Background}"
+                                       BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
                                        BorderColor="Transparent"
                                        CornerRadius="8">
                                     <VerticalStackLayout Spacing="10">
@@ -131,6 +134,7 @@
                                             <Label Text="{Binding Area, StringFormat='{0} Area'}"
                                                    FontSize="14"
                                                    FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                                    HorizontalOptions="StartAndExpand"/>
                                             <Button Text="×"
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=RemoveMeasurementCommand}"
@@ -140,7 +144,7 @@
                                                     CornerRadius="15"
                                                     Padding="0"
                                                     BackgroundColor="Transparent"
-                                                    TextColor="{StaticResource Gray500}"/>
+                                                    TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"/>
                                         </HorizontalStackLayout>
 
                                         <!-- Area Picker -->
@@ -179,13 +183,14 @@
 
             <!-- General Notes -->
             <Frame Padding="15"
-                   BackgroundColor="{StaticResource Surface}"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                    BorderColor="Transparent"
                    CornerRadius="12">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="General Notes" FontSize="18" FontAttributes="Bold"/>
+                    <Label Text="General Notes" FontSize="18" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
                     <Label Text="Any other details your barber should know"
-                           FontSize="12" TextColor="{StaticResource Gray500}"/>
+                           FontSize="12" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                     <Editor Placeholder="e.g., I like my hair to fall naturally to the left, be careful around my cowlick..."
                             Text="{Binding GeneralNotes}"
                             HeightRequest="120"

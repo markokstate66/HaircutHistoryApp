@@ -58,9 +58,10 @@ public static class SubscriptionConfig
     // ============================================
 
     /// <summary>
-    /// AdMob Application ID for Android
+    /// AdMob Application ID for Android (test ID for development)
+    /// Replace with actual ID before release
     /// </summary>
-    public const string AdMobAppIdAndroid = "ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY";
+    public const string AdMobAppIdAndroid = "ca-app-pub-3940256099942544~3347511713";
 
     /// <summary>
     /// AdMob Application ID for iOS
