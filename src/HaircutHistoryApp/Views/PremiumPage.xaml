@@ -79,6 +79,38 @@
                 </VerticalStackLayout>
             </Frame>
 
+            <!-- Subscription Type Toggle (Client/Barber) -->
+            <Frame Padding="15"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
+                   BorderColor="Transparent"
+                   CornerRadius="12"
+                   IsVisible="{Binding IsPremium, Converter={StaticResource InvertedBoolConverter}}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="I am a..."
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                           HorizontalOptions="Center"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Button Text="Client"
+                                Command="{Binding SelectUserTypeCommand}"
+                                CommandParameter="Client"
+                                BackgroundColor="{Binding IsClientMode, Converter={StaticResource BoolToColorConverter}, ConverterParameter='Primary|Gray300'}"
+                                TextColor="{Binding IsClientMode, Converter={StaticResource BoolToColorConverter}, ConverterParameter='White|Gray600'}"
+                                CornerRadius="8"
+                                HeightRequest="45"/>
+                        <Button Grid.Column="1"
+                                Text="Barber/Stylist"
+                                Command="{Binding SelectUserTypeCommand}"
+                                CommandParameter="Barber"
+                                BackgroundColor="{Binding IsBarberMode, Converter={StaticResource BoolToColorConverter}, ConverterParameter='Primary|Gray300'}"
+                                TextColor="{Binding IsBarberMode, Converter={StaticResource BoolToColorConverter}, ConverterParameter='White|Gray600'}"
+                                CornerRadius="8"
+                                HeightRequest="45"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
             <!-- Subscription Options -->
             <Frame Padding="20"
                    BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
@@ -91,44 +123,103 @@
                            FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
 
-                    <CollectionView ItemsSource="{Binding Products}"
-                                    SelectionMode="Single"
-                                    SelectedItem="{Binding SelectedProduct}">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:ProductInfo">
-                                <Frame Padding="15"
-                                       Margin="0,5"
-                                       BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
-                                       BorderColor="{StaticResource Primary}"
-                                       CornerRadius="10">
-                                    <Grid ColumnDefinitions="*,Auto">
-                                        <VerticalStackLayout>
-                                            <Label Text="{Binding Name}"
-                                                   FontSize="16"
-                                                   FontAttributes="Bold"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-                                            <Label Text="{Binding Description}"
-                                                   FontSize="12"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
-                                        </VerticalStackLayout>
-                                        <Label Grid.Column="1"
-                                               Text="{Binding Price}"
-                                               FontSize="18"
+                    <!-- Monthly Option -->
+                    <Frame Padding="15"
+                           BackgroundColor="{Binding IsMonthlySelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter='PrimaryLight|Background'}"
+                           BorderColor="{Binding IsMonthlySelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter='Primary|Gray300'}"
+                           CornerRadius="10">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectPlanCommand}" CommandParameter="Monthly"/>
+                        </Frame.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <Frame WidthRequest="24"
+                                   HeightRequest="24"
+                                   CornerRadius="12"
+                                   Padding="0"
+                                   BackgroundColor="{Binding IsMonthlySelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter='Primary|Transparent'}"
+                                   BorderColor="{StaticResource Primary}">
+                                <Label Text="✓"
+                                       FontSize="14"
+                                       TextColor="White"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       IsVisible="{Binding IsMonthlySelected}"/>
+                            </Frame>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="{Binding MonthlyProduct.Name}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                                <Label Text="{Binding MonthlyProduct.Description}"
+                                       FontSize="12"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2"
+                                   Text="{Binding MonthlyProduct.Price}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"
+                                   VerticalOptions="Center"/>
+                        </Grid>
+                    </Frame>
+
+                    <!-- Yearly Option -->
+                    <Frame Padding="15"
+                           BackgroundColor="{Binding IsYearlySelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter='PrimaryLight|Background'}"
+                           BorderColor="{Binding IsYearlySelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter='Primary|Gray300'}"
+                           CornerRadius="10">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectPlanCommand}" CommandParameter="Yearly"/>
+                        </Frame.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <Frame WidthRequest="24"
+                                   HeightRequest="24"
+                                   CornerRadius="12"
+                                   Padding="0"
+                                   BackgroundColor="{Binding IsYearlySelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter='Primary|Transparent'}"
+                                   BorderColor="{StaticResource Primary}">
+                                <Label Text="✓"
+                                       FontSize="14"
+                                       TextColor="White"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       IsVisible="{Binding IsYearlySelected}"/>
+                            </Frame>
+                            <VerticalStackLayout Grid.Column="1">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label Text="{Binding YearlyProduct.Name}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                                    <Frame Padding="4,2"
+                                           BackgroundColor="{StaticResource Success}"
+                                           BorderColor="Transparent"
+                                           CornerRadius="4">
+                                        <Label Text="SAVE 50%"
+                                               FontSize="10"
                                                FontAttributes="Bold"
-                                               TextColor="{StaticResource Primary}"
-                                               VerticalOptions="Center"/>
-                                    </Grid>
-                                </Frame>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
+                                               TextColor="White"/>
+                                    </Frame>
+                                </HorizontalStackLayout>
+                                <Label Text="{Binding YearlyProduct.Description}"
+                                       FontSize="12"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2"
+                                   Text="{Binding YearlyProduct.Price}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"
+                                   VerticalOptions="Center"/>
+                        </Grid>
+                    </Frame>
 
                     <!-- Fallback when no products loaded -->
                     <Label Text="Loading subscription options..."
                            FontSize="14"
                            TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                            HorizontalOptions="Center"
-                           IsVisible="{Binding Products.Count, Converter={StaticResource IntToBoolConverter}, ConverterParameter=invert}"/>
+                           IsVisible="{Binding IsLoading}"/>
                 </VerticalStackLayout>
             </Frame>
 

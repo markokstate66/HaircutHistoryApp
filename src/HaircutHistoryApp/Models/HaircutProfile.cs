@@ -5,6 +5,7 @@ public class HaircutProfile
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string UserId { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
+    public string PersonName { get; set; } = string.Empty;  // Who this profile is for (e.g., "Ryder", "Mark")
     public string Description { get; set; } = string.Empty;
     public List<HaircutMeasurement> Measurements { get; set; } = new();
     public List<string> ImageUrls { get; set; } = new();

@@ -28,6 +28,7 @@
             <converters:BoolToAchievementBgConverter x:Key="BoolToAchievementBgConverter"/>
             <converters:ProgressToWidthConverter x:Key="ProgressToWidthConverter"/>
             <converters:ProgressToSmallWidthConverter x:Key="ProgressToSmallWidthConverter"/>
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
 
             <!-- Barcode Reader Options -->
             <zxing:BarcodeReaderOptions x:Key="BarcodeReaderOptions"

@@ -23,6 +23,9 @@ public partial class AddEditProfileViewModel : BaseViewModel
     private string _profileName = string.Empty;
 
     [ObservableProperty]
+    private string _personName = string.Empty;
+
+    [ObservableProperty]
     private string _description = string.Empty;
 
     [ObservableProperty]
@@ -98,6 +101,7 @@ public partial class AddEditProfileViewModel : BaseViewModel
             }
 
             ProfileName = profile.Name;
+            PersonName = profile.PersonName;
             Description = profile.Description;
             GeneralNotes = profile.GeneralNotes;
 
@@ -236,6 +240,7 @@ public partial class AddEditProfileViewModel : BaseViewModel
             }
 
             profile.Name = ProfileName;
+            profile.PersonName = PersonName;
             profile.Description = Description;
             profile.GeneralNotes = GeneralNotes;
 

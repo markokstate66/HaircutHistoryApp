@@ -31,6 +31,13 @@
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="5">
+                        <Label Text="Who is this for?" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                        <Entry Placeholder="e.g., Ryder, Mark, Clark"
+                               Text="{Binding PersonName}"
+                               Style="{StaticResource EntryStyle}"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="5">
                         <Label Text="Description" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                         <Editor Placeholder="Brief description of this style..."
                                 Text="{Binding Description}"
@@ -149,23 +156,23 @@
 
                                         <!-- Area Picker -->
                                         <Picker Title="Select Area"
-                                                SelectedItem="{Binding Area}"
                                                 ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=AvailableAreas}"
+                                                SelectedItem="{Binding Area, Mode=TwoWay}"
                                                 Style="{StaticResource PickerStyle}"/>
 
                                         <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                                             <!-- Guard Size -->
                                             <Picker Grid.Column="0"
                                                     Title="Guard Size"
-                                                    SelectedItem="{Binding GuardSize}"
                                                     ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=AvailableGuardSizes}"
+                                                    SelectedItem="{Binding GuardSize, Mode=TwoWay}"
                                                     Style="{StaticResource PickerStyle}"/>
 
                                             <!-- Technique -->
                                             <Picker Grid.Column="1"
                                                     Title="Technique"
-                                                    SelectedItem="{Binding Technique}"
                                                     ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=AvailableTechniques}"
+                                                    SelectedItem="{Binding Technique, Mode=TwoWay}"
                                                     Style="{StaticResource PickerStyle}"/>
                                         </Grid>
 

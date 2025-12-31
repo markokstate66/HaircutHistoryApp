@@ -109,12 +109,17 @@
                                            IsVisible="{Binding ThumbnailUrl, Converter={StaticResource StringToBoolConverter}, ConverterParameter=invert}"/>
                                 </Border>
 
-                                <!-- Profile Name -->
-                                <Label Grid.Row="0" Grid.Column="1"
-                                       Text="{Binding Name}"
-                                       FontSize="18"
-                                       FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                                <!-- Profile Name & Person -->
+                                <VerticalStackLayout Grid.Row="0" Grid.Column="1">
+                                    <Label Text="{Binding Name}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                                    <Label Text="{Binding PersonName, StringFormat='For: {0}'}"
+                                           FontSize="12"
+                                           TextColor="{StaticResource Secondary}"
+                                           IsVisible="{Binding PersonName, Converter={StaticResource StringToBoolConverter}}"/>
+                                </VerticalStackLayout>
 
                                 <!-- Favorite Indicator -->
                                 <Label Grid.Row="0" Grid.Column="2"

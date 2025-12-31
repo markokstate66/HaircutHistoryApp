@@ -23,6 +23,11 @@
                                FontSize="24"
                                FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                        <Label Text="{Binding Profile.PersonName, StringFormat='For: {0}'}"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Secondary}"
+                               IsVisible="{Binding Profile.PersonName, Converter={StaticResource StringToBoolConverter}}"/>
                         <Label Text="{Binding Profile.Description}"
                                FontSize="14"
                                TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"

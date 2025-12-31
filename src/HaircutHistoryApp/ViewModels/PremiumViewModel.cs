@@ -23,7 +23,28 @@ public partial class PremiumViewModel : BaseViewModel
     private bool _isRestoring;
 
     [ObservableProperty]
+    private bool _isLoading;
+
+    [ObservableProperty]
     private DateTime? _expirationDate;
+
+    [ObservableProperty]
+    private bool _isClientMode = true;
+
+    [ObservableProperty]
+    private bool _isBarberMode;
+
+    [ObservableProperty]
+    private bool _isMonthlySelected = true;
+
+    [ObservableProperty]
+    private bool _isYearlySelected;
+
+    [ObservableProperty]
+    private ProductInfo? _monthlyProduct;
+
+    [ObservableProperty]
+    private ProductInfo? _yearlyProduct;
 
     public List<string> PremiumFeatures { get; } = new()
     {
@@ -41,9 +62,26 @@ public partial class PremiumViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private void SelectUserType(string userType)
+    {
+        IsClientMode = userType == "Client";
+        IsBarberMode = userType == "Barber";
+    }
+
+    [RelayCommand]
+    private void SelectPlan(string plan)
+    {
+        IsMonthlySelected = plan == "Monthly";
+        IsYearlySelected = plan == "Yearly";
+        SelectedProduct = IsMonthlySelected ? MonthlyProduct : YearlyProduct;
+    }
+
+    [RelayCommand]
     private async Task LoadProductsAsync()
     {
-        await ExecuteAsync(async () =>
+        IsLoading = true;
+
+        try
         {
             IsPremium = _subscriptionService.IsPremium;
             ExpirationDate = _subscriptionService.CurrentSubscription?.ExpirationDate;
@@ -78,9 +116,29 @@ public partial class PremiumViewModel : BaseViewModel
                 });
             }
 
-            // Default to first product (usually monthly)
-            SelectedProduct = Products.FirstOrDefault();
-        }, "Loading subscription options...");
+            // Set monthly and yearly products
+            MonthlyProduct = Products.FirstOrDefault(p =>
+                p.ProductId.Contains("monthly", StringComparison.OrdinalIgnoreCase) ||
+                p.Name.Contains("Monthly", StringComparison.OrdinalIgnoreCase));
+
+            YearlyProduct = Products.FirstOrDefault(p =>
+                p.ProductId.Contains("yearly", StringComparison.OrdinalIgnoreCase) ||
+                p.ProductId.Contains("annual", StringComparison.OrdinalIgnoreCase) ||
+                p.Name.Contains("Year", StringComparison.OrdinalIgnoreCase));
+
+            // Fallback if not found
+            MonthlyProduct ??= Products.FirstOrDefault();
+            YearlyProduct ??= Products.Skip(1).FirstOrDefault() ?? MonthlyProduct;
+
+            // Default to monthly selected
+            IsMonthlySelected = true;
+            IsYearlySelected = false;
+            SelectedProduct = MonthlyProduct;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     [RelayCommand]

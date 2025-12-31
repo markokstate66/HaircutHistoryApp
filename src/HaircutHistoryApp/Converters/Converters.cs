@@ -226,3 +226,56 @@ public class ProgressToSmallWidthConverter : IValueConverter
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => throw new NotImplementedException();
 }
+
+/// <summary>
+/// Converts a boolean to a color based on parameter.
+/// Parameter format: "TrueColor|FalseColor"
+/// Colors can be resource names (Primary, Secondary, etc.) or hex values.
+/// </summary>
+public class BoolToColorConverter : IValueConverter
+{
+    private static readonly Dictionary<string, Color> ColorMap = new(StringComparer.OrdinalIgnoreCase)
+    {
+        { "Primary", Color.FromArgb("#6366F1") },
+        { "PrimaryLight", Color.FromArgb("#E0E7FF") },
+        { "Secondary", Color.FromArgb("#EC4899") },
+        { "Success", Color.FromArgb("#10B981") },
+        { "Warning", Color.FromArgb("#F59E0B") },
+        { "Danger", Color.FromArgb("#EF4444") },
+        { "Gray100", Color.FromArgb("#F1F5F9") },
+        { "Gray200", Color.FromArgb("#E2E8F0") },
+        { "Gray300", Color.FromArgb("#CBD5E1") },
+        { "Gray400", Color.FromArgb("#94A3B8") },
+        { "Gray500", Color.FromArgb("#64748B") },
+        { "Gray600", Color.FromArgb("#475569") },
+        { "Gray700", Color.FromArgb("#334155") },
+        { "White", Colors.White },
+        { "Black", Colors.Black },
+        { "Transparent", Colors.Transparent },
+        { "Background", Color.FromArgb("#F8FAFC") }
+    };
+
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is not bool boolValue || parameter is not string paramStr)
+            return Colors.Transparent;
+
+        var colors = paramStr.Split('|');
+        if (colors.Length != 2)
+            return Colors.Transparent;
+
+        var colorName = boolValue ? colors[0].Trim() : colors[1].Trim();
+
+        if (ColorMap.TryGetValue(colorName, out var color))
+            return color;
+
+        // Try to parse as hex
+        if (colorName.StartsWith("#"))
+            return Color.FromArgb(colorName);
+
+        return Colors.Transparent;
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
