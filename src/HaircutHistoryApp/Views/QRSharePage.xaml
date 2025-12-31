@@ -5,7 +5,7 @@
              x:Class="HaircutHistoryApp.Views.QRSharePage"
              x:DataType="vm:QRShareViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{StaticResource Background}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20" VerticalOptions="Center">
@@ -15,10 +15,11 @@
                 <Label Text="Share Your Haircut"
                        FontSize="24"
                        FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                        HorizontalOptions="Center"/>
                 <Label Text="{Binding Profile.Name}"
                        FontSize="16"
-                       TextColor="{StaticResource Gray500}"
+                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                        HorizontalOptions="Center"/>
             </VerticalStackLayout>
 
@@ -38,13 +39,14 @@
 
                     <!-- Share Code -->
                     <Frame Padding="10"
-                           BackgroundColor="{StaticResource Background}"
+                           BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
                            BorderColor="Transparent"
                            CornerRadius="8">
                         <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
                             <Label Text="{Binding ShareCode}"
                                    FontSize="28"
                                    FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                    LetterSpacing="3"
                                    VerticalOptions="Center"/>
                             <Button Text="📋"
@@ -61,7 +63,7 @@
             <!-- Instructions -->
             <Label Text="Show this QR code to your barber or share the code above"
                    FontSize="14"
-                   TextColor="{StaticResource Gray500}"
+                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center"/>
 
@@ -80,7 +82,7 @@
 
             <!-- Options -->
             <Frame Padding="15"
-                   BackgroundColor="{StaticResource Surface}"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                    BorderColor="Transparent"
                    CornerRadius="12">
                 <HorizontalStackLayout Spacing="15">
@@ -89,10 +91,11 @@
                     <VerticalStackLayout>
                         <Label Text="Allow Barber Notes"
                                FontSize="14"
-                               FontAttributes="Bold"/>
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
                         <Label Text="Let your barber add tips about cutting your hair"
                                FontSize="12"
-                               TextColor="{StaticResource Gray500}"/>
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                     </VerticalStackLayout>
                 </HorizontalStackLayout>
             </Frame>

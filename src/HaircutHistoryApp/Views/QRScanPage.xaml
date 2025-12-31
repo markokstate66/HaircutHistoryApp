@@ -6,7 +6,7 @@
              x:Class="HaircutHistoryApp.Views.QRScanPage"
              x:DataType="vm:QRScanViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{StaticResource Background}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
 
     <Grid RowDefinitions="*,Auto">
 
@@ -58,10 +58,11 @@
             <Label Text="Enter Share Code"
                    FontSize="24"
                    FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                    HorizontalOptions="Center"/>
             <Label Text="Enter the 8-character code shared by your client"
                    FontSize="14"
-                   TextColor="{StaticResource Gray500}"
+                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center"/>
 
@@ -84,7 +85,7 @@
         <!-- Bottom Bar -->
         <Frame Grid.Row="1"
                Padding="20"
-               BackgroundColor="{StaticResource Surface}"
+               BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                BorderColor="Transparent"
                CornerRadius="0">
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">

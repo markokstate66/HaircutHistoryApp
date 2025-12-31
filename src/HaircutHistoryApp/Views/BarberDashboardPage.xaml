@@ -6,7 +6,7 @@
              x:Class="HaircutHistoryApp.Views.BarberDashboardPage"
              x:DataType="vm:BarberDashboardViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{StaticResource Background}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Settings" Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.GoToSettingsCommand}" IconImageSource="settings.png"/>
@@ -21,10 +21,11 @@
                 <VerticalStackLayout Spacing="5">
                     <Label Text="{Binding CurrentUser.DisplayName, StringFormat='Hello, {0}!'}"
                            FontSize="28"
-                           FontAttributes="Bold"/>
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
                     <Label Text="{Binding CurrentUser.ShopName}"
                            FontSize="14"
-                           TextColor="{StaticResource Gray500}"
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                            IsVisible="{Binding CurrentUser.ShopName, Converter={StaticResource StringToBoolConverter}}"/>
                 </VerticalStackLayout>
 
@@ -63,7 +64,8 @@
                 <VerticalStackLayout Spacing="15" IsVisible="{Binding HasRecentClients}">
                     <Label Text="Recent Clients"
                            FontSize="20"
-                           FontAttributes="Bold"/>
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
 
                     <CollectionView ItemsSource="{Binding RecentClients}"
                                   SelectionMode="None">
@@ -71,7 +73,7 @@
                             <DataTemplate x:DataType="models:RecentClient">
                                 <Frame Padding="15"
                                        Margin="0,0,0,10"
-                                       BackgroundColor="{StaticResource Surface}"
+                                       BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                                        BorderColor="Transparent"
                                        CornerRadius="12">
                                     <Frame.GestureRecognizers>
@@ -99,20 +101,21 @@
                                         <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
                                             <Label Text="{Binding ClientName}"
                                                    FontSize="16"
-                                                   FontAttributes="Bold"/>
+                                                   FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
                                             <Label Text="{Binding ProfileName}"
                                                    FontSize="13"
-                                                   TextColor="{StaticResource Gray600}"/>
+                                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                                             <Label Text="{Binding ProfileSummary}"
                                                    FontSize="12"
-                                                   TextColor="{StaticResource Gray400}"/>
+                                                   TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"/>
                                         </VerticalStackLayout>
 
                                         <!-- Time -->
                                         <Label Grid.Column="2"
                                                Text="{Binding ViewedAt, Converter={StaticResource DateToRelativeConverter}}"
                                                FontSize="11"
-                                               TextColor="{StaticResource Gray400}"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
                                                VerticalOptions="Start"/>
                                     </Grid>
                                 </Frame>
@@ -123,7 +126,7 @@
 
                 <!-- No Recent Clients -->
                 <Frame Padding="30"
-                       BackgroundColor="{StaticResource Surface}"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                        BorderColor="Transparent"
                        CornerRadius="12"
                        IsVisible="{Binding HasRecentClients, Converter={StaticResource InvertedBoolConverter}}">
@@ -132,10 +135,11 @@
                         <Label Text="No Recent Clients"
                                FontSize="16"
                                FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                HorizontalOptions="Center"/>
                         <Label Text="Scan a client's QR code to get started"
                                FontSize="14"
-                               TextColor="{StaticResource Gray500}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                HorizontalOptions="Center"
                                HorizontalTextAlignment="Center"/>
                     </VerticalStackLayout>

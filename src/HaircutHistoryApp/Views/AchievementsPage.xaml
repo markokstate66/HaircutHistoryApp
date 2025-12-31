@@ -6,7 +6,7 @@
              x:Class="HaircutHistoryApp.Views.AchievementsPage"
              x:DataType="vm:AchievementsViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{StaticResource Background}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
 
     <Grid RowDefinitions="Auto,*">
 
@@ -75,7 +75,7 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:Achievement">
                     <Frame Padding="15"
-                           BackgroundColor="{StaticResource Surface}"
+                           BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                            BorderColor="{Binding IsUnlocked, Converter={StaticResource BoolToUnlockedBorderConverter}}"
                            CornerRadius="12"
                            Opacity="{Binding IsUnlocked, Converter={StaticResource BoolToOpacityConverter}}">
@@ -98,7 +98,8 @@
                                 <HorizontalStackLayout Spacing="8">
                                     <Label Text="{Binding Name}"
                                            FontSize="16"
-                                           FontAttributes="Bold"/>
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
                                     <Label Text="✓"
                                            FontSize="16"
                                            TextColor="{StaticResource Success}"
@@ -106,7 +107,7 @@
                                 </HorizontalStackLayout>
                                 <Label Text="{Binding Description}"
                                        FontSize="12"
-                                       TextColor="{StaticResource Gray500}"/>
+                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
 
                                 <!-- Progress Bar (if not unlocked) -->
                                 <Grid ColumnDefinitions="*,Auto"
@@ -116,7 +117,7 @@
                                     <Frame Padding="0"
                                            HeightRequest="6"
                                            CornerRadius="3"
-                                           BackgroundColor="{StaticResource Gray200}"
+                                           BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
                                            HasShadow="False">
                                         <Frame Padding="0"
                                                HeightRequest="6"
@@ -129,7 +130,7 @@
                                     <Label Grid.Column="1"
                                            Text="{Binding ProgressText}"
                                            FontSize="11"
-                                           TextColor="{StaticResource Gray500}"/>
+                                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                                 </Grid>
                             </VerticalStackLayout>
                         </Grid>
@@ -143,10 +144,11 @@
                     <Label Text="No achievements yet"
                            FontSize="18"
                            FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                            HorizontalOptions="Center"/>
                     <Label Text="Start creating haircut profiles to unlock achievements!"
                            FontSize="14"
-                           TextColor="{StaticResource Gray500}"
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                            HorizontalOptions="Center"
                            HorizontalTextAlignment="Center"/>
                 </VerticalStackLayout>

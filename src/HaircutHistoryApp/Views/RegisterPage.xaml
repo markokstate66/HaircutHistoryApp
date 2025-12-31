@@ -5,7 +5,7 @@
              x:Class="HaircutHistoryApp.Views.RegisterPage"
              x:DataType="vm:RegisterViewModel"
              Title="{Binding Title}"
-             BackgroundColor="{StaticResource Background}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
 
     <ScrollView>
         <VerticalStackLayout Padding="30" Spacing="15">
@@ -14,11 +14,12 @@
             <Label Text="Create Account"
                    FontSize="24"
                    FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                    Margin="0,0,0,20"/>
 
             <!-- Display Name -->
             <VerticalStackLayout Spacing="5">
-                <Label Text="Display Name" FontSize="14" TextColor="{StaticResource Gray600}"/>
+                <Label Text="Display Name" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                 <Entry Placeholder="Your name"
                        Text="{Binding DisplayName}"
                        ReturnType="Next"
@@ -31,7 +32,7 @@
 
             <!-- Email -->
             <VerticalStackLayout Spacing="5">
-                <Label Text="Email" FontSize="14" TextColor="{StaticResource Gray600}"/>
+                <Label Text="Email" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                 <Entry Placeholder="Enter your email"
                        Text="{Binding Email}"
                        Keyboard="Email"
@@ -45,7 +46,7 @@
 
             <!-- Password -->
             <VerticalStackLayout Spacing="5">
-                <Label Text="Password" FontSize="14" TextColor="{StaticResource Gray600}"/>
+                <Label Text="Password" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                 <Entry Placeholder="Create a password (min 6 characters)"
                        Text="{Binding Password}"
                        IsPassword="True"
@@ -59,7 +60,7 @@
 
             <!-- Confirm Password -->
             <VerticalStackLayout Spacing="5">
-                <Label Text="Confirm Password" FontSize="14" TextColor="{StaticResource Gray600}"/>
+                <Label Text="Confirm Password" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                 <Entry Placeholder="Confirm your password"
                        Text="{Binding ConfirmPassword}"
                        IsPassword="True"
@@ -73,23 +74,25 @@
 
             <!-- Mode Selection -->
             <Frame Padding="15" Margin="0,10,0,0"
-                   BackgroundColor="{StaticResource Surface}"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                    BorderColor="Transparent"
                    CornerRadius="10">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="I am a:" FontSize="16" FontAttributes="Bold"/>
+                    <Label Text="I am a:" FontSize="16" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
 
                     <HorizontalStackLayout Spacing="10">
                         <Switch IsToggled="{Binding IsBarberMode}"
                                 OnColor="{StaticResource Primary}"/>
                         <Label Text="{Binding IsBarberMode, Converter={StaticResource BoolToModeConverter}}"
                                VerticalOptions="Center"
-                               FontSize="16"/>
+                               FontSize="16"
+                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
                     </HorizontalStackLayout>
 
                     <!-- Shop Name (visible only for barbers) -->
                     <VerticalStackLayout Spacing="5" IsVisible="{Binding IsBarberMode}">
-                        <Label Text="Shop/Salon Name (Optional)" FontSize="14" TextColor="{StaticResource Gray600}"/>
+                        <Label Text="Shop/Salon Name (Optional)" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                         <Entry Placeholder="Enter your shop name"
                                Text="{Binding ShopName}"
                                Style="{StaticResource EntryStyle}"/>
