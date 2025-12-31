@@ -10,12 +10,66 @@ public class PlayFabService : IPlayFabService
     private string? _playFabId;
     private string? _sessionTicket;
 
+    private const string SessionTicketKey = "playfab_session_ticket";
+    private const string PlayFabIdKey = "playfab_id";
+    private const string AuthMethodKey = "auth_method";
+
     public bool IsLoggedIn => !string.IsNullOrEmpty(_sessionTicket);
     public string? PlayFabId => _playFabId;
 
     public PlayFabService()
     {
         PlayFabSettings.staticSettings.TitleId = PlayFabConfig.TitleId;
+    }
+
+    /// <summary>
+    /// Try to restore a previous session on app startup
+    /// </summary>
+    public async Task<bool> TryRestoreSessionAsync()
+    {
+        try
+        {
+            var authMethod = await SecureStorage.GetAsync(AuthMethodKey);
+            if (string.IsNullOrEmpty(authMethod))
+                return false;
+
+            // Try device login to restore session
+            var (success, _) = await LoginWithDeviceAsync();
+            return success;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private async Task SaveSessionAsync(string authMethod)
+    {
+        try
+        {
+            await SecureStorage.SetAsync(SessionTicketKey, _sessionTicket ?? "");
+            await SecureStorage.SetAsync(PlayFabIdKey, _playFabId ?? "");
+            await SecureStorage.SetAsync(AuthMethodKey, authMethod);
+        }
+        catch
+        {
+            // Ignore storage errors
+        }
+    }
+
+    private async Task ClearSessionAsync()
+    {
+        try
+        {
+            SecureStorage.Remove(SessionTicketKey);
+            SecureStorage.Remove(PlayFabIdKey);
+            SecureStorage.Remove(AuthMethodKey);
+        }
+        catch
+        {
+            // Ignore storage errors
+        }
+        await Task.CompletedTask;
     }
 
     #region Authentication
@@ -39,6 +93,9 @@ public class PlayFabService : IPlayFabService
 
         _playFabId = result.Result.PlayFabId;
         _sessionTicket = result.Result.SessionTicket;
+
+        await SaveSessionAsync("email");
+        await LinkDeviceToAccountAsync();
 
         return (true, null);
     }
@@ -65,6 +122,9 @@ public class PlayFabService : IPlayFabService
 
         _playFabId = result.Result.PlayFabId;
         _sessionTicket = result.Result.SessionTicket;
+
+        await SaveSessionAsync("email");
+        await LinkDeviceToAccountAsync();
 
         return (true, null);
     }
@@ -119,6 +179,8 @@ public class PlayFabService : IPlayFabService
         _playFabId = result.Result.PlayFabId;
         _sessionTicket = result.Result.SessionTicket;
 
+        await SaveSessionAsync("device");
+
         return (true, null);
     }
 
@@ -145,6 +207,9 @@ public class PlayFabService : IPlayFabService
 
         _playFabId = result.Result.PlayFabId;
         _sessionTicket = result.Result.SessionTicket;
+
+        await SaveSessionAsync("google");
+        await LinkDeviceToAccountAsync();
 
         return (true, null);
     }
@@ -173,6 +238,9 @@ public class PlayFabService : IPlayFabService
         _playFabId = result.Result.PlayFabId;
         _sessionTicket = result.Result.SessionTicket;
 
+        await SaveSessionAsync("facebook");
+        await LinkDeviceToAccountAsync();
+
         return (true, null);
     }
 
@@ -200,14 +268,17 @@ public class PlayFabService : IPlayFabService
         _playFabId = result.Result.PlayFabId;
         _sessionTicket = result.Result.SessionTicket;
 
+        await SaveSessionAsync("apple");
+        await LinkDeviceToAccountAsync();
+
         return (true, null);
     }
 
-    public Task LogoutAsync()
+    public async Task LogoutAsync()
     {
         _playFabId = null;
         _sessionTicket = null;
-        return Task.CompletedTask;
+        await ClearSessionAsync();
     }
 
     private async Task<string> GetDeviceIdAsync()
@@ -219,6 +290,47 @@ public class PlayFabService : IPlayFabService
             await SecureStorage.SetAsync("device_id", deviceId);
         }
         return deviceId;
+    }
+
+    /// <summary>
+    /// Link current device to the logged-in PlayFab account.
+    /// This allows session restoration via device login.
+    /// </summary>
+    private async Task LinkDeviceToAccountAsync()
+    {
+        if (!IsLoggedIn) return;
+
+        try
+        {
+            var deviceId = await GetDeviceIdAsync();
+
+#if ANDROID
+            var request = new PlayFab.ClientModels.LinkAndroidDeviceIDRequest
+            {
+                AndroidDeviceId = deviceId,
+                ForceLink = true
+            };
+            await PlayFabClientAPI.LinkAndroidDeviceIDAsync(request);
+#elif IOS
+            var request = new PlayFab.ClientModels.LinkIOSDeviceIDRequest
+            {
+                DeviceId = deviceId,
+                ForceLink = true
+            };
+            await PlayFabClientAPI.LinkIOSDeviceIDAsync(request);
+#else
+            var request = new PlayFab.ClientModels.LinkCustomIDRequest
+            {
+                CustomId = deviceId,
+                ForceLink = true
+            };
+            await PlayFabClientAPI.LinkCustomIDAsync(request);
+#endif
+        }
+        catch
+        {
+            // Device may already be linked, ignore errors
+        }
     }
 
     #endregion

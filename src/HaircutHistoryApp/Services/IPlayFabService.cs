@@ -7,6 +7,9 @@ public interface IPlayFabService
     bool IsLoggedIn { get; }
     string? PlayFabId { get; }
 
+    // Session Management
+    Task<bool> TryRestoreSessionAsync();
+
     // Authentication
     Task<(bool Success, string? Error)> RegisterAsync(string email, string password, string displayName);
     Task<(bool Success, string? Error)> LoginAsync(string email, string password);

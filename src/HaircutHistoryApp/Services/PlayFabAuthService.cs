@@ -287,9 +287,9 @@ public class PlayFabAuthService : IAuthService
 
         if (!_playFabService.IsLoggedIn)
         {
-            // Try device login for returning users
-            var (success, _) = await _playFabService.LoginWithDeviceAsync();
-            if (!success)
+            // Try to restore previous session (linked device)
+            var restored = await _playFabService.TryRestoreSessionAsync();
+            if (!restored)
                 return null;
         }
 
