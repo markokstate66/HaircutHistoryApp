@@ -8,6 +8,6 @@
     "test": "echo \"No tests specified\" && exit 0"
   },
   "dependencies": {
-    "playfab-sdk": "^1.169.240802"
+    "playfab-sdk": "^2.187.251205"
   }
 }

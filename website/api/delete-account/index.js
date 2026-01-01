@@ -1,8 +1,8 @@
-const PlayFab = require("playfab-sdk");
+const PlayFabServer = require("playfab-sdk/Scripts/PlayFab/PlayFabServer");
 
 // Initialize PlayFab
-PlayFab.settings.titleId = process.env.PLAYFAB_TITLE_ID;
-PlayFab.settings.developerSecretKey = process.env.PLAYFAB_SECRET_KEY;
+PlayFabServer.settings.titleId = process.env.PLAYFAB_TITLE_ID;
+PlayFabServer.settings.developerSecretKey = process.env.PLAYFAB_SECRET_KEY;
 
 module.exports = async function (context, req) {
     context.log('Account deletion request received');
@@ -94,7 +94,7 @@ function generateRequestId() {
 
 async function getAccountByEmail(email) {
     return new Promise((resolve, reject) => {
-        PlayFab.PlayFabServer.GetUserAccountInfo({
+        PlayFabServer.GetUserAccountInfo({
             Email: email
         }, (error, result) => {
             if (error) {
@@ -114,7 +114,7 @@ async function getAccountByEmail(email) {
 async function deleteUserData(playFabId) {
     return new Promise((resolve, reject) => {
         // Get all user data keys first
-        PlayFab.PlayFabServer.GetUserData({
+        PlayFabServer.GetUserData({
             PlayFabId: playFabId
         }, (error, result) => {
             if (error) {
@@ -130,7 +130,7 @@ async function deleteUserData(playFabId) {
             }
 
             // Delete all user data
-            PlayFab.PlayFabServer.UpdateUserData({
+            PlayFabServer.UpdateUserData({
                 PlayFabId: playFabId,
                 KeysToRemove: keys
             }, (error, result) => {
@@ -146,7 +146,7 @@ async function deleteUserData(playFabId) {
 
 async function deletePlayFabAccount(playFabId) {
     return new Promise((resolve, reject) => {
-        PlayFab.PlayFabServer.DeletePlayer({
+        PlayFabServer.DeletePlayer({
             PlayFabId: playFabId
         }, (error, result) => {
             if (error) {
