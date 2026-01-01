@@ -5,7 +5,26 @@
 		<!-- Replace with your actual App ID before release -->
 		<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
 				   android:value="ca-app-pub-3940256099942544~3347511713"/>
+
+		<!-- OAuth Callback Activity for Google/Facebook/Apple Sign-In -->
+		<activity android:name="Microsoft.Maui.Authentication.WebAuthenticatorCallbackActivity"
+				  android:exported="true">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="com.haircuthistory.app" android:host="callback" />
+			</intent-filter>
+		</activity>
 	</application>
+
+	<!-- Required for OAuth web authentication -->
+	<queries>
+		<intent>
+			<action android:name="android.intent.action.VIEW" />
+			<data android:scheme="https" />
+		</intent>
+	</queries>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.CAMERA" />

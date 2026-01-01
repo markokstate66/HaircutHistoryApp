@@ -1,12 +1,12 @@
 # robots.txt for HairCut History
-# https://haircuthistory.app
+# https://haircuthistory.com
 
 # Allow all crawlers
 User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://haircuthistory.app/sitemap.xml
+Sitemap: https://haircuthistory.com/sitemap.xml
 
 # Crawl-delay for polite crawling
 Crawl-delay: 1
@@ -42,4 +42,4 @@ User-agent: MJ12bot
 Disallow: /
 
 # Host directive
-Host: https://haircuthistory.app
+Host: https://haircuthistory.com

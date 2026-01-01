@@ -11,6 +11,10 @@
     {
       "route": "/terms",
       "rewrite": "/terms.html"
+    },
+    {
+      "route": "/delete-account",
+      "rewrite": "/delete-account.html"
     }
   ],
   "navigationFallback": {

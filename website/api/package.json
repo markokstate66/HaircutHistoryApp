@@ -1,0 +1,13 @@
+{
+  "name": "haircuthistory-api",
+  "version": "1.0.0",
+  "description": "Azure Functions API for HairCut History",
+  "main": "index.js",
+  "scripts": {
+    "start": "func start",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "dependencies": {
+    "playfab-sdk": "^1.169.240802"
+  }
+}

@@ -63,6 +63,10 @@ secrets.json
 **/AzureStorageConfig.cs
 **/SocialAuthConfig.cs
 
+# Azure Functions
+**/local.settings.json
+**/node_modules/
+
 # User-specific
 *.rsuser
 *.suo

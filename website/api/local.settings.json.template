@@ -1,0 +1,9 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "PLAYFAB_TITLE_ID": "YOUR_PLAYFAB_TITLE_ID",
+    "PLAYFAB_SECRET_KEY": "YOUR_PLAYFAB_SECRET_KEY"
+  }
+}

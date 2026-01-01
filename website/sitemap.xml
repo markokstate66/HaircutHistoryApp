@@ -5,12 +5,12 @@
 
     <!-- Homepage -->
     <url>
-        <loc>https://haircuthistory.app/</loc>
+        <loc>https://haircuthistory.com/</loc>
         <lastmod>2025-12-11</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
         <image:image>
-            <image:loc>https://haircuthistory.app/images/og-image.png</image:loc>
+            <image:loc>https://haircuthistory.com/images/og-image.png</image:loc>
             <image:title>HairCut History App</image:title>
             <image:caption>Save your haircut measurements and share with barbers via QR code</image:caption>
         </image:image>
@@ -18,35 +18,35 @@
 
     <!-- Features/Landing Pages -->
     <url>
-        <loc>https://haircuthistory.app/features/save-haircut-measurements</loc>
+        <loc>https://haircuthistory.com/features/save-haircut-measurements</loc>
         <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
-        <loc>https://haircuthistory.app/features/qr-code-sharing</loc>
+        <loc>https://haircuthistory.com/features/qr-code-sharing</loc>
         <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
-        <loc>https://haircuthistory.app/features/barber-mode</loc>
+        <loc>https://haircuthistory.com/features/barber-mode</loc>
         <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
-        <loc>https://haircuthistory.app/for-barbers</loc>
+        <loc>https://haircuthistory.com/for-barbers</loc>
         <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
-        <loc>https://haircuthistory.app/for-barbers.html</loc>
+        <loc>https://haircuthistory.com/for-barbers.html</loc>
         <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
@@ -54,7 +54,7 @@
 
     <!-- Achievements -->
     <url>
-        <loc>https://haircuthistory.app/achievements.html</loc>
+        <loc>https://haircuthistory.com/achievements.html</loc>
         <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
@@ -62,42 +62,42 @@
 
     <!-- Blog -->
     <url>
-        <loc>https://haircuthistory.app/blog/</loc>
+        <loc>https://haircuthistory.com/blog/</loc>
         <lastmod>2025-12-11</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <url>
-        <loc>https://haircuthistory.app/blog/how-to-ask-for-haircut</loc>
+        <loc>https://haircuthistory.com/blog/how-to-ask-for-haircut</loc>
         <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <url>
-        <loc>https://haircuthistory.app/blog/hair-clipper-guard-sizes-guide</loc>
+        <loc>https://haircuthistory.com/blog/hair-clipper-guard-sizes-guide</loc>
         <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <url>
-        <loc>https://haircuthistory.app/blog/fade-vs-taper-difference</loc>
+        <loc>https://haircuthistory.com/blog/fade-vs-taper-difference</loc>
         <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <url>
-        <loc>https://haircuthistory.app/blog/how-often-should-you-get-haircut</loc>
+        <loc>https://haircuthistory.com/blog/how-often-should-you-get-haircut</loc>
         <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <url>
-        <loc>https://haircuthistory.app/blog/best-haircut-for-face-shape</loc>
+        <loc>https://haircuthistory.com/blog/best-haircut-for-face-shape</loc>
         <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
@@ -105,14 +105,14 @@
 
     <!-- Legal -->
     <url>
-        <loc>https://haircuthistory.app/privacy.html</loc>
+        <loc>https://haircuthistory.com/privacy.html</loc>
         <lastmod>2025-12-10</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
     </url>
 
     <url>
-        <loc>https://haircuthistory.app/terms.html</loc>
+        <loc>https://haircuthistory.com/terms.html</loc>
         <lastmod>2025-12-10</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>

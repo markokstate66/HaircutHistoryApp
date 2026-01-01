@@ -93,7 +93,7 @@ git push origin main
 1. In Azure Portal, go to your Static Web App
 2. Click **Custom domains** in the left menu
 3. Click **+ Add**
-4. Enter your domain (e.g., `www.haircuthistory.app`)
+4. Enter your domain (e.g., `www.haircuthistory.com`)
 5. Follow the DNS configuration instructions
 6. Azure provides free SSL certificate automatically
 
