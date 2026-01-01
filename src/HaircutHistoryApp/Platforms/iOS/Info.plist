@@ -56,5 +56,15 @@
 	<!-- App Tracking Transparency -->
 	<key>NSUserTrackingUsageDescription</key>
 	<string>This identifier will be used to deliver personalized ads to you.</string>
+	<!-- Google Sign-In URL Scheme -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1002816079632-ovdhkusbs1o0pevhq74andev4n9tsm62</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

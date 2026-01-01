@@ -13,11 +13,11 @@ public static class SocialAuthConfig
     // Google OAuth 2.0 Client IDs
     // Get from: https://console.cloud.google.com/apis/credentials
 #if ANDROID
-    public const string GoogleClientId = "1011642019698-3ve2rsua01kffk5ecncjtdu88ccsioml.apps.googleusercontent.com";
+    public const string GoogleClientId = "1002816079632-51s901e5jdcq7b97c2vkqm38p25ig20v.apps.googleusercontent.com";
 #elif IOS
-    public const string GoogleClientId = "1011642019698-cu9ah59cro83sm843tc79717ohseq595.apps.googleusercontent.com";
+    public const string GoogleClientId = "1002816079632-ovdhkusbs1o0pevhq74andev4n9tsm62.apps.googleusercontent.com";
 #else
-    public const string GoogleClientId = "1011642019698-o653trds8649gc4bolul06rm26l1f43s.apps.googleusercontent.com";
+    public const string GoogleClientId = "1002816079632-ppf6u4cuke8a5o0dfccp7pio70ronie6.apps.googleusercontent.com";
 #endif
 
     // Facebook App ID
