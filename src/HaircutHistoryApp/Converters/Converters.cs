@@ -232,6 +232,51 @@ public class ProgressToSmallWidthConverter : IValueConverter
 /// Parameter format: "TrueColor|FalseColor"
 /// Colors can be resource names (Primary, Secondary, etc.) or hex values.
 /// </summary>
+public class NullToBoolConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        var hasValue = value != null;
+
+        // Support invert parameter
+        if (parameter is string param && param.Equals("invert", StringComparison.OrdinalIgnoreCase))
+            return !hasValue;
+
+        return hasValue;
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class InvertedNullToBoolConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value == null;
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class InvertedStringToBoolConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return string.IsNullOrEmpty(value as string);
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 public class BoolToColorConverter : IValueConverter
 {
     private static readonly Dictionary<string, Color> ColorMap = new(StringComparer.OrdinalIgnoreCase)

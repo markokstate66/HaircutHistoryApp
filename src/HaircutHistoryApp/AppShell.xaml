@@ -5,31 +5,86 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:HaircutHistoryApp.Views"
     Title="HairCut History"
-    Shell.FlyoutBehavior="Disabled"
+    FlyoutWidth="280"
+    FlyoutBehavior="Flyout"
     Shell.BackgroundColor="{StaticResource Primary}"
     Shell.ForegroundColor="White"
-    Shell.TitleColor="White">
+    Shell.TitleColor="White"
+    FlyoutBackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
 
-    <!-- Login Flow -->
-    <ShellContent
-        Route="login"
-        ContentTemplate="{DataTemplate views:LoginPage}"/>
+    <!-- Flyout Header -->
+    <Shell.FlyoutHeader>
+        <Grid BackgroundColor="{StaticResource Primary}"
+              Padding="20"
+              HeightRequest="140">
+            <VerticalStackLayout VerticalOptions="Center" Spacing="5">
+                <Label Text="HairCut History"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="White"/>
+                <Label Text="Never forget your perfect cut"
+                       FontSize="14"
+                       TextColor="White"
+                       Opacity="0.8"/>
+            </VerticalStackLayout>
+        </Grid>
+    </Shell.FlyoutHeader>
 
-    <!-- Register Page (navigated to from login) -->
+    <!-- Flyout Item Template -->
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid Padding="20,15">
+                <Label Text="{Binding Title}"
+                       FontSize="16"
+                       VerticalOptions="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
 
-    <!-- Main Router (redirects based on user mode) -->
-    <ShellContent
-        Route="main"
-        ContentTemplate="{DataTemplate views:MainPage}"/>
+    <!-- Login (flyout hidden) -->
+    <ShellContent Route="login"
+                  ContentTemplate="{DataTemplate views:LoginPage}"
+                  Shell.FlyoutBehavior="Disabled"
+                  Shell.FlyoutItemIsVisible="False"
+                  Shell.TabBarIsVisible="False"
+                  Shell.NavBarIsVisible="False"/>
 
-    <!-- Client Dashboard -->
-    <ShellContent
-        Route="clientDashboard"
-        ContentTemplate="{DataTemplate views:ProfileListPage}"/>
+    <!-- Main Router (flyout hidden) -->
+    <ShellContent Route="main"
+                  ContentTemplate="{DataTemplate views:MainPage}"
+                  Shell.FlyoutBehavior="Disabled"
+                  Shell.FlyoutItemIsVisible="False"
+                  Shell.TabBarIsVisible="False"
+                  Shell.NavBarIsVisible="False"/>
 
-    <!-- Barber Dashboard -->
-    <ShellContent
-        Route="barberDashboard"
-        ContentTemplate="{DataTemplate views:BarberDashboardPage}"/>
+    <!-- Main App with Flyout Menu -->
+    <FlyoutItem Title="My Profiles" Route="profiles">
+        <ShellContent ContentTemplate="{DataTemplate views:ProfileListPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Scan QR Code" Route="scan">
+        <ShellContent ContentTemplate="{DataTemplate views:QRScanPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Shared With Me" Route="shared">
+        <ShellContent ContentTemplate="{DataTemplate views:SharedProfilesPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Glossary" Route="glossary">
+        <ShellContent ContentTemplate="{DataTemplate views:GlossaryPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Themes" Route="themes">
+        <ShellContent ContentTemplate="{DataTemplate views:ThemeSelectionPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Premium" Route="premium">
+        <ShellContent ContentTemplate="{DataTemplate views:PremiumPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Settings" Route="settings">
+        <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}"/>
+    </FlyoutItem>
 
 </Shell>

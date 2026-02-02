@@ -15,7 +15,7 @@
 		<ApplicationTitle>HairCut History</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.haircuthistory.app</ApplicationId>
+		<ApplicationId>com.stg.haircuthistory</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -57,10 +57,19 @@
 		<PackageReference Include="ZXing.Net.Maui.Controls" Version="0.7.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\HaircutHistoryApp.Shared\HaircutHistoryApp.Shared.csproj" />
+	</ItemGroup>
+
 	<!-- Mobile-only packages (In-App Purchases and AdMob) -->
 	<ItemGroup Condition="$(TargetFramework.Contains('-android')) OR $(TargetFramework.Contains('-ios'))">
 		<PackageReference Include="Plugin.InAppBilling" Version="7.1.0" />
 		<PackageReference Include="Plugin.MauiMTAdmob" Version="1.6.3" />
+	</ItemGroup>
+
+	<!-- Android-only packages (Native Google Sign-In) -->
+	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+		<PackageReference Include="Xamarin.GooglePlayServices.Auth" Version="120.7.0.4" />
 	</ItemGroup>
 
 </Project>

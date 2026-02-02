@@ -11,7 +11,7 @@
              Shell.ForegroundColor="White">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Share" Command="{Binding ShareImageCommand}" IconImageSource="share.png"/>
+        <ToolbarItem Text="Share" Command="{Binding ShareImageCommand}"/>
     </ContentPage.ToolbarItems>
 
     <Grid>

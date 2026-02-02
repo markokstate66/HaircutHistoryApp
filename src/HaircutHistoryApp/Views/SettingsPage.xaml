@@ -103,146 +103,183 @@
                             <Label Text="Theme"
                                    FontSize="16"
                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-                            <Label Text="Choose how the app looks"
+                            <Label Text="Customize app colors and style"
                                    FontSize="12"
                                    TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                         </VerticalStackLayout>
-                        <Picker Grid.Column="1"
-                                ItemsSource="{Binding ThemeOptions}"
-                                SelectedIndex="{Binding SelectedThemeIndex}"
-                                WidthRequest="140"
-                                VerticalOptions="Center"
-                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                        <Button Grid.Column="1"
+                                Text="Customize"
+                                Command="{Binding GoToThemesCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                HeightRequest="35"
+                                FontSize="12"
+                                VerticalOptions="Center"/>
                     </Grid>
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Mode Section -->
+            <!-- Support Section -->
             <Frame Padding="15"
                    BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                    BorderColor="Transparent"
                    CornerRadius="12">
                 <VerticalStackLayout Spacing="15">
-                    <Label Text="App Mode"
+                    <Label Text="Support"
                            FontSize="18"
                            FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
 
-                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
-                        <VerticalStackLayout Grid.Column="0">
-                            <Label Text="Barber/Stylist Mode"
+                    <!-- Rate App -->
+                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto">
+                        <Label Text="*"
+                               FontSize="20"
+                               VerticalOptions="Center"
+                               TextColor="{StaticResource Secondary}"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="10,0">
+                            <Label Text="Rate Us"
                                    FontSize="16"
                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-                            <Label Text="Switch to view and add notes to client profiles"
+                            <Label Text="Love the app? Leave a review!"
                                    FontSize="12"
                                    TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                         </VerticalStackLayout>
-                        <Switch Grid.Column="1"
-                                IsToggled="{Binding IsBarberMode}"
-                                OnColor="{StaticResource Primary}"
+                        <Button Grid.Column="2"
+                                Text="Rate"
+                                Command="{Binding RateAppCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                HeightRequest="35"
+                                FontSize="12"
                                 VerticalOptions="Center"/>
+                    </Grid>
 
-                        <!-- Shop Name (for barbers) -->
-                        <Frame Grid.Row="1" Grid.ColumnSpan="2"
-                               Padding="10"
-                               Margin="0,10,0,0"
-                               BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
-                               BorderColor="Transparent"
-                               CornerRadius="8"
-                               IsVisible="{Binding IsBarberMode}">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <VerticalStackLayout>
-                                    <Label Text="Shop Name" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
-                                    <Label Text="{Binding ShopName, TargetNullValue='Not set'}"
-                                           FontSize="14"
-                                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-                                </VerticalStackLayout>
-                                <Button Grid.Column="1"
-                                        Text="Edit"
-                                        Command="{Binding UpdateShopNameCommand}"
-                                        Style="{StaticResource SecondaryButton}"
-                                        HeightRequest="35"
-                                        FontSize="12"/>
-                            </Grid>
-                        </Frame>
+                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#E0E0E0, Dark=#404040}"/>
+
+                    <!-- Share App -->
+                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto">
+                        <Label Text="&lt;"
+                               FontSize="20"
+                               VerticalOptions="Center"
+                               TextColor="{StaticResource Secondary}"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="10,0">
+                            <Label Text="Share"
+                                   FontSize="16"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                            <Label Text="Share with friends and family"
+                                   FontSize="12"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                        </VerticalStackLayout>
+                        <Button Grid.Column="2"
+                                Text="Share"
+                                Command="{Binding ShareAppCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                HeightRequest="35"
+                                FontSize="12"
+                                VerticalOptions="Center"/>
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#E0E0E0, Dark=#404040}"/>
+
+                    <!-- Contact Support -->
+                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto">
+                        <Label Text="?"
+                               FontSize="20"
+                               VerticalOptions="Center"
+                               TextColor="{StaticResource Secondary}"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="10,0">
+                            <Label Text="Contact Support"
+                                   FontSize="16"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                            <Label Text="Need help? Reach out to us"
+                                   FontSize="12"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                        </VerticalStackLayout>
+                        <Button Grid.Column="2"
+                                Text="Email"
+                                Command="{Binding ContactSupportCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                HeightRequest="35"
+                                FontSize="12"
+                                VerticalOptions="Center"/>
                     </Grid>
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Achievements Section -->
+            <!-- About Section -->
             <Frame Padding="15"
                    BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                    BorderColor="Transparent"
                    CornerRadius="12">
                 <VerticalStackLayout Spacing="15">
-                    <Label Text="Achievements"
-                           FontSize="18"
-                           FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-
-                    <Frame Padding="15"
-                           BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
-                           BorderColor="Transparent"
-                           CornerRadius="10">
-                        <Grid ColumnDefinitions="Auto,*,Auto">
-                            <Frame WidthRequest="45"
-                                   HeightRequest="45"
-                                   CornerRadius="22"
-                                   Padding="0"
-                                   BackgroundColor="{StaticResource Secondary}">
-                                <Label Text="T"
-                                       FontSize="22"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"
-                                       TextColor="White"/>
-                            </Frame>
-                            <VerticalStackLayout Grid.Column="1" Margin="15,0,0,0" VerticalOptions="Center">
-                                <Label Text="Your Progress"
-                                       FontSize="16"
-                                       FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-                                <Label Text="Track your haircut milestones"
-                                       FontSize="12"
-                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
-                            </VerticalStackLayout>
-                            <Button Grid.Column="2"
-                                    Text="View"
-                                    Command="{Binding ViewAchievementsCommand}"
-                                    Style="{StaticResource SecondaryButton}"
-                                    HeightRequest="35"
-                                    FontSize="12"
-                                    VerticalOptions="Center"/>
-                        </Grid>
-                    </Frame>
-                </VerticalStackLayout>
-            </Frame>
-
-            <!-- App Info -->
-            <Frame Padding="15"
-                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
-                   BorderColor="Transparent"
-                   CornerRadius="12">
-                <VerticalStackLayout Spacing="10">
                     <Label Text="About"
                            FontSize="18"
                            FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
 
-                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
-                        <Label Text="Version" Grid.Row="0" TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-                        <Label Text="1.0.0" Grid.Row="0" Grid.Column="1" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="10">
+                        <Label Text="Version" Grid.Row="0"
+                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                        <Label Text="1.0.0" Grid.Row="0" Grid.Column="1"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
 
-                        <Label Text="Build" Grid.Row="1" TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-                        <Label Text="1" Grid.Row="1" Grid.Column="1" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                        <Label Text="Build" Grid.Row="1"
+                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                        <Label Text="1" Grid.Row="1" Grid.Column="1"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                     </Grid>
+
+                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#E0E0E0, Dark=#404040}"/>
+
+                    <!-- Legal Links -->
+                    <HorizontalStackLayout Spacing="20" HorizontalOptions="Center">
+                        <Label Text="Privacy Policy"
+                               FontSize="14"
+                               TextColor="{StaticResource Primary}"
+                               TextDecorations="Underline">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenPrivacyPolicyCommand}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                        <Label Text="Terms of Service"
+                               FontSize="14"
+                               TextColor="{StaticResource Primary}"
+                               TextDecorations="Underline">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenTermsOfServiceCommand}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Sign Out -->
+            <!-- Offline Mode Banner -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Warning}"
+                   BorderColor="Transparent"
+                   CornerRadius="12"
+                   IsVisible="{Binding IsOfflineMode}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Local Mode"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="White"/>
+                    <Label Text="Your data is only stored on this device. Sign in to sync across devices and access all features."
+                           FontSize="12"
+                           TextColor="White"/>
+                    <Button Text="Sign In to Sync"
+                            Command="{Binding SignInCommand}"
+                            BackgroundColor="White"
+                            TextColor="{StaticResource Warning}"
+                            CornerRadius="8"
+                            HeightRequest="40"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Sign Out (only for signed-in users) -->
             <Button Text="Sign Out"
                     Command="{Binding SignOutCommand}"
                     Style="{StaticResource DangerButton}"
-                    Margin="0,20,0,0"/>
+                    IsVisible="{Binding IsOfflineMode, Converter={StaticResource InvertedBoolConverter}}"
+                    Margin="0,10,0,0"/>
 
             <!-- Loading -->
             <ActivityIndicator IsRunning="{Binding IsBusy}"

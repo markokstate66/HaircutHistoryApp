@@ -8,9 +8,6 @@
              Title="{Binding Title}"
              BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Settings" Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.GoToSettingsCommand}" IconImageSource="settings.png"/>
-    </ContentPage.ToolbarItems>
 
     <Grid RowDefinitions="Auto,*,Auto">
         <!-- Upgrade Banner for Free Users -->
@@ -75,11 +72,74 @@
             <CollectionView ItemsSource="{Binding Profiles}"
                           SelectionMode="None"
                           Margin="15">
+                <CollectionView.Header>
+                    <!-- Global Stats Card -->
+                    <Frame Padding="15"
+                           Margin="0,0,0,15"
+                           BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
+                           BorderColor="Transparent"
+                           CornerRadius="12"
+                           IsVisible="{Binding HasGlobalStats}">
+                        <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
+                            <!-- Days Since -->
+                            <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
+                                <Label Text="{Binding GlobalDaysSinceDisplay}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="Last Cut"
+                                       FontSize="10"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+
+                            <!-- This Year Cuts -->
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center">
+                                <Label Text="{Binding TotalHaircutsThisYear}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="This Year"
+                                       FontSize="10"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+
+                            <!-- 90 Day Spend -->
+                            <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="Center">
+                                <Label Text="{Binding SpentPast90Days, StringFormat='${0:F0}'}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Secondary}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="90 Days"
+                                       FontSize="10"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+
+                            <!-- Year Spend -->
+                            <VerticalStackLayout Grid.Column="3" Spacing="2" HorizontalOptions="Center">
+                                <Label Text="{Binding SpentThisYear, StringFormat='${0:F0}'}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Secondary}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="YTD"
+                                       FontSize="10"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+                </CollectionView.Header>
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="15"/>
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:HaircutProfile">
+                    <DataTemplate x:DataType="models:Profile">
                         <Frame Padding="15"
                                BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                                BorderColor="Transparent"
@@ -90,47 +150,39 @@
                                                     CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
                             <Grid ColumnDefinitions="60,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12">
-                                <!-- Thumbnail Image -->
+                                <!-- Avatar -->
                                 <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
-                                        StrokeShape="RoundRectangle 8"
+                                        StrokeShape="RoundRectangle 30"
                                         Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
-                                        BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
+                                        BackgroundColor="{StaticResource Primary}"
                                         WidthRequest="60"
                                         HeightRequest="60"
                                         VerticalOptions="Start">
-                                    <Image Source="{Binding ThumbnailUrl}"
-                                           Aspect="AspectFill"
-                                           IsVisible="{Binding ThumbnailUrl, Converter={StaticResource StringToBoolConverter}}"/>
-                                    <Label Text="S"
-                                           FontSize="24"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center"
-                                           TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
-                                           IsVisible="{Binding ThumbnailUrl, Converter={StaticResource StringToBoolConverter}, ConverterParameter=invert}"/>
+                                    <Grid>
+                                        <Image Source="{Binding AvatarUrl}"
+                                               Aspect="AspectFill"
+                                               IsVisible="{Binding AvatarUrl, Converter={StaticResource StringToBoolConverter}}"/>
+                                        <Label Text="{Binding Initials}"
+                                               FontSize="20"
+                                               FontAttributes="Bold"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               TextColor="White"
+                                               IsVisible="{Binding AvatarUrl, Converter={StaticResource StringToBoolConverter}, ConverterParameter=invert}"/>
+                                    </Grid>
                                 </Border>
 
-                                <!-- Profile Name & Person -->
+                                <!-- Profile Name -->
                                 <VerticalStackLayout Grid.Row="0" Grid.Column="1">
                                     <Label Text="{Binding Name}"
                                            FontSize="18"
                                            FontAttributes="Bold"
                                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-                                    <Label Text="{Binding PersonName, StringFormat='For: {0}'}"
-                                           FontSize="12"
-                                           TextColor="{StaticResource Secondary}"
-                                           IsVisible="{Binding PersonName, Converter={StaticResource StringToBoolConverter}}"/>
                                 </VerticalStackLayout>
 
-                                <!-- Favorite Indicator -->
-                                <Label Grid.Row="0" Grid.Column="2"
-                                       Text="*"
-                                       IsVisible="{Binding IsFavorite}"
-                                       FontSize="16"
-                                       TextColor="{StaticResource Warning}"/>
-
-                                <!-- Summary -->
+                                <!-- Haircut Count -->
                                 <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                                       Text="{Binding DisplaySummary}"
+                                       Text="{Binding HaircutCountDisplay}"
                                        FontSize="14"
                                        TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                        Margin="0,5,0,0"/>

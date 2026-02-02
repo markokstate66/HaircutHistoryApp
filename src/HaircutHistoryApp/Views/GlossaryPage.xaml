@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HaircutHistoryApp.ViewModels"
+             xmlns:models="clr-namespace:HaircutHistoryApp.Models"
+             x:Class="HaircutHistoryApp.Views.GlossaryPage"
+             x:DataType="vm:GlossaryViewModel"
+             Title="Glossary"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
+
+    <Grid>
+        <!-- Main Grouped List -->
+        <CollectionView ItemsSource="{Binding Groups}"
+                        IsGrouped="True"
+                        SelectionMode="None">
+
+            <!-- Group Header Template -->
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate x:DataType="vm:GlossaryGroup">
+                    <Grid Padding="15,20,15,10"
+                          BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="{Binding Name}"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"/>
+                            <Label Text="{Binding Description}"
+                                   FontSize="13"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
+
+            <!-- Item Template -->
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:GlossaryItem">
+                    <Frame Margin="12,4" Padding="0" CornerRadius="12"
+                           BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                           BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GlossaryViewModel}}, Path=SelectItemCommand}"
+                                                  CommandParameter="{Binding .}" />
+                        </Frame.GestureRecognizers>
+
+                        <Grid ColumnDefinitions="70,*,Auto" Padding="0">
+                            <!-- Thumbnail -->
+                            <Border Grid.Column="0"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12,0,0,12" />
+                                </Border.StrokeShape>
+                                <Image Source="{Binding ImageSource}"
+                                       Aspect="AspectFill"
+                                       WidthRequest="70"
+                                       HeightRequest="70">
+                                    <Image.Triggers>
+                                        <DataTrigger TargetType="Image" Binding="{Binding ImageSource}" Value="{x:Null}">
+                                            <Setter Property="Source" Value="glossary_placeholder.png" />
+                                        </DataTrigger>
+                                    </Image.Triggers>
+                                </Image>
+                            </Border>
+
+                            <!-- Text Content -->
+                            <VerticalStackLayout Grid.Column="1"
+                                                 Padding="12,8"
+                                                 VerticalOptions="Center"
+                                                 Spacing="2">
+                                <Label Text="{Binding Name}"
+                                       FontSize="15"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                <Label Text="{Binding Description}"
+                                       FontSize="12"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                       LineBreakMode="TailTruncation"
+                                       MaxLines="2" />
+                            </VerticalStackLayout>
+
+                            <!-- Chevron -->
+                            <Label Grid.Column="2"
+                                   Text=">"
+                                   FontSize="16"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                   VerticalOptions="Center"
+                                   Margin="0,0,15,0"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.Header>
+                <BoxView HeightRequest="6" Color="Transparent" />
+            </CollectionView.Header>
+
+            <CollectionView.Footer>
+                <BoxView HeightRequest="20" Color="Transparent" />
+            </CollectionView.Footer>
+        </CollectionView>
+
+        <!-- Detail Overlay -->
+        <Grid IsVisible="{Binding ShowDetail}"
+              BackgroundColor="{AppThemeBinding Light=#80000000, Dark=#CC000000}">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding CloseDetailCommand}" />
+            </Grid.GestureRecognizers>
+
+            <Frame Margin="20"
+                   Padding="0"
+                   CornerRadius="16"
+                   MaximumWidthRequest="500"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
+                   BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer /> <!-- Prevents tap-through -->
+                </Frame.GestureRecognizers>
+
+                <Grid RowDefinitions="Auto,*,Auto">
+                    <!-- Header Image -->
+                    <Border Grid.Row="0"
+                            StrokeThickness="0"
+                            HeightRequest="200"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16,16,0,0" />
+                        </Border.StrokeShape>
+                        <Image Source="{Binding SelectedItem.ImageSource}"
+                               Aspect="AspectFill">
+                            <Image.Triggers>
+                                <DataTrigger TargetType="Image" Binding="{Binding SelectedItem.ImageSource}" Value="{x:Null}">
+                                    <Setter Property="Source" Value="glossary_placeholder.png" />
+                                </DataTrigger>
+                            </Image.Triggers>
+                        </Image>
+                    </Border>
+
+                    <!-- Close Button -->
+                    <Button Grid.Row="0"
+                            Text="X"
+                            FontSize="16"
+                            WidthRequest="36"
+                            HeightRequest="36"
+                            CornerRadius="18"
+                            Padding="0"
+                            Margin="12"
+                            HorizontalOptions="End"
+                            VerticalOptions="Start"
+                            BackgroundColor="{AppThemeBinding Light=#80000000, Dark=#80000000}"
+                            TextColor="White"
+                            Command="{Binding CloseDetailCommand}" />
+
+                    <!-- Content -->
+                    <ScrollView Grid.Row="1" Padding="20">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="{Binding SelectedItem.Name}"
+                                   FontSize="24"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+
+                            <Label Text="{Binding SelectedItem.Description}"
+                                   FontSize="16"
+                                   LineHeight="1.4"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <!-- Footer -->
+                    <Button Grid.Row="2"
+                            Text="Got it"
+                            Margin="20,0,20,20"
+                            Command="{Binding CloseDetailCommand}"
+                            Style="{StaticResource PrimaryButton}" />
+                </Grid>
+            </Frame>
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaircutHistoryApp", "src\HaircutHistoryApp\HaircutHistoryApp.csproj", "{C8AAD019-35CC-4E42-B7F5-1814D578D43C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaircutHistoryApp.Shared", "src\HaircutHistoryApp.Shared\HaircutHistoryApp.Shared.csproj", "{1A38163D-4032-4379-BF89-C6D6175F9F46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaircutHistoryApp.Api", "src\HaircutHistoryApp.Api\HaircutHistoryApp.Api.csproj", "{EC01E071-31C5-4B9D-8F7F-F4494B25DE7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,11 +33,37 @@ Global
 		{C8AAD019-35CC-4E42-B7F5-1814D578D43C}.Release|x64.Build.0 = Release|Any CPU
 		{C8AAD019-35CC-4E42-B7F5-1814D578D43C}.Release|x86.ActiveCfg = Release|Any CPU
 		{C8AAD019-35CC-4E42-B7F5-1814D578D43C}.Release|x86.Build.0 = Release|Any CPU
+		{1A38163D-4032-4379-BF89-C6D6175F9F46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A38163D-4032-4379-BF89-C6D6175F9F46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A38163D-4032-4379-BF89-C6D6175F9F46}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1A38163D-4032-4379-BF89-C6D6175F9F46}.Debug|x64.Build.0 = Debug|Any CPU
+		{1A38163D-4032-4379-BF89-C6D6175F9F46}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1A38163D-4032-4379-BF89-C6D6175F9F46}.Debug|x86.Build.0 = Debug|Any CPU
+		{1A38163D-4032-4379-BF89-C6D6175F9F46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A38163D-4032-4379-BF89-C6D6175F9F46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A38163D-4032-4379-BF89-C6D6175F9F46}.Release|x64.ActiveCfg = Release|Any CPU
+		{1A38163D-4032-4379-BF89-C6D6175F9F46}.Release|x64.Build.0 = Release|Any CPU
+		{1A38163D-4032-4379-BF89-C6D6175F9F46}.Release|x86.ActiveCfg = Release|Any CPU
+		{1A38163D-4032-4379-BF89-C6D6175F9F46}.Release|x86.Build.0 = Release|Any CPU
+		{EC01E071-31C5-4B9D-8F7F-F4494B25DE7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC01E071-31C5-4B9D-8F7F-F4494B25DE7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC01E071-31C5-4B9D-8F7F-F4494B25DE7C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EC01E071-31C5-4B9D-8F7F-F4494B25DE7C}.Debug|x64.Build.0 = Debug|Any CPU
+		{EC01E071-31C5-4B9D-8F7F-F4494B25DE7C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EC01E071-31C5-4B9D-8F7F-F4494B25DE7C}.Debug|x86.Build.0 = Debug|Any CPU
+		{EC01E071-31C5-4B9D-8F7F-F4494B25DE7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC01E071-31C5-4B9D-8F7F-F4494B25DE7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC01E071-31C5-4B9D-8F7F-F4494B25DE7C}.Release|x64.ActiveCfg = Release|Any CPU
+		{EC01E071-31C5-4B9D-8F7F-F4494B25DE7C}.Release|x64.Build.0 = Release|Any CPU
+		{EC01E071-31C5-4B9D-8F7F-F4494B25DE7C}.Release|x86.ActiveCfg = Release|Any CPU
+		{EC01E071-31C5-4B9D-8F7F-F4494B25DE7C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C8AAD019-35CC-4E42-B7F5-1814D578D43C} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{1A38163D-4032-4379-BF89-C6D6175F9F46} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{EC01E071-31C5-4B9D-8F7F-F4494B25DE7C} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 EndGlobal

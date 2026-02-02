@@ -50,9 +50,9 @@ public partial class PremiumViewModel : BaseViewModel
     {
         "Up to 5 haircut profiles",
         "Attach reference photos to profiles",
+        "15 premium app themes",
         "No advertisements",
-        "Cloud backup of all data",
-        "Priority support"
+        "Cloud backup of all data"
     };
 
     public PremiumViewModel(ISubscriptionService subscriptionService)
@@ -105,14 +105,14 @@ public partial class PremiumViewModel : BaseViewModel
                     ProductId = "com.haircuthistory.premium.monthly",
                     Name = "Monthly Premium",
                     Description = "Billed monthly",
-                    Price = "$2.99/month"
+                    Price = "$0.99/month"
                 });
                 Products.Add(new ProductInfo
                 {
                     ProductId = "com.haircuthistory.premium.yearly",
                     Name = "Yearly Premium",
-                    Description = "Save 50% - Best value!",
-                    Price = "$17.99/year"
+                    Description = "Best value!",
+                    Price = "$9.99/year"
                 });
             }
 

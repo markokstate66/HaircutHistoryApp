@@ -47,7 +47,7 @@
                                    FontSize="28"
                                    FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                                   LetterSpacing="3"
+                                   CharacterSpacing="3"
                                    VerticalOptions="Center"/>
                             <Button Text="📋"
                                     Command="{Binding CopyCodeCommand}"

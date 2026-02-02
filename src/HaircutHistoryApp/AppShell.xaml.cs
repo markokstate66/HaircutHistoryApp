@@ -8,17 +8,17 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
 
-        // Register routes for navigation
-        Routing.RegisterRoute("register", typeof(RegisterPage));
+        // Register routes for sub-page navigation (not top-level flyout items)
         Routing.RegisterRoute("addProfile", typeof(AddEditProfilePage));
         Routing.RegisterRoute("editProfile", typeof(AddEditProfilePage));
         Routing.RegisterRoute("profileDetail", typeof(ProfileDetailPage));
         Routing.RegisterRoute("qrShare", typeof(QRSharePage));
-        Routing.RegisterRoute("qrScan", typeof(QRScanPage));
-        Routing.RegisterRoute("clientView", typeof(ClientViewPage));
-        Routing.RegisterRoute("settings", typeof(SettingsPage));
         Routing.RegisterRoute("imageViewer", typeof(ImageViewerPage));
         Routing.RegisterRoute("achievements", typeof(AchievementsPage));
-        Routing.RegisterRoute("premium", typeof(PremiumPage));
+        Routing.RegisterRoute("haircutList", typeof(HaircutListPage));
+        Routing.RegisterRoute("addHaircut", typeof(AddEditHaircutPage));
+        Routing.RegisterRoute("editHaircut", typeof(AddEditHaircutPage));
+        Routing.RegisterRoute("cuttingGuide", typeof(CuttingGuidePage));
+        Routing.RegisterRoute("themeSelection", typeof(ThemeSelectionPage));
     }
 }

@@ -7,18 +7,13 @@ namespace HaircutHistoryApp.ViewModels;
 public partial class LoginViewModel : BaseViewModel
 {
     private readonly IAuthService _authService;
+    private bool _hasAttemptedSignIn;
 
     [ObservableProperty]
-    private string _email = string.Empty;
+    private string? _errorMessage;
 
     [ObservableProperty]
-    private string _password = string.Empty;
-
-    [ObservableProperty]
-    private string? _emailError;
-
-    [ObservableProperty]
-    private string? _passwordError;
+    private bool _showRetry;
 
     public LoginViewModel(IAuthService authService)
     {
@@ -26,109 +21,85 @@ public partial class LoginViewModel : BaseViewModel
         Title = "Sign In";
     }
 
-    private bool ValidateInput()
+    /// <summary>
+    /// Called when the page appears. Auto-initiates sign-in.
+    /// </summary>
+    public async Task OnAppearingAsync()
     {
-        EmailError = null;
-        PasswordError = null;
-        var isValid = true;
-
-        // Validate email
-        var emailResult = InputValidator.ValidateEmail(Email);
-        if (!emailResult.IsValid)
-        {
-            EmailError = emailResult.Error;
-            isValid = false;
-        }
-
-        // For login, use less strict password validation (don't enforce strength)
-        var passwordResult = InputValidator.ValidateLoginPassword(Password);
-        if (!passwordResult.IsValid)
-        {
-            PasswordError = passwordResult.Error;
-            isValid = false;
-        }
-
-        return isValid;
-    }
-
-    [RelayCommand]
-    private async Task SignInAsync()
-    {
-        if (!ValidateInput())
+        // Only attempt once per page load
+        if (_hasAttemptedSignIn)
             return;
 
-        await ExecuteAsync(async () =>
-        {
-            var (success, error) = await _authService.SignInAsync(Email.Trim(), Password);
+        _hasAttemptedSignIn = true;
+        await SignInAsync();
+    }
 
-            if (success)
+    [RelayCommand]
+    private async Task RetrySignInAsync()
+    {
+        await SignInAsync();
+    }
+
+    [RelayCommand]
+    private async Task ContinueOfflineAsync()
+    {
+        // Set offline mode preference
+        Preferences.Set("OfflineMode", true);
+        await Shell.Current.GoToAsync("//main");
+    }
+
+    private async Task SignInAsync()
+    {
+        if (IsBusy)
+            return;
+
+        IsBusy = true;
+        ShowRetry = false;
+        ErrorMessage = null;
+
+        try
+        {
+            // Check if user previously chose offline mode
+            if (Preferences.Get("OfflineMode", false))
             {
                 await Shell.Current.GoToAsync("//main");
+                return;
             }
-            else
+
+            // Try to restore existing session (includes silent sign-in)
+            var existingUser = await _authService.GetCurrentUserAsync();
+            if (existingUser != null)
             {
-                await AlertService.ShowErrorAsync(error ?? "Invalid email or password. Please try again.", "Sign In Failed");
+                System.Diagnostics.Debug.WriteLine($"Session restored for: {existingUser.Email}");
+                await Shell.Current.GoToAsync("//main");
+                return;
             }
-        }, "Signing in...", "Sign in failed");
-    }
 
-    [RelayCommand]
-    private async Task GoToRegisterAsync()
-    {
-        await Shell.Current.GoToAsync("register");
-    }
-
-    [RelayCommand]
-    private async Task SignInWithGoogleAsync()
-    {
-        await ExecuteAsync(async () =>
-        {
+            // No cached session - trigger Google sign-in through Firebase
+            System.Diagnostics.Debug.WriteLine("No cached session, starting Google sign-in...");
             var (success, error) = await _authService.SignInWithGoogleAsync();
 
             if (success)
             {
+                System.Diagnostics.Debug.WriteLine("Google sign-in successful via Firebase");
                 await Shell.Current.GoToAsync("//main");
             }
             else
             {
-                await AlertService.ShowErrorAsync(error ?? "Unable to sign in with Google. Please try again.", "Google Sign In");
+                ErrorMessage = error ?? "Unable to sign in. Please try again.";
+                ShowRetry = true;
+                System.Diagnostics.Debug.WriteLine($"Sign-in failed: {error}");
             }
-        }, "Signing in with Google...", "Google sign in failed");
-    }
-
-    [RelayCommand]
-    private async Task SignInWithFacebookAsync()
-    {
-        await ExecuteAsync(async () =>
+        }
+        catch (Exception ex)
         {
-            var (success, error) = await _authService.SignInWithFacebookAsync();
-
-            if (success)
-            {
-                await Shell.Current.GoToAsync("//main");
-            }
-            else
-            {
-                await AlertService.ShowErrorAsync(error ?? "Unable to sign in with Facebook. Please try again.", "Facebook Sign In");
-            }
-        }, "Signing in with Facebook...", "Facebook sign in failed");
-    }
-
-    [RelayCommand]
-    private async Task SignInWithAppleAsync()
-    {
-        await ExecuteAsync(async () =>
+            ErrorMessage = "Something went wrong. Please try again.";
+            ShowRetry = true;
+            System.Diagnostics.Debug.WriteLine($"Sign-in error: {ex.Message}");
+        }
+        finally
         {
-            var (success, error) = await _authService.SignInWithAppleAsync();
-
-            if (success)
-            {
-                await Shell.Current.GoToAsync("//main");
-            }
-            else
-            {
-                await AlertService.ShowErrorAsync(error ?? "Unable to sign in with Apple. Please try again.", "Apple Sign In");
-            }
-        }, "Signing in with Apple...", "Apple sign in failed");
+            IsBusy = false;
+        }
     }
 }

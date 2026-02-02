@@ -8,26 +8,16 @@ namespace HaircutHistoryApp.ViewModels;
 public partial class SettingsViewModel : BaseViewModel
 {
     private readonly IAuthService _authService;
-    private readonly IThemeService _themeService;
     private readonly IProfilePictureService _profilePictureService;
 
     [ObservableProperty]
     private User? _currentUser;
 
     [ObservableProperty]
-    private bool _isBarberMode;
-
-    [ObservableProperty]
-    private string _shopName = string.Empty;
-
-    [ObservableProperty]
     private string _displayName = string.Empty;
 
     [ObservableProperty]
     private string _email = string.Empty;
-
-    [ObservableProperty]
-    private int _selectedThemeIndex;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasProfilePicture))]
@@ -41,6 +31,9 @@ public partial class SettingsViewModel : BaseViewModel
     [ObservableProperty]
     private bool _canUploadProfilePicture;
 
+    [ObservableProperty]
+    private bool _isOfflineMode;
+
     public bool HasProfilePicture => !string.IsNullOrEmpty(ProfilePictureUrl);
     public bool HasNoProfilePicture => string.IsNullOrEmpty(ProfilePictureUrl);
 
@@ -53,23 +46,11 @@ public partial class SettingsViewModel : BaseViewModel
         _ => "Email account"
     };
 
-    public List<string> ThemeOptions { get; } = new() { "System Default", "Light", "Dark" };
-
-    public SettingsViewModel(IAuthService authService, IThemeService themeService, IProfilePictureService profilePictureService)
+    public SettingsViewModel(IAuthService authService, IProfilePictureService profilePictureService)
     {
         _authService = authService;
-        _themeService = themeService;
         _profilePictureService = profilePictureService;
         Title = "Settings";
-
-        // Load current theme
-        SelectedThemeIndex = (int)_themeService.CurrentTheme;
-    }
-
-    partial void OnSelectedThemeIndexChanged(int value)
-    {
-        var theme = (Services.AppTheme)value;
-        _themeService.SetTheme(theme);
     }
 
     [RelayCommand]
@@ -77,21 +58,30 @@ public partial class SettingsViewModel : BaseViewModel
     {
         await ExecuteAsync(async () =>
         {
+            IsOfflineMode = Preferences.Get("OfflineMode", false);
+
             CurrentUser = await _authService.GetCurrentUserAsync();
 
-            if (CurrentUser == null)
+            if (CurrentUser == null && !IsOfflineMode)
             {
                 await Shell.Current.GoToAsync("//login");
                 return;
             }
 
-            DisplayName = CurrentUser.DisplayName;
-            Email = CurrentUser.Email;
-            IsBarberMode = CurrentUser.Mode == UserMode.Barber;
-            ShopName = CurrentUser.ShopName ?? string.Empty;
-            ProfilePictureUrl = CurrentUser.EffectiveProfilePictureUrl;
-            AuthProvider = CurrentUser.AuthProvider;
-            CanUploadProfilePicture = CurrentUser.CanUploadCustomPicture;
+            if (CurrentUser != null)
+            {
+                DisplayName = CurrentUser.DisplayName;
+                Email = CurrentUser.Email;
+                ProfilePictureUrl = CurrentUser.EffectiveProfilePictureUrl;
+                AuthProvider = CurrentUser.AuthProvider;
+                CanUploadProfilePicture = CurrentUser.CanUploadCustomPicture;
+            }
+            else
+            {
+                DisplayName = "Local User";
+                Email = "Data stored on this device only";
+                AuthProvider = AuthProvider.Device;
+            }
         });
     }
 
@@ -208,80 +198,82 @@ public partial class SettingsViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task ToggleModeAsync()
+    private async Task ViewAchievementsAsync()
     {
-        var newMode = IsBarberMode ? UserMode.Barber : UserMode.Client;
+        await Shell.Current.GoToAsync("achievements");
+    }
 
-        string? newShopName = null;
-        if (newMode == UserMode.Barber && string.IsNullOrEmpty(ShopName))
+    [RelayCommand]
+    private async Task GoToThemesAsync()
+    {
+        await Shell.Current.GoToAsync("themeSelection");
+    }
+
+    [RelayCommand]
+    private async Task RateAppAsync()
+    {
+        try
         {
-            newShopName = await Shell.Current.DisplayPromptAsync(
-                "Shop Name",
-                "Enter your shop/salon name (optional):",
-                keyboard: Keyboard.Text);
-
-            if (newShopName != null)
-            {
-                ShopName = newShopName;
-            }
+#if ANDROID
+            var uri = new Uri("market://details?id=com.stg.haircuthistory");
+#elif IOS
+            var uri = new Uri("itms-apps://itunes.apple.com/app/id123456789"); // Replace with actual App Store ID
+#else
+            var uri = new Uri("https://play.google.com/store/apps/details?id=com.stg.haircuthistory");
+#endif
+            await Launcher.OpenAsync(uri);
         }
-
-        await ExecuteAsync(async () =>
+        catch
         {
-            var (success, error) = await _authService.UpdateUserModeAsync(
-                newMode, IsBarberMode ? ShopName : null);
+            // Fallback to web URL
+            await Launcher.OpenAsync("https://play.google.com/store/apps/details?id=com.stg.haircuthistory");
+        }
+    }
 
-            if (success)
-            {
-                await Shell.Current.DisplayAlertAsync("Mode Changed",
-                    $"You are now in {(IsBarberMode ? "Barber" : "Client")} mode.", "OK");
-
-                // Refresh the main page
-                await Shell.Current.GoToAsync("//main");
-            }
-            else
-            {
-                // Revert the toggle
-                IsBarberMode = !IsBarberMode;
-                await Shell.Current.DisplayAlertAsync("Error", error ?? "Failed to change mode.", "OK");
-            }
+    [RelayCommand]
+    private async Task ShareAppAsync()
+    {
+        await Share.RequestAsync(new ShareTextRequest
+        {
+            Title = "Share HairCut History",
+            Text = "Check out HairCut History - the app that helps you remember your perfect haircut!\n\nhttps://play.google.com/store/apps/details?id=com.stg.haircuthistory"
         });
     }
 
     [RelayCommand]
-    private async Task UpdateShopNameAsync()
+    private async Task ContactSupportAsync()
     {
-        if (!IsBarberMode)
-            return;
-
-        var newName = await Shell.Current.DisplayPromptAsync(
-            "Shop Name",
-            "Enter your shop/salon name:",
-            initialValue: ShopName,
-            keyboard: Keyboard.Text);
-
-        if (newName != null && newName != ShopName)
+        try
         {
-            await ExecuteAsync(async () =>
-            {
-                var (success, error) = await _authService.UpdateUserModeAsync(UserMode.Barber, newName);
+            var deviceInfo = $"\n\n---\nDevice: {DeviceInfo.Manufacturer} {DeviceInfo.Model}\nOS: {DeviceInfo.Platform} {DeviceInfo.VersionString}\nApp Version: 1.0.0";
+            var body = $"Hi, I need help with...\n{deviceInfo}";
 
-                if (success)
-                {
-                    ShopName = newName;
-                }
-                else
-                {
-                    await Shell.Current.DisplayAlertAsync("Error", error ?? "Failed to update shop name.", "OK");
-                }
-            });
+            await Microsoft.Maui.ApplicationModel.Communication.Email.Default.ComposeAsync("HairCut History Support", body, "support@haircuthistory.com");
+        }
+        catch
+        {
+            await Shell.Current.DisplayAlertAsync("Email Not Available", "Please email us at support@haircuthistory.com", "OK");
         }
     }
 
     [RelayCommand]
-    private async Task ViewAchievementsAsync()
+    private async Task OpenPrivacyPolicyAsync()
     {
-        await Shell.Current.GoToAsync("achievements");
+        await Launcher.OpenAsync("https://haircuthistory.com/privacy");
+    }
+
+    [RelayCommand]
+    private async Task OpenTermsOfServiceAsync()
+    {
+        await Launcher.OpenAsync("https://haircuthistory.com/terms");
+    }
+
+    [RelayCommand]
+    private async Task SignInAsync()
+    {
+        // Clear offline mode and go to login
+        Preferences.Remove("OfflineMode");
+        await Shell.Current.GoToAsync("//login");
     }
 
     [RelayCommand]
@@ -294,6 +286,7 @@ public partial class SettingsViewModel : BaseViewModel
 
         if (confirm)
         {
+            Preferences.Remove("OfflineMode");
             await _authService.SignOutAsync();
             await Shell.Current.GoToAsync("//login");
         }

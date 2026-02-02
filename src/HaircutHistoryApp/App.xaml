@@ -15,7 +15,10 @@
             <!-- Converters -->
             <converters:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
             <converters:StringToBoolConverter x:Key="StringToBoolConverter"/>
+            <converters:InvertedStringToBoolConverter x:Key="InvertedStringToBoolConverter"/>
             <converters:IntToBoolConverter x:Key="IntToBoolConverter"/>
+            <converters:NullToBoolConverter x:Key="NullToBoolConverter"/>
+            <converters:InvertedNullToBoolConverter x:Key="InvertedNullToBoolConverter"/>
             <converters:BoolToModeConverter x:Key="BoolToModeConverter"/>
             <converters:BoolToScanTextConverter x:Key="BoolToScanTextConverter"/>
             <converters:NameToInitialsConverter x:Key="NameToInitialsConverter"/>

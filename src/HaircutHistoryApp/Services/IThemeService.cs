@@ -1,19 +1,36 @@
+using HaircutHistoryApp.Models;
+
 namespace HaircutHistoryApp.Services;
 
-public enum AppTheme
-{
-    System,
-    Light,
-    Dark
-}
-
+/// <summary>
+/// Service for managing app themes.
+/// </summary>
 public interface IThemeService
 {
-    AppTheme CurrentTheme { get; }
+    /// <summary>
+    /// Get all available theme definitions.
+    /// </summary>
+    List<ThemeDefinition> GetAllThemes();
 
-    void SetTheme(AppTheme theme);
+    /// <summary>
+    /// Get the currently active theme.
+    /// </summary>
+    ThemeDefinition GetCurrentTheme();
 
-    AppTheme LoadSavedTheme();
+    /// <summary>
+    /// Get the current theme key.
+    /// </summary>
+    string CurrentThemeKey { get; }
 
-    event EventHandler<AppTheme>? ThemeChanged;
+    /// <summary>
+    /// Apply a theme. Checks premium status before applying premium themes.
+    /// Returns false if user is not premium and theme requires premium.
+    /// </summary>
+    Task<bool> SetThemeAsync(string themeKey);
+
+    /// <summary>
+    /// Load and apply the saved theme on app startup.
+    /// Falls back to classic_shop if saved theme requires premium and user is no longer premium.
+    /// </summary>
+    Task InitializeAsync();
 }

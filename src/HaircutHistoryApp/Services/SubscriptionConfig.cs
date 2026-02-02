@@ -8,17 +8,23 @@ public static class SubscriptionConfig
     // ============================================
     // IN-APP PURCHASE PRODUCT IDS
     // Must match App Store Connect / Google Play Console
+    // Pricing: Monthly $0.99, Yearly $4.99, Lifetime $9.99
     // ============================================
 
     /// <summary>
-    /// Monthly premium subscription product ID
+    /// Monthly premium subscription product ID ($0.99/month)
     /// </summary>
-    public const string PremiumMonthlyProductId = "com.haircuthistory.premium.monthly";
+    public const string PremiumMonthlyProductId = "com.stg.haircuthistory.premium.monthly";
 
     /// <summary>
-    /// Yearly premium subscription product ID
+    /// Yearly premium subscription product ID ($4.99/year)
     /// </summary>
-    public const string PremiumYearlyProductId = "com.haircuthistory.premium.yearly";
+    public const string PremiumYearlyProductId = "com.stg.haircuthistory.premium.yearly";
+
+    /// <summary>
+    /// Lifetime premium purchase product ID ($9.99 one-time)
+    /// </summary>
+    public const string PremiumLifetimeProductId = "com.stg.haircuthistory.premium.lifetime";
 
     /// <summary>
     /// All available subscription product IDs
@@ -26,7 +32,8 @@ public static class SubscriptionConfig
     public static readonly string[] AllProductIds =
     {
         PremiumMonthlyProductId,
-        PremiumYearlyProductId
+        PremiumYearlyProductId,
+        PremiumLifetimeProductId
     };
 
     // ============================================
@@ -135,10 +142,20 @@ public static class SubscriptionConfig
     }
 
     /// <summary>
+    /// Checks if a product ID is for a lifetime purchase
+    /// </summary>
+    public static bool IsLifetimeProduct(string productId)
+    {
+        return productId == PremiumLifetimeProductId;
+    }
+
+    /// <summary>
     /// Gets the subscription duration in days based on product ID
     /// </summary>
     public static int GetSubscriptionDurationDays(string productId)
     {
+        if (IsLifetimeProduct(productId))
+            return 36500; // ~100 years
         return IsYearlyProduct(productId) ? 365 : 30;
     }
 }

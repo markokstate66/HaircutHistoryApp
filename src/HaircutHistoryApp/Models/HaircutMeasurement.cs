@@ -7,6 +7,17 @@ public class HaircutMeasurement
     public string Technique { get; set; } = string.Empty;
     public string Notes { get; set; } = string.Empty;
 
+    /// <summary>
+    /// The order/step number for this measurement in the haircut workflow.
+    /// Lower numbers are done first.
+    /// </summary>
+    public int StepOrder { get; set; }
+
+    /// <summary>
+    /// Display text showing the step number and area.
+    /// </summary>
+    public string StepDisplay => StepOrder > 0 ? $"Step {StepOrder}: {Area}" : Area;
+
     public static List<string> CommonAreas => new()
     {
         "Top",

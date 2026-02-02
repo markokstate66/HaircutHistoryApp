@@ -15,7 +15,7 @@ public partial class ProfileListViewModel : BaseViewModel
     private readonly ISubscriptionService _subscriptionService;
 
     [ObservableProperty]
-    private ObservableCollection<HaircutProfile> _profiles = new();
+    private ObservableCollection<Profile> _profiles = new();
 
     [ObservableProperty]
     private bool _isEmpty;
@@ -31,6 +31,28 @@ public partial class ProfileListViewModel : BaseViewModel
 
     [ObservableProperty]
     private bool _showAds;
+
+    // Global Stats
+    [ObservableProperty]
+    private int? _daysSinceLastHaircut;
+
+    [ObservableProperty]
+    private decimal _spentThisYear;
+
+    [ObservableProperty]
+    private decimal _spentPast90Days;
+
+    [ObservableProperty]
+    private int _totalHaircutsThisYear;
+
+    [ObservableProperty]
+    private bool _hasGlobalStats;
+
+    public string GlobalDaysSinceDisplay => DaysSinceLastHaircut.HasValue
+        ? DaysSinceLastHaircut.Value == 0 ? "Today"
+        : DaysSinceLastHaircut.Value == 1 ? "1 day ago"
+        : $"{DaysSinceLastHaircut.Value} days"
+        : "--";
 
     public string BannerAdUnitId =>
 #if DEBUG
@@ -71,7 +93,7 @@ public partial class ProfileListViewModel : BaseViewModel
                 return;
             }
 
-            var profiles = await _dataService.GetProfilesAsync(user.Id);
+            var profiles = await _dataService.GetProfilesAsync();
 
             Profiles.Clear();
             foreach (var profile in profiles)
@@ -80,6 +102,9 @@ public partial class ProfileListViewModel : BaseViewModel
             }
 
             IsEmpty = Profiles.Count == 0;
+
+            // Calculate global stats
+            await CalculateGlobalStatsAsync();
 
             // Update subscription status
             await UpdateSubscriptionStatusAsync();
@@ -136,6 +161,56 @@ public partial class ProfileListViewModel : BaseViewModel
         await Shell.Current.GoToAsync("addProfile");
     }
 
+    private async Task CalculateGlobalStatsAsync()
+    {
+        try
+        {
+            var allHaircuts = new List<HaircutRecord>();
+
+            // Load haircuts from all profiles
+            foreach (var profile in Profiles)
+            {
+                var haircuts = await _dataService.GetHaircutRecordsAsync(profile.Id);
+                allHaircuts.AddRange(haircuts);
+            }
+
+            if (allHaircuts.Count == 0)
+            {
+                HasGlobalStats = false;
+                return;
+            }
+
+            HasGlobalStats = true;
+
+            var today = DateTime.Today;
+            var startOfYear = new DateTime(today.Year, 1, 1);
+            var past90Days = today.AddDays(-90);
+
+            // Days since last haircut (any profile)
+            var latestDate = allHaircuts.Max(h => h.Date);
+            DaysSinceLastHaircut = (int)(today - latestDate.Date).TotalDays;
+
+            // Spent this year
+            SpentThisYear = allHaircuts
+                .Where(h => h.Date >= startOfYear && h.Price.HasValue)
+                .Sum(h => h.Price!.Value);
+
+            // Spent past 90 days
+            SpentPast90Days = allHaircuts
+                .Where(h => h.Date >= past90Days && h.Price.HasValue)
+                .Sum(h => h.Price!.Value);
+
+            // Total haircuts this year
+            TotalHaircutsThisYear = allHaircuts.Count(h => h.Date >= startOfYear);
+
+            OnPropertyChanged(nameof(GlobalDaysSinceDisplay));
+        }
+        catch
+        {
+            HasGlobalStats = false;
+        }
+    }
+
     private async Task UpdateSubscriptionStatusAsync()
     {
         var isPremium = _subscriptionService.IsPremium;
@@ -155,7 +230,7 @@ public partial class ProfileListViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task ViewProfileAsync(HaircutProfile profile)
+    private async Task ViewProfileAsync(Profile profile)
     {
         if (profile == null)
             return;
@@ -170,7 +245,7 @@ public partial class ProfileListViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task ShareProfileAsync(HaircutProfile profile)
+    private async Task ShareProfileAsync(Profile profile)
     {
         if (profile == null)
             return;
@@ -179,7 +254,7 @@ public partial class ProfileListViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task DeleteProfileAsync(HaircutProfile profile)
+    private async Task DeleteProfileAsync(Profile profile)
     {
         if (profile == null)
             return;
@@ -201,5 +276,23 @@ public partial class ProfileListViewModel : BaseViewModel
                 { AnalyticsProperties.ProfileName, profile.Name }
             });
         }
+    }
+
+    [RelayCommand]
+    private async Task GoToSettingsAsync()
+    {
+        await Shell.Current.GoToAsync("settings");
+    }
+
+    [RelayCommand]
+    private async Task GoToSharedProfilesAsync()
+    {
+        await Shell.Current.GoToAsync("sharedProfiles");
+    }
+
+    [RelayCommand]
+    private async Task ScanQRAsync()
+    {
+        await Shell.Current.GoToAsync("qrScan");
     }
 }

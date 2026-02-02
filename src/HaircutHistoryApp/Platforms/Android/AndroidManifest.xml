@@ -13,7 +13,19 @@
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:scheme="com.haircuthistory.app" android:host="callback" />
+				<data android:scheme="com.stg.haircuthistory" android:host="callback" />
+			</intent-filter>
+		</activity>
+
+		<!-- MSAL Authentication Activity for Azure AD B2C -->
+		<activity android:name="microsoft.identity.client.BrowserTabActivity"
+				  android:exported="true">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="msauth"
+					  android:host="com.stg.haircuthistory" />
 			</intent-filter>
 		</activity>
 	</application>

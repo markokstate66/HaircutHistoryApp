@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HaircutHistoryApp.ViewModels"
+             xmlns:models="clr-namespace:HaircutHistoryApp.Models"
+             x:Class="HaircutHistoryApp.Views.SharedProfilesPage"
+             x:DataType="vm:SharedProfilesViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- Shared Profiles List -->
+        <RefreshView Grid.Row="0"
+                     IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding RefreshCommand}">
+            <CollectionView ItemsSource="{Binding SharedProfiles}"
+                            SelectionMode="None">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout VerticalOptions="Center"
+                                         HorizontalOptions="Center"
+                                         Padding="20">
+                        <Label Text="No shared profiles"
+                               FontSize="18"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="Scan a QR code to view a client's profile"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                               HorizontalOptions="Center"
+                               Margin="0,10,0,0"/>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Profile">
+                        <Frame Margin="10,5"
+                               Padding="15"
+                               BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
+                               BorderColor="Transparent"
+                               CornerRadius="12">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SharedProfilesViewModel}}, Path=ViewProfileCommand}"
+                                                      CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <!-- Avatar -->
+                                <Frame WidthRequest="50"
+                                       HeightRequest="50"
+                                       CornerRadius="25"
+                                       Padding="0"
+                                       IsClippedToBounds="True"
+                                       BackgroundColor="{StaticResource Primary}">
+                                    <Grid>
+                                        <!-- Initials -->
+                                        <Label Text="{Binding Name, Converter={StaticResource NameToInitialsConverter}}"
+                                               FontSize="18"
+                                               FontAttributes="Bold"
+                                               TextColor="White"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               IsVisible="{Binding AvatarUrl, Converter={StaticResource InvertedStringToBoolConverter}}"/>
+                                        <!-- Avatar Image -->
+                                        <Image Source="{Binding AvatarUrl}"
+                                               Aspect="AspectFill"
+                                               IsVisible="{Binding AvatarUrl, Converter={StaticResource StringToBoolConverter}}"/>
+                                    </Grid>
+                                </Frame>
+
+                                <!-- Profile Info -->
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Margin="15,0,0,0"
+                                                     VerticalOptions="Center">
+                                    <Label Text="{Binding Name}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                                    <Label Text="{Binding HaircutCount, StringFormat='{0} haircuts'}"
+                                           FontSize="12"
+                                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                                </VerticalStackLayout>
+
+                                <!-- Chevron -->
+                                <Label Grid.Column="2"
+                                       Text=">"
+                                       FontSize="18"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                       VerticalOptions="Center"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Scan QR Button -->
+        <Button Grid.Row="1"
+                Text="Scan QR Code"
+                Command="{Binding ScanQRCommand}"
+                Style="{StaticResource PrimaryButton}"
+                Margin="15"/>
+
+        <!-- Loading -->
+        <ActivityIndicator Grid.RowSpan="2"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Color="{StaticResource Primary}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+    </Grid>
+</ContentPage>

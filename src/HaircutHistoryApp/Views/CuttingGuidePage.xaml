@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HaircutHistoryApp.ViewModels"
+             x:Class="HaircutHistoryApp.Views.CuttingGuidePage"
+             x:DataType="vm:CuttingGuideViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Edit" Command="{Binding EditProfileCommand}" />
+        <ToolbarItem Text="Reset" Command="{Binding ResetAllCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Header with Progress -->
+        <Frame Grid.Row="0"
+               Padding="16"
+               Margin="12,12,12,0"
+               CornerRadius="12"
+               BorderColor="Transparent"
+               BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}">
+            <VerticalStackLayout Spacing="12">
+                <!-- Profile Info -->
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="{Binding PersonName}"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                    <Label Text="•"
+                           FontSize="20"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
+                           IsVisible="{Binding PersonName, Converter={StaticResource StringToBoolConverter}}" />
+                    <Label Text="{Binding ProfileName}"
+                           FontSize="16"
+                           VerticalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                </HorizontalStackLayout>
+
+                <!-- Progress Bar -->
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <ProgressBar Grid.Column="0"
+                                 Progress="{Binding ProgressPercent}"
+                                 ProgressColor="{StaticResource Primary}"
+                                 BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                                 HeightRequest="8" />
+                    <Label Grid.Column="1"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}">
+                        <Label.Text>
+                            <MultiBinding StringFormat="{}{0}/{1}">
+                                <Binding Path="CompletedCount" />
+                                <Binding Path="TotalCount" />
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                </Grid>
+
+                <!-- All Complete Message -->
+                <Frame Padding="12"
+                       CornerRadius="8"
+                       BorderColor="Transparent"
+                       BackgroundColor="{StaticResource Success}"
+                       IsVisible="{Binding AllComplete}">
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="8">
+                        <Label Text="✓"
+                               FontSize="18"
+                               TextColor="White" />
+                        <Label Text="All steps complete!"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="White" />
+                    </HorizontalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Steps List -->
+        <ScrollView Grid.Row="1" Padding="12,12,12,0">
+            <VerticalStackLayout Spacing="8">
+                <CollectionView ItemsSource="{Binding Steps}"
+                              SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:CuttingStep">
+                            <Frame Padding="0"
+                                   Margin="0,0,0,4"
+                                   CornerRadius="12"
+                                   BorderColor="Transparent"
+                                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}">
+                                <Frame.Triggers>
+                                    <DataTrigger TargetType="Frame" Binding="{Binding IsComplete}" Value="True">
+                                        <Setter Property="Opacity" Value="0.6" />
+                                    </DataTrigger>
+                                </Frame.Triggers>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CuttingGuideViewModel}}, Path=ToggleStepCommand}"
+                                                          CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+
+                                <Grid ColumnDefinitions="60,*,50" Padding="0">
+                                    <!-- Step Number / Checkbox -->
+                                    <Border Grid.Column="0"
+                                            StrokeThickness="0"
+                                            BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12,0,0,12" />
+                                        </Border.StrokeShape>
+                                        <Grid>
+                                            <!-- Step Number (when not complete) -->
+                                            <Label Text="{Binding StepNumber}"
+                                                   FontSize="24"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource Primary}"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   IsVisible="{Binding IsComplete, Converter={StaticResource InverseBoolConverter}}" />
+
+                                            <!-- Checkmark (when complete) -->
+                                            <Label Text="✓"
+                                                   FontSize="28"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource Success}"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   IsVisible="{Binding IsComplete}" />
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Step Content -->
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Padding="12,10"
+                                                         Spacing="4"
+                                                         VerticalOptions="Center">
+                                        <!-- Area Name -->
+                                        <Label Text="{Binding Area}"
+                                               FontSize="17"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsComplete}" Value="True">
+                                                    <Setter Property="TextDecorations" Value="Strikethrough" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+
+                                        <!-- Details (Guard + Technique) -->
+                                        <Label Text="{Binding DetailsDisplay}"
+                                               FontSize="14"
+                                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                               IsVisible="{Binding DetailsDisplay, Converter={StaticResource StringToBoolConverter}}" />
+
+                                        <!-- Notes -->
+                                        <Frame Padding="8,4"
+                                               Margin="0,4,0,0"
+                                               CornerRadius="6"
+                                               BorderColor="Transparent"
+                                               BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray700}}"
+                                               IsVisible="{Binding HasNotes}">
+                                            <Label Text="{Binding Notes}"
+                                                   FontSize="12"
+                                                   FontAttributes="Italic"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" />
+                                        </Frame>
+                                    </VerticalStackLayout>
+
+                                    <!-- Checkbox Visual -->
+                                    <Border Grid.Column="2"
+                                            WidthRequest="28"
+                                            HeightRequest="28"
+                                            StrokeThickness="2"
+                                            Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                                            BackgroundColor="Transparent"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="6" />
+                                        </Border.StrokeShape>
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border" Binding="{Binding IsComplete}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="{StaticResource Success}" />
+                                                <Setter Property="Stroke" Value="{StaticResource Success}" />
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                        <Label Text="✓"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               TextColor="White"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               IsVisible="{Binding IsComplete}" />
+                                    </Border>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- General Notes Section -->
+                <Frame Padding="12"
+                       Margin="0,8,0,0"
+                       CornerRadius="12"
+                       BorderColor="Transparent"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
+                       IsVisible="{Binding GeneralNotes, Converter={StaticResource StringToBoolConverter}}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="📝 Notes"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        <Label Text="{Binding GeneralNotes}"
+                               FontSize="14"
+                               LineHeight="1.3"
+                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Bottom Padding -->
+                <BoxView HeightRequest="20" Color="Transparent" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Bottom Action Bar -->
+        <Frame Grid.Row="2"
+               Padding="16,12"
+               Margin="0"
+               CornerRadius="0"
+               BorderColor="Transparent"
+               BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}">
+            <Button Text="Done"
+                    Command="{Binding CloseCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    HorizontalOptions="Fill" />
+        </Frame>
+    </Grid>
+</ContentPage>

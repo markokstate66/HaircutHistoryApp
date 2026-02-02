@@ -5,7 +5,10 @@ using HaircutHistoryApp.ViewModels;
 using HaircutHistoryApp.Views;
 using Microsoft.Extensions.Logging;
 using ZXing.Net.Maui.Controls;
-#if ANDROID || IOS
+#if ANDROID
+using HaircutHistoryApp.Platforms.Android.Services;
+using Plugin.MauiMTAdmob;
+#elif IOS
 using Plugin.MauiMTAdmob;
 #endif
 
@@ -35,10 +38,7 @@ public static class MauiProgram
         // Register Services
         builder.Services.AddSingleton<IAnalyticsService, AnalyticsService>();
         builder.Services.AddSingleton<ILogService, LogService>();
-        builder.Services.AddSingleton<IPlayFabService, PlayFabService>();
         builder.Services.AddSingleton<IProfilePictureService, ProfilePictureService>();
-        builder.Services.AddSingleton<IAuthService, PlayFabAuthService>();
-        builder.Services.AddSingleton<IDataService, PlayFabDataService>();
         builder.Services.AddSingleton<IImageService, ImageService>();
         builder.Services.AddSingleton<IQRService, QRService>();
         builder.Services.AddSingleton<IThemeService, ThemeService>();
@@ -46,36 +46,59 @@ public static class MauiProgram
         builder.Services.AddSingleton<ISubscriptionService, SubscriptionService>();
         builder.Services.AddSingleton<IAdService, AdService>();
 
+        // Register Native Auth Service (platform-specific) - must be before FirebaseAuthService
+#if ANDROID
+        builder.Services.AddSingleton<INativeAuthService>(sp =>
+        {
+            var service = new GoogleAuthService();
+            MainActivity.GoogleAuthService = service;
+            return service;
+        });
+#else
+        builder.Services.AddSingleton<INativeAuthService, DefaultNativeAuthService>();
+#endif
+
+        // Register Azure/Firebase Services
+        builder.Services.AddSingleton<IApiService, AzureApiService>();
+        builder.Services.AddSingleton<IAuthService, FirebaseAuthService>();
+        builder.Services.AddSingleton<IDataService, AzureDataService>();
+
         // Register ViewModels
         builder.Services.AddTransient<LoginViewModel>();
-        builder.Services.AddTransient<RegisterViewModel>();
         builder.Services.AddTransient<ProfileListViewModel>();
         builder.Services.AddTransient<ProfileDetailViewModel>();
         builder.Services.AddTransient<AddEditProfileViewModel>();
         builder.Services.AddTransient<QRShareViewModel>();
         builder.Services.AddTransient<QRScanViewModel>();
-        builder.Services.AddTransient<BarberDashboardViewModel>();
-        builder.Services.AddTransient<ClientViewViewModel>();
         builder.Services.AddTransient<SettingsViewModel>();
         builder.Services.AddTransient<ImageViewerViewModel>();
         builder.Services.AddTransient<AchievementsViewModel>();
         builder.Services.AddTransient<PremiumViewModel>();
+        builder.Services.AddTransient<HaircutListViewModel>();
+        builder.Services.AddTransient<AddEditHaircutViewModel>();
+        builder.Services.AddTransient<SharedProfilesViewModel>();
+        builder.Services.AddTransient<GlossaryViewModel>();
+        builder.Services.AddTransient<CuttingGuideViewModel>();
+        builder.Services.AddTransient<ThemeSelectionViewModel>();
 
         // Register Pages
         builder.Services.AddTransient<LoginPage>();
-        builder.Services.AddTransient<RegisterPage>();
         builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<ProfileListPage>();
         builder.Services.AddTransient<ProfileDetailPage>();
         builder.Services.AddTransient<AddEditProfilePage>();
         builder.Services.AddTransient<QRSharePage>();
         builder.Services.AddTransient<QRScanPage>();
-        builder.Services.AddTransient<BarberDashboardPage>();
-        builder.Services.AddTransient<ClientViewPage>();
         builder.Services.AddTransient<SettingsPage>();
         builder.Services.AddTransient<ImageViewerPage>();
         builder.Services.AddTransient<AchievementsPage>();
         builder.Services.AddTransient<PremiumPage>();
+        builder.Services.AddTransient<HaircutListPage>();
+        builder.Services.AddTransient<AddEditHaircutPage>();
+        builder.Services.AddTransient<SharedProfilesPage>();
+        builder.Services.AddTransient<GlossaryPage>();
+        builder.Services.AddTransient<CuttingGuidePage>();
+        builder.Services.AddTransient<ThemeSelectionPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

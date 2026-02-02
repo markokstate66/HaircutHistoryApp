@@ -15,18 +15,27 @@ public partial class ProfileListPage : ContentPage
         InitializeComponent();
         BindingContext = _viewModel = viewModel;
 
-        InitializeAdBanner();
+        // Temporarily disabled to debug JavaProxyThrowable
+        // InitializeAdBanner();
     }
 
     private void InitializeAdBanner()
     {
 #if ANDROID || IOS
-        var adView = new MTAdView
+        try
         {
-            AdsId = _viewModel.BannerAdUnitId
-        };
-        adView.SetBinding(IsVisibleProperty, new Binding(nameof(_viewModel.ShowAds)));
-        AdBannerContainer.Content = adView;
+            var adView = new MTAdView
+            {
+                AdsId = _viewModel.BannerAdUnitId
+            };
+            adView.SetBinding(IsVisibleProperty, new Binding(nameof(_viewModel.ShowAds)));
+            AdBannerContainer.Content = adView;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"AdBanner init error: {ex.Message}");
+            // Ads not available - continue without them
+        }
 #endif
     }
 

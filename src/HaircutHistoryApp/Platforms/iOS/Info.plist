@@ -65,6 +65,19 @@
 				<string>com.googleusercontent.apps.1002816079632-ovdhkusbs1o0pevhq74andev4n9tsm62</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>MSAL Auth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>msauth.com.stg.haircuthistory</string>
+			</array>
+		</dict>
+	</array>
+	<!-- MSAL Keychain Group -->
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)com.stg.haircuthistory</string>
 	</array>
 </dict>
 </plist>

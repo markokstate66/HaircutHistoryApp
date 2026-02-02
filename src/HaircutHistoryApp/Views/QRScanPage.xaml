@@ -72,7 +72,7 @@
                    Keyboard="Plain"
                    HorizontalTextAlignment="Center"
                    FontSize="24"
-                   LetterSpacing="3"
+                   CharacterSpacing="3"
                    Style="{StaticResource EntryStyle}"/>
 
             <Button Text="Submit"

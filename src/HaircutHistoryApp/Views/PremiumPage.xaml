@@ -195,7 +195,7 @@
                                            BackgroundColor="{StaticResource Success}"
                                            BorderColor="Transparent"
                                            CornerRadius="4">
-                                        <Label Text="SAVE 50%"
+                                        <Label Text="BEST VALUE"
                                                FontSize="10"
                                                FontAttributes="Bold"
                                                TextColor="White"/>

@@ -6,15 +6,14 @@ public class ShareSession
 {
     public string Id { get; set; } = GenerateSecureCode();
     public string ProfileId { get; set; } = string.Empty;
-    public string ClientUserId { get; set; } = string.Empty;
-    public string ClientName { get; set; } = string.Empty;
+    public string? Token { get; set; }
+    public string? ShareUrl { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime ExpiresAt { get; set; } = DateTime.UtcNow.AddHours(24);
-    public bool AllowBarberNotes { get; set; } = true;
 
     public bool IsExpired => DateTime.UtcNow > ExpiresAt;
 
-    public string QRContent => $"haircut://{Id}";
+    public string QRContent => ShareUrl ?? $"haircuthistory://share/{Token ?? Id}";
 
     /// <summary>
     /// Generates a cryptographically secure 8-character code.

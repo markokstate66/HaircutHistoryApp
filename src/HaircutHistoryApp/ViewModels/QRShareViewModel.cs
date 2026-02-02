@@ -16,7 +16,7 @@ public partial class QRShareViewModel : BaseViewModel
     private string _profileId = string.Empty;
 
     [ObservableProperty]
-    private HaircutProfile? _profile;
+    private Profile? _profile;
 
     [ObservableProperty]
     private ShareSession? _shareSession;
@@ -26,9 +26,6 @@ public partial class QRShareViewModel : BaseViewModel
 
     [ObservableProperty]
     private string _shareCode = string.Empty;
-
-    [ObservableProperty]
-    private bool _allowBarberNotes = true;
 
     [ObservableProperty]
     private string _expiresIn = string.Empty;
@@ -69,23 +66,13 @@ public partial class QRShareViewModel : BaseViewModel
                 return;
             }
 
-            ShareSession = await _dataService.CreateShareSessionAsync(
-                ProfileId, user.Id, user.DisplayName, AllowBarberNotes);
+            ShareSession = await _dataService.CreateShareSessionAsync(ProfileId);
 
             ShareCode = ShareSession.Id;
             ExpiresIn = "24 hours";
 
             GenerateQRCode();
         });
-    }
-
-    partial void OnAllowBarberNotesChanged(bool value)
-    {
-        if (ShareSession != null)
-        {
-            ShareSession.AllowBarberNotes = value;
-            RegenerateShareCommand.Execute(null);
-        }
     }
 
     [RelayCommand]

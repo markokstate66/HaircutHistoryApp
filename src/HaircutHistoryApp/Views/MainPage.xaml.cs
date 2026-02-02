@@ -1,4 +1,3 @@
-using HaircutHistoryApp.Models;
 using HaircutHistoryApp.Services;
 
 namespace HaircutHistoryApp.Views;
@@ -16,10 +15,10 @@ public partial class MainPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await RouteToCorrectDashboard();
+        await RouteToDashboard();
     }
 
-    private async Task RouteToCorrectDashboard()
+    private async Task RouteToDashboard()
     {
         var user = await _authService.GetCurrentUserAsync();
 
@@ -29,13 +28,7 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        if (user.Mode == UserMode.Barber)
-        {
-            await Shell.Current.GoToAsync("//barberDashboard");
-        }
-        else
-        {
-            await Shell.Current.GoToAsync("//clientDashboard");
-        }
+        // Route to the profiles page (main dashboard)
+        await Shell.Current.GoToAsync("//profiles");
     }
 }

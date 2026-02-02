@@ -42,15 +42,15 @@ public partial class QRScanViewModel : BaseViewModel
         _hasProcessedCode = true;
         IsScanning = false;
 
-        var sessionId = _qrService.ParseQRContent(qrContent);
-        if (string.IsNullOrEmpty(sessionId))
+        var token = _qrService.ParseQRContent(qrContent);
+        if (string.IsNullOrEmpty(token))
         {
             await Shell.Current.DisplayAlertAsync("Invalid Code", "The scanned code is not valid.", "OK");
             ResetScanner();
             return;
         }
 
-        await NavigateToClientViewAsync(sessionId);
+        await AcceptShareAsync(token);
     }
 
     [RelayCommand]
@@ -72,30 +72,36 @@ public partial class QRScanViewModel : BaseViewModel
             return;
         }
 
-        var sessionId = _qrService.ParseQRContent(ManualCode.Trim().ToUpperInvariant());
-        if (string.IsNullOrEmpty(sessionId))
+        var token = _qrService.ParseQRContent(ManualCode.Trim());
+        if (string.IsNullOrEmpty(token))
         {
-            sessionId = ManualCode.Trim().ToUpperInvariant();
+            // Treat manual input as the token itself
+            token = ManualCode.Trim();
         }
 
-        await NavigateToClientViewAsync(sessionId);
+        await AcceptShareAsync(token);
     }
 
-    private async Task NavigateToClientViewAsync(string sessionId)
+    private async Task AcceptShareAsync(string token)
     {
         await ExecuteAsync(async () =>
         {
-            var (profile, session) = await _dataService.GetSharedProfileAsync(sessionId);
+            var success = await _dataService.AcceptShareAsync(token);
 
-            if (profile == null || session == null)
+            if (!success)
             {
-                await Shell.Current.DisplayAlertAsync("Not Found",
-                    "This share code is invalid or has expired.", "OK");
+                var errorDetail = _dataService.LastError ?? "This share code is invalid or has expired.";
+                await Shell.Current.DisplayAlertAsync("Share Failed", errorDetail, "OK");
                 ResetScanner();
                 return;
             }
 
-            await Shell.Current.GoToAsync($"clientView?sessionId={sessionId}");
+            // Share accepted - navigate to shared profiles
+            await Shell.Current.DisplayAlertAsync("Success",
+                "Profile has been shared with you! You can now view it in 'Shared With Me'.", "OK");
+
+            // Navigate to shared profiles page
+            await Shell.Current.GoToAsync("//shared");
         });
     }
 

@@ -8,11 +8,11 @@ using AppPurchaseState = HaircutHistoryApp.Models.PurchaseState;
 namespace HaircutHistoryApp.Services;
 
 /// <summary>
-/// Service for managing user subscriptions and in-app purchases
+/// Service for managing user subscriptions and in-app purchases.
+/// Uses local storage for subscription data.
 /// </summary>
 public class SubscriptionService : ISubscriptionService
 {
-    private readonly IPlayFabService _playFabService;
     private readonly ILogService _logService;
     private SubscriptionInfo? _cachedSubscription;
 
@@ -22,9 +22,8 @@ public class SubscriptionService : ISubscriptionService
 
     public event EventHandler<SubscriptionChangedEventArgs>? SubscriptionChanged;
 
-    public SubscriptionService(IPlayFabService playFabService, ILogService logService)
+    public SubscriptionService(ILogService logService)
     {
-        _playFabService = playFabService;
         _logService = logService;
     }
 
@@ -44,14 +43,14 @@ public class SubscriptionService : ISubscriptionService
         }
     }
 
-    public async Task<SubscriptionInfo> GetSubscriptionInfoAsync()
+    public Task<SubscriptionInfo> GetSubscriptionInfoAsync()
     {
         if (_cachedSubscription != null)
-            return _cachedSubscription;
+            return Task.FromResult(_cachedSubscription);
 
         try
         {
-            var json = await _playFabService.GetPlayerDataAsync(SubscriptionConfig.SubscriptionDataKey);
+            var json = Preferences.Get(SubscriptionConfig.SubscriptionDataKey, null);
 
             if (!string.IsNullOrEmpty(json))
             {
@@ -60,11 +59,11 @@ public class SubscriptionService : ISubscriptionService
         }
         catch (Exception ex)
         {
-            _logService.Error("Failed to get subscription info from PlayFab", exception: ex);
+            _logService.Error("Failed to get subscription info from local storage", exception: ex);
         }
 
         _cachedSubscription ??= new SubscriptionInfo();
-        return _cachedSubscription;
+        return Task.FromResult(_cachedSubscription);
     }
 
     public async Task<bool> CanAddProfileAsync(int currentProfileCount)
@@ -96,11 +95,32 @@ public class SubscriptionService : ISubscriptionService
                 return products;
             }
 
-            var items = await CrossInAppBilling.Current.GetProductInfoAsync(
+            // Get subscription products (monthly/yearly)
+            var subscriptionIds = new[] { SubscriptionConfig.PremiumMonthlyProductId, SubscriptionConfig.PremiumYearlyProductId };
+            var subscriptionItems = await CrossInAppBilling.Current.GetProductInfoAsync(
                 ItemType.Subscription,
-                SubscriptionConfig.AllProductIds);
+                subscriptionIds);
 
-            foreach (var item in items)
+            foreach (var item in subscriptionItems)
+            {
+                products.Add(new ProductInfo
+                {
+                    ProductId = item.ProductId,
+                    Name = item.Name,
+                    Description = item.Description,
+                    Price = item.LocalizedPrice,
+                    PriceValue = item.MicrosPrice / 1_000_000m,
+                    CurrencyCode = item.CurrencyCode
+                });
+            }
+
+            // Get lifetime purchase (one-time)
+            var lifetimeIds = new[] { SubscriptionConfig.PremiumLifetimeProductId };
+            var lifetimeItems = await CrossInAppBilling.Current.GetProductInfoAsync(
+                ItemType.InAppPurchase,
+                lifetimeIds);
+
+            foreach (var item in lifetimeItems)
             {
                 products.Add(new ProductInfo
                 {
@@ -149,9 +169,14 @@ public class SubscriptionService : ISubscriptionService
 
             _logService.Info($"Attempting to purchase: {productId}");
 
+            // Lifetime purchases are one-time (InAppPurchase), subscriptions are recurring
+            var itemType = SubscriptionConfig.IsLifetimeProduct(productId)
+                ? ItemType.InAppPurchase
+                : ItemType.Subscription;
+
             var purchase = await CrossInAppBilling.Current.PurchaseAsync(
                 productId,
-                ItemType.Subscription);
+                itemType);
 
             if (purchase == null)
             {
@@ -327,7 +352,7 @@ public class SubscriptionService : ISubscriptionService
 
         try
         {
-            // Load from PlayFab first
+            // Load from local storage first
             await GetSubscriptionInfoAsync();
 
             // Check if subscription has expired
@@ -408,7 +433,7 @@ public class SubscriptionService : ISubscriptionService
         }
     }
 
-    private async Task SaveSubscriptionAsync(SubscriptionInfo subscription)
+    private Task SaveSubscriptionAsync(SubscriptionInfo subscription)
     {
         var oldTier = _cachedSubscription?.Tier ?? SubscriptionTier.Free;
         _cachedSubscription = subscription;
@@ -416,12 +441,12 @@ public class SubscriptionService : ISubscriptionService
         try
         {
             var json = JsonConvert.SerializeObject(subscription);
-            await _playFabService.SavePlayerDataAsync(SubscriptionConfig.SubscriptionDataKey, json);
+            Preferences.Set(SubscriptionConfig.SubscriptionDataKey, json);
             _logService.Info($"Subscription saved: Tier={subscription.Tier}, Expires={subscription.ExpirationDate}");
         }
         catch (Exception ex)
         {
-            _logService.Error("Failed to save subscription to PlayFab", exception: ex);
+            _logService.Error("Failed to save subscription to local storage", exception: ex);
         }
 
         // Fire event if tier changed
@@ -433,6 +458,8 @@ public class SubscriptionService : ISubscriptionService
                 NewTier = subscription.Tier
             });
         }
+
+        return Task.CompletedTask;
     }
 
 #if ANDROID || IOS

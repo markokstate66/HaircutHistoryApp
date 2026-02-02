@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:HaircutHistoryApp.ViewModels"
+             xmlns:models="clr-namespace:HaircutHistoryApp.Models"
+             x:Class="HaircutHistoryApp.Views.ThemeSelectionPage"
+             x:DataType="vm:ThemeSelectionViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="15" Spacing="15">
+
+            <!-- Header -->
+            <Label Text="Choose Your Theme"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                   HorizontalOptions="Center"
+                   Margin="0,10,0,5"/>
+
+            <Label Text="Premium members can choose from 6 beautiful themes"
+                   FontSize="14"
+                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,0,0,10"/>
+
+            <!-- Theme Grid -->
+            <CollectionView ItemsSource="{Binding Themes}"
+                          SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                   Span="2"
+                                   HorizontalItemSpacing="12"
+                                   VerticalItemSpacing="12"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ThemeDisplayModel">
+                        <Frame Padding="0"
+                               CornerRadius="12"
+                               BorderColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter='Primary|Gray300'}"
+                               BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
+                               HasShadow="True">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ThemeSelectionViewModel}}, Path=SelectThemeCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+
+                            <Grid RowDefinitions="80,Auto">
+                                <!-- Color Preview -->
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Background color (top left) -->
+                                    <BoxView Grid.Row="0" Grid.Column="0"
+                                           Color="{Binding PreviewBackground}"/>
+                                    <!-- Primary color (top right) -->
+                                    <BoxView Grid.Row="0" Grid.Column="1"
+                                           Color="{Binding PreviewPrimary}"/>
+                                    <!-- Secondary color (bottom left) -->
+                                    <BoxView Grid.Row="1" Grid.Column="0"
+                                           Color="{Binding PreviewSecondary}"/>
+                                    <!-- Accent color (bottom right) -->
+                                    <BoxView Grid.Row="1" Grid.Column="1"
+                                           Color="{Binding PreviewAccent}"/>
+
+                                    <!-- Selected checkmark -->
+                                    <Frame Grid.RowSpan="2" Grid.ColumnSpan="2"
+                                         BackgroundColor="#80000000"
+                                         IsVisible="{Binding IsSelected}"
+                                         Padding="0"
+                                         HasShadow="False"
+                                         CornerRadius="0">
+                                        <Label Text="*"
+                                             FontSize="32"
+                                             TextColor="White"
+                                             HorizontalOptions="Center"
+                                             VerticalOptions="Center"/>
+                                    </Frame>
+
+                                    <!-- Lock icon for premium themes -->
+                                    <Frame Grid.Row="0" Grid.Column="1"
+                                         BackgroundColor="#CC000000"
+                                         IsVisible="{Binding IsLocked}"
+                                         Padding="6"
+                                         CornerRadius="0"
+                                         HasShadow="False"
+                                         HorizontalOptions="End"
+                                         VerticalOptions="Start">
+                                        <Label Text="PREMIUM"
+                                             FontSize="8"
+                                             FontAttributes="Bold"
+                                             TextColor="White"/>
+                                    </Frame>
+                                </Grid>
+
+                                <!-- Theme Info -->
+                                <VerticalStackLayout Grid.Row="1"
+                                                   Padding="10"
+                                                   Spacing="2">
+                                    <Label Text="{Binding DisplayName}"
+                                         FontSize="14"
+                                         FontAttributes="Bold"
+                                         TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                                    <Label Text="{Binding Description}"
+                                         FontSize="11"
+                                         TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                         LineBreakMode="TailTruncation"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Upgrade prompt for free users -->
+            <Frame Padding="15"
+                   BackgroundColor="{StaticResource Primary}"
+                   BorderColor="Transparent"
+                   CornerRadius="12"
+                   IsVisible="{Binding IsPremium, Converter={StaticResource InvertedBoolConverter}}"
+                   Margin="0,10,0,0">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ThemeSelectionViewModel}}, Path=SelectThemeCommand}"
+                                        CommandParameter="{x:Null}"/>
+                </Frame.GestureRecognizers>
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Unlock All Themes"
+                         FontSize="18"
+                         FontAttributes="Bold"
+                         TextColor="White"
+                         HorizontalOptions="Center"/>
+                    <Label Text="Upgrade to Premium to personalize your app with 5 additional beautiful themes."
+                         FontSize="13"
+                         TextColor="White"
+                         HorizontalTextAlignment="Center"
+                         Opacity="0.9"/>
+                    <Button Text="Upgrade Now"
+                          BackgroundColor="White"
+                          TextColor="{StaticResource Primary}"
+                          CornerRadius="8"
+                          HeightRequest="40"
+                          Margin="0,5,0,0"
+                          Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ThemeSelectionViewModel}}, Path=SelectThemeCommand}">
+                        <Button.CommandParameter>
+                            <x:Null/>
+                        </Button.CommandParameter>
+                    </Button>
+                </VerticalStackLayout>
+            </Frame>
+
+            <BoxView HeightRequest="20" Color="Transparent"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
