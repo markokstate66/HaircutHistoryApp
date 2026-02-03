@@ -128,7 +128,7 @@
                            TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
 
                     <!-- Empty State -->
-                    <Frame IsVisible="{Binding HasMeasurements, Converter={StaticResource InverseBoolConverter}}"
+                    <Frame IsVisible="{Binding HasMeasurements, Converter={StaticResource InvertedBoolConverter}}"
                            Padding="20"
                            BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
                            BorderColor="Transparent"
@@ -213,7 +213,7 @@
                                                    FontSize="12"
                                                    TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                                             <Picker Title="Select area"
-                                                    SelectedItem="{Binding Area}"
+                                                    SelectedItem="{Binding Area, Mode=TwoWay}"
                                                     ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=AreaOptions}"
                                                     TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
                                         </VerticalStackLayout>
@@ -225,7 +225,7 @@
                                                        FontSize="12"
                                                        TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                                                 <Picker Title="Select guard"
-                                                        SelectedItem="{Binding GuardSize}"
+                                                        SelectedItem="{Binding GuardSize, Mode=TwoWay}"
                                                         ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=GuardSizeOptions}"
                                                         TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
                                             </VerticalStackLayout>
@@ -235,7 +235,7 @@
                                                        FontSize="12"
                                                        TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                                                 <Picker Title="Select technique"
-                                                        SelectedItem="{Binding Technique}"
+                                                        SelectedItem="{Binding Technique, Mode=TwoWay}"
                                                         ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=TechniqueOptions}"
                                                         TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
                                             </VerticalStackLayout>

@@ -1,17 +1,27 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace HaircutHistoryApp.Models;
 
-public class HaircutMeasurement
+public partial class HaircutMeasurement : ObservableObject
 {
-    public string Area { get; set; } = string.Empty;
-    public string GuardSize { get; set; } = string.Empty;
-    public string Technique { get; set; } = string.Empty;
-    public string Notes { get; set; } = string.Empty;
+    [ObservableProperty]
+    private string _area = string.Empty;
+
+    [ObservableProperty]
+    private string _guardSize = string.Empty;
+
+    [ObservableProperty]
+    private string _technique = string.Empty;
+
+    [ObservableProperty]
+    private string _notes = string.Empty;
 
     /// <summary>
     /// The order/step number for this measurement in the haircut workflow.
     /// Lower numbers are done first.
     /// </summary>
-    public int StepOrder { get; set; }
+    [ObservableProperty]
+    private int _stepOrder;
 
     /// <summary>
     /// Display text showing the step number and area.

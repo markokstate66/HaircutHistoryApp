@@ -115,7 +115,7 @@
                                                    TextColor="{StaticResource Primary}"
                                                    HorizontalOptions="Center"
                                                    VerticalOptions="Center"
-                                                   IsVisible="{Binding IsComplete, Converter={StaticResource InverseBoolConverter}}" />
+                                                   IsVisible="{Binding IsComplete, Converter={StaticResource InvertedBoolConverter}}" />
 
                                             <!-- Checkmark (when complete) -->
                                             <Label Text="✓"
