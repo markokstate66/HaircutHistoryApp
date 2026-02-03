@@ -184,9 +184,39 @@ keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore |
 keytool -exportcert -alias YOUR_KEY_ALIAS -keystore /path/to/your.keystore | openssl sha1 -binary | openssl base64
 ```
 
-## Step 9: Deploy Azure Functions
+## Step 9: Deploy Azure Functions (Linux Consumption)
 
-After Entra setup, configure and deploy your API:
+After Entra setup, configure and deploy your API to **Linux Consumption plan**.
+
+> **Important:** Always use Linux Consumption plan - no cold start penalty, and it's on the Flex Consumption migration path (Sept 2028).
+
+### Create Function App (if not exists)
+
+```bash
+# Create resource group
+az group create --name HaircutHistory-rg --location eastus
+
+# Create storage account
+az storage account create \
+  --name haircuthistorystor \
+  --resource-group HaircutHistory-rg \
+  --location eastus \
+  --sku Standard_LRS
+
+# Create Function App - MUST be Linux
+az functionapp create \
+  --resource-group HaircutHistory-rg \
+  --consumption-plan-location eastus \
+  --name haircuthistory-api \
+  --storage-account haircuthistorystor \
+  --os-type Linux \
+  --runtime dotnet-isolated \
+  --runtime-version 8 \
+  --functions-version 4
+
+# Verify it's Linux (should return "functionapp,linux")
+az functionapp show --name haircuthistory-api --resource-group HaircutHistory-rg --query "kind"
+```
 
 ### Configure Function App Settings
 

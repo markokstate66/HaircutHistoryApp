@@ -6,11 +6,16 @@ A .NET MAUI mobile application (iOS + Android) that helps users remember their h
 ## Architecture
 
 ### Tech Stack
-- **Frontend**: .NET MAUI 8.0 (C#, XAML)
-- **Backend**: Firebase (Authentication, Firestore, Storage)
+- **Frontend**: .NET MAUI 10 (C#, XAML)
+- **Backend API**: Azure Functions (.NET 8 Isolated Worker, Linux Consumption plan)
+- **Database**: Azure Cosmos DB (NoSQL)
+- **Storage**: Azure Blob Storage (photos)
+- **Authentication**: Firebase Auth (Google Sign-In)
 - **QR Code**: ZXing.Net.Maui for generation/scanning
-- **Images**: Firebase Storage for cloud sync
 - **Architecture Pattern**: MVVM with CommunityToolkit.Mvvm
+
+> **Note:** Azure Functions must be deployed to **Linux Consumption plan** - no Windows.
+> Linux has no cold start penalty and is on the Flex Consumption migration path.
 
 ### Project Structure
 ```

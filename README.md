@@ -20,17 +20,37 @@ A .NET MAUI mobile application for iOS and Android that helps users remember the
 
 ## Tech Stack
 
-- **.NET MAUI 10** - Cross-platform mobile framework
+### Mobile App
+- **.NET MAUI 10** - Cross-platform mobile framework (iOS, Android, Windows)
 - **C# / XAML** - Language and UI markup
 - **CommunityToolkit.Mvvm** - MVVM pattern implementation
 - **CommunityToolkit.Maui** - Additional MAUI controls and behaviors
 - **ZXing.Net.Maui** - QR code generation and scanning
-- **Newtonsoft.Json** - JSON serialization
+
+### Backend API
+- **Azure Functions** - .NET 8 Isolated Worker, Linux Consumption plan
+- **Azure Cosmos DB** - NoSQL database for profiles and records
+- **Azure Blob Storage** - Photo storage
+- **Firebase Authentication** - Google Sign-In via Firebase
+
+### Why Linux Consumption?
+- No cold start penalty (fires immediately)
+- Lower resource overhead per instance
+- Migrates to Flex Consumption by Sept 2028 (better scaling, VNet support)
 
 ## Project Structure
 
 ```
-src/HaircutHistoryApp/
+src/
+├── HaircutHistoryApp.Api/      # Azure Functions API (Linux Consumption)
+│   ├── Functions/              # HTTP trigger functions
+│   ├── Services/               # CosmosDB, Blob services
+│   ├── Middleware/             # Auth middleware
+│   └── host.json               # Functions config
+├── HaircutHistoryApp.Shared/   # Shared models and DTOs
+│   ├── Models/
+│   └── DTOs/
+└── HaircutHistoryApp/
 ├── Models/                 # Data models
 │   ├── User.cs
 │   ├── HaircutProfile.cs
@@ -117,11 +137,12 @@ dotnet run -f net10.0-ios
 
 ### Data Storage
 
-Currently uses local device storage with `Preferences` API. The architecture is designed to easily swap in cloud storage (Firebase, Azure, etc.) by implementing the service interfaces:
+Uses Azure backend with the following services:
 
-- `IAuthService` - Authentication
-- `IDataService` - Profile and session data
-- `IImageService` - Photo storage
+- **Firebase Auth** - Google Sign-In authentication
+- **Azure Cosmos DB** - Profile and haircut record storage
+- **Azure Blob Storage** - Photo storage
+- **Azure Functions (Linux Consumption)** - RESTful API endpoints
 
 ## App Screenshots
 
@@ -134,12 +155,14 @@ The app features:
 
 ## Future Enhancements
 
-- [ ] Firebase/Azure cloud sync
+- [x] Azure cloud sync (Cosmos DB + Blob Storage)
+- [x] Firebase Authentication with Google Sign-In
 - [ ] Push notifications for barber notes
 - [ ] Appointment reminders integration
 - [ ] Multiple profile photos per area
 - [ ] Export profile as PDF
 - [ ] Social sharing of styles
+- [ ] Apple Sign-In support
 
 ## License
 
