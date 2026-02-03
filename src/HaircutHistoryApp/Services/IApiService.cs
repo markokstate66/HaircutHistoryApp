@@ -20,8 +20,8 @@ public interface IApiService
     // Profile operations
     Task<ApiResponse<List<Profile>>> GetProfilesAsync();
     Task<ApiResponse<Profile>> GetProfileAsync(string profileId);
-    Task<ApiResponse<Profile>> CreateProfileAsync(string name, string? avatarUrl = null);
-    Task<ApiResponse<Profile>> UpdateProfileAsync(string profileId, string? name = null, string? avatarUrl = null);
+    Task<ApiResponse<Profile>> CreateProfileAsync(CreateProfileRequest request);
+    Task<ApiResponse<Profile>> UpdateProfileAsync(string profileId, UpdateProfileRequest request);
     Task<ApiResponse> DeleteProfileAsync(string profileId);
     Task<ApiResponse<List<Profile>>> GetSharedProfilesAsync();
 

@@ -69,22 +69,19 @@ public partial class CuttingGuideViewModel : BaseViewModel
             ProfileName = profile.Name;
             Title = $"Guide: {profile.Name}";
 
-            // Load the latest haircut to get measurements
-            var haircuts = await _dataService.GetHaircutRecordsAsync(ProfileId);
-            var latestHaircut = haircuts.FirstOrDefault();
-
-            if (latestHaircut == null)
+            // Check if profile has measurements
+            if (profile.Measurements.Count == 0)
             {
-                await Shell.Current.DisplayAlertAsync("No Haircuts",
-                    "Add a haircut record first to use the cutting guide.", "OK");
+                await Shell.Current.DisplayAlertAsync("No Measurements",
+                    "Add measurements to this profile first to use the cutting guide.", "OK");
                 await Shell.Current.GoToAsync("..");
                 return;
             }
 
-            GeneralNotes = latestHaircut.Notes ?? string.Empty;
+            GeneralNotes = profile.Description ?? string.Empty;
 
             Steps.Clear();
-            var orderedMeasurements = latestHaircut.Measurements
+            var orderedMeasurements = profile.Measurements
                 .OrderBy(m => m.StepOrder)
                 .ToList();
 

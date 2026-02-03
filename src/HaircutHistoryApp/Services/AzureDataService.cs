@@ -77,7 +77,21 @@ public class AzureDataService : IDataService
             {
                 // Create new profile
                 _logService.Info("AzureDataService", $"Creating profile: {profile.Name}");
-                var response = await _apiService.CreateProfileAsync(profile.Name, profile.AvatarUrl);
+                var request = new CreateProfileRequest
+                {
+                    Name = profile.Name,
+                    Description = profile.Description,
+                    Measurements = profile.Measurements.Select(m => new Measurement
+                    {
+                        Area = m.Area,
+                        GuardSize = m.GuardSize,
+                        Technique = m.Technique,
+                        Notes = m.Notes,
+                        StepOrder = m.StepOrder
+                    }).ToList(),
+                    AvatarUrl = profile.AvatarUrl
+                };
+                var response = await _apiService.CreateProfileAsync(request);
 
                 if (!response.Success || response.Data == null)
                 {
@@ -95,7 +109,21 @@ public class AzureDataService : IDataService
             {
                 // Update existing profile
                 _logService.Info("AzureDataService", $"Updating profile: {profile.Id}");
-                var response = await _apiService.UpdateProfileAsync(profile.Id, profile.Name, profile.AvatarUrl);
+                var request = new UpdateProfileRequest
+                {
+                    Name = profile.Name,
+                    Description = profile.Description,
+                    Measurements = profile.Measurements.Select(m => new Measurement
+                    {
+                        Area = m.Area,
+                        GuardSize = m.GuardSize,
+                        Technique = m.Technique,
+                        Notes = m.Notes,
+                        StepOrder = m.StepOrder
+                    }).ToList(),
+                    AvatarUrl = profile.AvatarUrl
+                };
+                var response = await _apiService.UpdateProfileAsync(profile.Id, request);
 
                 if (!response.Success)
                 {
@@ -361,6 +389,15 @@ public class AzureDataService : IDataService
         Id = p.Id,
         OwnerUserId = p.OwnerUserId,
         Name = p.Name,
+        Description = p.Description,
+        Measurements = p.Measurements.Select(m => new HaircutMeasurement
+        {
+            Area = m.Area,
+            GuardSize = m.GuardSize,
+            Technique = m.Technique,
+            Notes = m.Notes,
+            StepOrder = m.StepOrder
+        }).OrderBy(m => m.StepOrder).ToList(),
         AvatarUrl = p.AvatarUrl,
         HaircutCount = p.HaircutCount,
         CreatedAt = p.CreatedAt,
@@ -373,19 +410,9 @@ public class AzureDataService : IDataService
         ProfileId = r.ProfileId,
         CreatedByUserId = r.CreatedByUserId,
         Date = r.Date,
-        Description = r.Description ?? string.Empty,
         StylistName = r.StylistName,
         Location = r.Location,
-        Measurements = r.Measurements.Select(m => new HaircutMeasurement
-        {
-            Area = m.Area,
-            GuardSize = m.GuardSize,
-            Technique = m.Technique,
-            Notes = m.Notes,
-            StepOrder = m.StepOrder
-        }).OrderBy(m => m.StepOrder).ToList(),
         PhotoUrls = r.PhotoUrls.ToList(),
-        Products = r.Products.ToList(),
         Notes = r.Notes,
         Price = r.Price,
         DurationMinutes = r.DurationMinutes,
@@ -396,43 +423,23 @@ public class AzureDataService : IDataService
     private CreateHaircutRecordRequest MapToCreateRequest(Models.HaircutRecord record) => new()
     {
         Date = record.Date,
-        Description = record.Description,
         StylistName = record.StylistName,
         Location = record.Location,
         Notes = record.Notes,
         Price = record.Price,
         DurationMinutes = record.DurationMinutes,
-        Measurements = record.Measurements.Select(m => new Measurement
-        {
-            Area = m.Area,
-            GuardSize = m.GuardSize,
-            Technique = m.Technique,
-            Notes = m.Notes,
-            StepOrder = m.StepOrder
-        }).ToList(),
-        PhotoUrls = record.PhotoUrls.ToList(),
-        Products = record.Products.ToList()
+        PhotoUrls = record.PhotoUrls.ToList()
     };
 
     private UpdateHaircutRecordRequest MapToUpdateRequest(Models.HaircutRecord record) => new()
     {
         Date = record.Date,
-        Description = record.Description,
         StylistName = record.StylistName,
         Location = record.Location,
         Notes = record.Notes,
         Price = record.Price,
         DurationMinutes = record.DurationMinutes,
-        Measurements = record.Measurements.Select(m => new Measurement
-        {
-            Area = m.Area,
-            GuardSize = m.GuardSize,
-            Technique = m.Technique,
-            Notes = m.Notes,
-            StepOrder = m.StepOrder
-        }).ToList(),
-        PhotoUrls = record.PhotoUrls.ToList(),
-        Products = record.Products.ToList()
+        PhotoUrls = record.PhotoUrls.ToList()
     };
 
     private string ExtractTokenId(string token)

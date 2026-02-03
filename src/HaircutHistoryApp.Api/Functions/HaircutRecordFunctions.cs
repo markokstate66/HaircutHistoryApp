@@ -177,12 +177,9 @@ public class HaircutRecordFunctions
             ProfileId = profileId,
             CreatedByUserId = userId,
             Date = requestBody.Date,
-            Description = requestBody.Description,
             StylistName = requestBody.StylistName,
             Location = requestBody.Location,
-            Measurements = requestBody.Measurements,
             PhotoUrls = requestBody.PhotoUrls,
-            Products = requestBody.Products,
             Notes = requestBody.Notes,
             Price = requestBody.Price,
             DurationMinutes = requestBody.DurationMinutes
@@ -234,12 +231,9 @@ public class HaircutRecordFunctions
         if (requestBody != null)
         {
             if (requestBody.Date.HasValue) record.Date = requestBody.Date.Value;
-            if (requestBody.Description != null) record.Description = requestBody.Description;
             if (requestBody.StylistName != null) record.StylistName = requestBody.StylistName;
             if (requestBody.Location != null) record.Location = requestBody.Location;
-            if (requestBody.Measurements != null) record.Measurements = requestBody.Measurements;
             if (requestBody.PhotoUrls != null) record.PhotoUrls = requestBody.PhotoUrls;
-            if (requestBody.Products != null) record.Products = requestBody.Products;
             if (requestBody.Notes != null) record.Notes = requestBody.Notes;
             if (requestBody.Price.HasValue) record.Price = requestBody.Price;
             if (requestBody.DurationMinutes.HasValue) record.DurationMinutes = requestBody.DurationMinutes;

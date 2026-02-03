@@ -3,7 +3,8 @@ using System.Text.Json.Serialization;
 namespace HaircutHistoryApp.Shared.Models;
 
 /// <summary>
-/// Represents a single haircut entry within a profile.
+/// Represents a log entry of when a haircut profile was used.
+/// This is a simple record - measurements live on the Profile.
 /// </summary>
 public class HaircutRecord
 {
@@ -14,13 +15,13 @@ public class HaircutRecord
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
     /// <summary>
-    /// The ID of the profile this haircut belongs to.
+    /// The ID of the profile (haircut template) this record is for.
     /// </summary>
     [JsonPropertyName("profileId")]
     public string ProfileId { get; set; } = string.Empty;
 
     /// <summary>
-    /// The ID of the user who created this record (owner or stylist).
+    /// The ID of the user who created this record.
     /// </summary>
     [JsonPropertyName("createdByUserId")]
     public string CreatedByUserId { get; set; } = string.Empty;
@@ -30,12 +31,6 @@ public class HaircutRecord
     /// </summary>
     [JsonPropertyName("date")]
     public DateTime Date { get; set; }
-
-    /// <summary>
-    /// Description of what was done (e.g., "Fade with lineup").
-    /// </summary>
-    [JsonPropertyName("description")]
-    public string? Description { get; set; }
 
     /// <summary>
     /// Name of the barber/stylist who performed the haircut.
@@ -50,25 +45,13 @@ public class HaircutRecord
     public string? Location { get; set; }
 
     /// <summary>
-    /// Detailed measurements for different areas of the haircut.
-    /// </summary>
-    [JsonPropertyName("measurements")]
-    public List<Measurement> Measurements { get; set; } = new();
-
-    /// <summary>
-    /// URLs to photos of the haircut (premium feature).
+    /// URLs to photos of the haircut.
     /// </summary>
     [JsonPropertyName("photoUrls")]
     public List<string> PhotoUrls { get; set; } = new();
 
     /// <summary>
-    /// Products used during or recommended after the haircut.
-    /// </summary>
-    [JsonPropertyName("products")]
-    public List<string> Products { get; set; } = new();
-
-    /// <summary>
-    /// Additional notes about the haircut.
+    /// Additional notes about this specific haircut.
     /// </summary>
     [JsonPropertyName("notes")]
     public string? Notes { get; set; }
@@ -104,28 +87,10 @@ public class HaircutRecord
     public DateTime UpdatedAt { get; set; }
 
     /// <summary>
-    /// Helper to get a display summary of the haircut.
+    /// Display summary for list views.
     /// </summary>
     [JsonIgnore]
-    public string DisplaySummary
-    {
-        get
-        {
-            if (!string.IsNullOrEmpty(Description))
-                return Description;
-
-            var topMeasurement = Measurements.FirstOrDefault(m => m.Area == "Top");
-            var sidesMeasurement = Measurements.FirstOrDefault(m => m.Area == "Sides");
-
-            if (topMeasurement != null || sidesMeasurement != null)
-            {
-                var parts = new List<string>();
-                if (topMeasurement != null) parts.Add(topMeasurement.DisplayText);
-                if (sidesMeasurement != null) parts.Add(sidesMeasurement.DisplayText);
-                return string.Join(", ", parts);
-            }
-
-            return $"Haircut on {Date:MMM d, yyyy}";
-        }
-    }
+    public string DisplaySummary => !string.IsNullOrEmpty(Notes)
+        ? Notes
+        : $"Haircut on {Date:MMM d, yyyy}";
 }

@@ -3,7 +3,8 @@ using System.Text.Json.Serialization;
 namespace HaircutHistoryApp.Shared.Models;
 
 /// <summary>
-/// Represents a person whose haircuts are being tracked (the user themselves, a child, etc.).
+/// Represents a haircut template/recipe (e.g., "Dad's winter haircut", "Ryder's summer cut").
+/// Contains the master measurements that define this haircut style.
 /// </summary>
 public class Profile
 {
@@ -20,13 +21,25 @@ public class Profile
     public string OwnerUserId { get; set; } = string.Empty;
 
     /// <summary>
-    /// Name of the profile (e.g., "Me", "Marcus Jr", "Son").
+    /// Name of the haircut profile (e.g., "Dad's winter haircut", "Ryder's summer cut").
     /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// URL to the profile's avatar image.
+    /// Description explaining why this cut or any special notes (e.g., "Shorter for baseball helmets").
+    /// </summary>
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// The master measurements/steps that define this haircut style.
+    /// </summary>
+    [JsonPropertyName("measurements")]
+    public List<Measurement> Measurements { get; set; } = new();
+
+    /// <summary>
+    /// URL to the profile's avatar/photo image.
     /// </summary>
     [JsonPropertyName("avatarUrl")]
     public string? AvatarUrl { get; set; }

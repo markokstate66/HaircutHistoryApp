@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HaircutHistoryApp.Models;
@@ -6,9 +7,8 @@ using HaircutHistoryApp.Services;
 namespace HaircutHistoryApp.ViewModels;
 
 /// <summary>
-/// ViewModel for creating or editing a Profile (person).
-/// Simplified to only handle name and avatar.
-/// Measurements are now on HaircutRecord, not Profile.
+/// ViewModel for creating or editing a Profile (haircut template).
+/// Profiles contain name, description, and measurements (cutting steps).
 /// </summary>
 [QueryProperty(nameof(ProfileId), "profileId")]
 public partial class AddEditProfileViewModel : BaseViewModel
@@ -25,7 +25,21 @@ public partial class AddEditProfileViewModel : BaseViewModel
     private string _name = string.Empty;
 
     [ObservableProperty]
+    private string _description = string.Empty;
+
+    [ObservableProperty]
     private string? _avatarUrl;
+
+    [ObservableProperty]
+    private ObservableCollection<HaircutMeasurement> _measurements = new();
+
+    [ObservableProperty]
+    private bool _hasMeasurements;
+
+    // Picker options
+    public List<string> AreaOptions => HaircutMeasurement.CommonAreas;
+    public List<string> GuardSizeOptions => HaircutMeasurement.CommonGuardSizes;
+    public List<string> TechniqueOptions => HaircutMeasurement.CommonTechniques;
 
     public AddEditProfileViewModel(
         IDataService dataService,
@@ -58,6 +72,16 @@ public partial class AddEditProfileViewModel : BaseViewModel
         OnPropertyChanged(nameof(AvatarInitials));
     }
 
+    partial void OnMeasurementsChanged(ObservableCollection<HaircutMeasurement> value)
+    {
+        UpdateHasMeasurements();
+    }
+
+    private void UpdateHasMeasurements()
+    {
+        HasMeasurements = Measurements.Count > 0;
+    }
+
     [RelayCommand]
     private async Task LoadProfileAsync()
     {
@@ -75,9 +99,19 @@ public partial class AddEditProfileViewModel : BaseViewModel
             }
 
             Name = profile.Name;
+            Description = profile.Description ?? string.Empty;
             AvatarUrl = profile.AvatarUrl;
+
+            Measurements.Clear();
+            foreach (var m in profile.Measurements.OrderBy(m => m.StepOrder))
+            {
+                Measurements.Add(m);
+            }
+            UpdateHasMeasurements();
         });
     }
+
+    #region Photo Commands
 
     [RelayCommand]
     private async Task TakePhotoAsync()
@@ -105,6 +139,69 @@ public partial class AddEditProfileViewModel : BaseViewModel
         AvatarUrl = null;
     }
 
+    #endregion
+
+    #region Measurement Commands
+
+    [RelayCommand]
+    private void AddMeasurement()
+    {
+        var newMeasurement = new HaircutMeasurement
+        {
+            StepOrder = Measurements.Count + 1,
+            Area = AreaOptions.FirstOrDefault() ?? "Top"
+        };
+        Measurements.Add(newMeasurement);
+        UpdateHasMeasurements();
+    }
+
+    [RelayCommand]
+    private void RemoveMeasurement(HaircutMeasurement measurement)
+    {
+        if (measurement != null)
+        {
+            Measurements.Remove(measurement);
+            RenumberSteps();
+            UpdateHasMeasurements();
+        }
+    }
+
+    [RelayCommand]
+    private void MoveMeasurementUp(HaircutMeasurement measurement)
+    {
+        if (measurement == null) return;
+
+        var index = Measurements.IndexOf(measurement);
+        if (index > 0)
+        {
+            Measurements.Move(index, index - 1);
+            RenumberSteps();
+        }
+    }
+
+    [RelayCommand]
+    private void MoveMeasurementDown(HaircutMeasurement measurement)
+    {
+        if (measurement == null) return;
+
+        var index = Measurements.IndexOf(measurement);
+        if (index < Measurements.Count - 1)
+        {
+            Measurements.Move(index, index + 1);
+            RenumberSteps();
+        }
+    }
+
+    private void RenumberSteps()
+    {
+        for (int i = 0; i < Measurements.Count; i++)
+        {
+            Measurements[i].StepOrder = i + 1;
+        }
+    }
+
+    #endregion
+
     [RelayCommand]
     private async Task SaveAsync()
     {
@@ -128,7 +225,12 @@ public partial class AddEditProfileViewModel : BaseViewModel
             }
 
             profile.Name = Name.Trim();
+            profile.Description = string.IsNullOrWhiteSpace(Description) ? null : Description.Trim();
             profile.AvatarUrl = AvatarUrl;
+
+            // Ensure step orders are correct before saving
+            RenumberSteps();
+            profile.Measurements = Measurements.ToList();
 
             var success = await _dataService.SaveProfileAsync(profile);
 

@@ -102,12 +102,12 @@ public partial class ProfileDetailViewModel : BaseViewModel
             LatestHaircut = haircuts.FirstOrDefault();
             HasLatestHaircut = LatestHaircut != null;
 
-            // Get latest haircut's measurements
+            // Get measurements from Profile (not HaircutRecord)
             Measurements.Clear();
 
-            if (LatestHaircut != null)
+            if (Profile != null)
             {
-                foreach (var measurement in LatestHaircut.Measurements)
+                foreach (var measurement in Profile.Measurements)
                 {
                     Measurements.Add(measurement);
                 }
@@ -209,9 +209,9 @@ public partial class ProfileDetailViewModel : BaseViewModel
     [RelayCommand]
     private async Task StartCuttingGuideAsync()
     {
-        if (Profile == null || LatestHaircut == null)
+        if (Profile == null || Profile.Measurements.Count == 0)
         {
-            await Shell.Current.DisplayAlertAsync("No Haircuts", "Add a haircut record first to use the cutting guide.", "OK");
+            await Shell.Current.DisplayAlertAsync("No Measurements", "Add measurements to this profile first to use the cutting guide.", "OK");
             return;
         }
 

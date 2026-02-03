@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:HaircutHistoryApp.ViewModels"
+             xmlns:models="clr-namespace:HaircutHistoryApp.Models"
              x:Class="HaircutHistoryApp.Views.AddEditProfilePage"
              x:DataType="vm:AddEditProfileViewModel"
              Title="{Binding Title}"
@@ -65,28 +66,195 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Name Section -->
+            <!-- Name & Description Section -->
             <Frame Padding="15"
                    BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                    BorderColor="Transparent"
                    CornerRadius="12">
                 <VerticalStackLayout Spacing="15">
-                    <Label Text="Profile Name"
+                    <Label Text="Profile Details"
                            FontSize="18"
                            FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
 
+                    <!-- Name -->
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Name *"
                                FontSize="14"
                                TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
-                        <Entry Placeholder="e.g., Me, Son, Daughter, Dad"
+                        <Entry Placeholder="e.g., Dad's Winter Cut, Ryder's Summer Style"
                                Text="{Binding Name}"
                                Style="{StaticResource EntryStyle}"/>
-                        <Label Text="This is the person whose haircuts you want to track"
+                        <Label Text="Give this haircut template a descriptive name"
                                FontSize="12"
                                TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
                     </VerticalStackLayout>
+
+                    <!-- Description -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Notes"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                        <Editor Placeholder="Any special notes (e.g., 'Shorter for baseball helmet season')"
+                                Text="{Binding Description}"
+                                HeightRequest="80"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
+                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Measurements Section -->
+            <Frame Padding="15"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
+                   BorderColor="Transparent"
+                   CornerRadius="12">
+                <VerticalStackLayout Spacing="15">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Cutting Steps"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                        <Button Grid.Column="1"
+                                Text="+ Add Step"
+                                Command="{Binding AddMeasurementCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                Padding="10,5"/>
+                    </Grid>
+
+                    <Label Text="Define the steps for this haircut. These will appear in the cutting guide."
+                           FontSize="12"
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+
+                    <!-- Empty State -->
+                    <Frame IsVisible="{Binding HasMeasurements, Converter={StaticResource InverseBoolConverter}}"
+                           Padding="20"
+                           BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
+                           BorderColor="Transparent"
+                           CornerRadius="8">
+                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Label Text="No steps added yet"
+                                   FontSize="16"
+                                   HorizontalOptions="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                            <Label Text="Tap '+ Add Step' to define cutting instructions"
+                                   FontSize="13"
+                                   HorizontalOptions="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Measurements List -->
+                    <CollectionView ItemsSource="{Binding Measurements}"
+                                    IsVisible="{Binding HasMeasurements}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:HaircutMeasurement">
+                                <Frame Margin="0,5"
+                                       Padding="12"
+                                       BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
+                                       BorderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                                       CornerRadius="8">
+                                    <VerticalStackLayout Spacing="10">
+                                        <!-- Step Header with Reorder/Delete -->
+                                        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" ColumnSpacing="5">
+                                            <Label Text="{Binding StepOrder, StringFormat='Step {0}'}"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   VerticalOptions="Center"
+                                                   TextColor="{StaticResource Primary}"/>
+
+                                            <!-- Move Up -->
+                                            <Button Grid.Column="2"
+                                                    Text="^"
+                                                    FontSize="14"
+                                                    FontAttributes="Bold"
+                                                    WidthRequest="36"
+                                                    HeightRequest="36"
+                                                    Padding="0"
+                                                    CornerRadius="18"
+                                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=MoveMeasurementUpCommand}"
+                                                    CommandParameter="{Binding .}"/>
+
+                                            <!-- Move Down -->
+                                            <Button Grid.Column="3"
+                                                    Text="v"
+                                                    FontSize="14"
+                                                    FontAttributes="Bold"
+                                                    WidthRequest="36"
+                                                    HeightRequest="36"
+                                                    Padding="0"
+                                                    CornerRadius="18"
+                                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=MoveMeasurementDownCommand}"
+                                                    CommandParameter="{Binding .}"/>
+
+                                            <!-- Delete -->
+                                            <Button Grid.Column="4"
+                                                    Text="X"
+                                                    FontSize="14"
+                                                    FontAttributes="Bold"
+                                                    WidthRequest="36"
+                                                    HeightRequest="36"
+                                                    Padding="0"
+                                                    CornerRadius="18"
+                                                    BackgroundColor="{StaticResource Danger}"
+                                                    TextColor="White"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=RemoveMeasurementCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Grid>
+
+                                        <!-- Area Picker -->
+                                        <VerticalStackLayout Spacing="3">
+                                            <Label Text="Area"
+                                                   FontSize="12"
+                                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                                            <Picker Title="Select area"
+                                                    SelectedItem="{Binding Area}"
+                                                    ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=AreaOptions}"
+                                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                                        </VerticalStackLayout>
+
+                                        <!-- Guard Size & Technique Row -->
+                                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                            <VerticalStackLayout Spacing="3">
+                                                <Label Text="Guard Size"
+                                                       FontSize="12"
+                                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                                                <Picker Title="Select guard"
+                                                        SelectedItem="{Binding GuardSize}"
+                                                        ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=GuardSizeOptions}"
+                                                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                                            </VerticalStackLayout>
+
+                                            <VerticalStackLayout Grid.Column="1" Spacing="3">
+                                                <Label Text="Technique"
+                                                       FontSize="12"
+                                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                                                <Picker Title="Select technique"
+                                                        SelectedItem="{Binding Technique}"
+                                                        ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=TechniqueOptions}"
+                                                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                                            </VerticalStackLayout>
+                                        </Grid>
+
+                                        <!-- Notes -->
+                                        <VerticalStackLayout Spacing="3">
+                                            <Label Text="Step Notes"
+                                                   FontSize="12"
+                                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                                            <Entry Placeholder="Optional notes for this step"
+                                                   Text="{Binding Notes}"
+                                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                                        </VerticalStackLayout>
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </VerticalStackLayout>
             </Frame>
 

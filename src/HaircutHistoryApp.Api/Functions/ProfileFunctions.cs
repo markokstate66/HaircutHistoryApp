@@ -140,6 +140,8 @@ public class ProfileFunctions
             Id = Guid.NewGuid().ToString(),
             OwnerUserId = userId,
             Name = requestBody.Name,
+            Description = requestBody.Description,
+            Measurements = requestBody.Measurements ?? new List<Measurement>(),
             AvatarUrl = requestBody.AvatarUrl
         };
 
@@ -182,6 +184,10 @@ public class ProfileFunctions
         {
             if (!string.IsNullOrWhiteSpace(requestBody.Name))
                 profile.Name = requestBody.Name;
+            if (requestBody.Description != null)
+                profile.Description = requestBody.Description;
+            if (requestBody.Measurements != null)
+                profile.Measurements = requestBody.Measurements;
             if (requestBody.AvatarUrl != null)
                 profile.AvatarUrl = requestBody.AvatarUrl;
         }

@@ -1,10 +1,9 @@
 using System.Text.Json.Serialization;
-using HaircutHistoryApp.Shared.Models;
 
 namespace HaircutHistoryApp.Shared.DTOs;
 
 /// <summary>
-/// Request to create a new haircut record.
+/// Request to create a new haircut record (log entry).
 /// </summary>
 public class CreateHaircutRecordRequest
 {
@@ -13,12 +12,6 @@ public class CreateHaircutRecordRequest
     /// </summary>
     [JsonPropertyName("date")]
     public DateTime Date { get; set; }
-
-    /// <summary>
-    /// Description of what was done.
-    /// </summary>
-    [JsonPropertyName("description")]
-    public string? Description { get; set; }
 
     /// <summary>
     /// Name of the barber/stylist.
@@ -33,25 +26,13 @@ public class CreateHaircutRecordRequest
     public string? Location { get; set; }
 
     /// <summary>
-    /// Detailed measurements.
-    /// </summary>
-    [JsonPropertyName("measurements")]
-    public List<Measurement> Measurements { get; set; } = new();
-
-    /// <summary>
-    /// Photo URLs (premium feature).
+    /// Photo URLs.
     /// </summary>
     [JsonPropertyName("photoUrls")]
     public List<string> PhotoUrls { get; set; } = new();
 
     /// <summary>
-    /// Products used.
-    /// </summary>
-    [JsonPropertyName("products")]
-    public List<string> Products { get; set; } = new();
-
-    /// <summary>
-    /// Additional notes.
+    /// Additional notes about this haircut.
     /// </summary>
     [JsonPropertyName("notes")]
     public string? Notes { get; set; }
@@ -81,12 +62,6 @@ public class UpdateHaircutRecordRequest
     public DateTime? Date { get; set; }
 
     /// <summary>
-    /// Updated description (optional).
-    /// </summary>
-    [JsonPropertyName("description")]
-    public string? Description { get; set; }
-
-    /// <summary>
     /// Updated stylist name (optional).
     /// </summary>
     [JsonPropertyName("stylistName")]
@@ -99,22 +74,10 @@ public class UpdateHaircutRecordRequest
     public string? Location { get; set; }
 
     /// <summary>
-    /// Updated measurements (optional).
-    /// </summary>
-    [JsonPropertyName("measurements")]
-    public List<Measurement>? Measurements { get; set; }
-
-    /// <summary>
     /// Updated photo URLs (optional).
     /// </summary>
     [JsonPropertyName("photoUrls")]
     public List<string>? PhotoUrls { get; set; }
-
-    /// <summary>
-    /// Updated products (optional).
-    /// </summary>
-    [JsonPropertyName("products")]
-    public List<string>? Products { get; set; }
 
     /// <summary>
     /// Updated notes (optional).

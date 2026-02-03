@@ -1,16 +1,18 @@
 namespace HaircutHistoryApp.Models;
 
 /// <summary>
-/// Represents a person whose haircuts are being tracked (the user, their child, etc.).
-/// This is separate from HaircutRecord which tracks individual haircut events.
+/// Represents a haircut template/recipe (e.g., "Dad's winter haircut", "Ryder's summer cut").
+/// Contains the master measurements that define this haircut style.
 /// </summary>
 public class Profile
 {
     public string Id { get; set; } = string.Empty;
     public string OwnerUserId { get; set; } = string.Empty;
-    public string Name { get; set; } = string.Empty;           // "Me", "Son", "Daughter", etc.
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public List<HaircutMeasurement> Measurements { get; set; } = new();
     public string? AvatarUrl { get; set; }
-    public int HaircutCount { get; set; }                      // Populated from API
+    public int HaircutCount { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
@@ -32,4 +34,27 @@ public class Profile
         1 => "1 haircut",
         _ => $"{HaircutCount} haircuts"
     };
+
+    /// <summary>
+    /// Summary of key measurements for display.
+    /// </summary>
+    public string MeasurementsSummary
+    {
+        get
+        {
+            if (Measurements.Count == 0)
+                return "No measurements set";
+
+            var top = Measurements.FirstOrDefault(m => m.Area == "Top");
+            var sides = Measurements.FirstOrDefault(m => m.Area == "Sides");
+            var parts = new List<string>();
+
+            if (top != null && !string.IsNullOrEmpty(top.GuardSize))
+                parts.Add($"Top: {top.GuardSize}");
+            if (sides != null && !string.IsNullOrEmpty(sides.GuardSize))
+                parts.Add($"Sides: {sides.GuardSize}");
+
+            return parts.Count > 0 ? string.Join(" | ", parts) : "Custom measurements";
+        }
+    }
 }

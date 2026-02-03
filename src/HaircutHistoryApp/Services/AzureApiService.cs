@@ -97,15 +97,13 @@ public class AzureApiService : IApiService
         return await GetAsync<Profile>($"profiles/{profileId}");
     }
 
-    public async Task<ApiResponse<Profile>> CreateProfileAsync(string name, string? avatarUrl = null)
+    public async Task<ApiResponse<Profile>> CreateProfileAsync(CreateProfileRequest request)
     {
-        var request = new CreateProfileRequest { Name = name, AvatarUrl = avatarUrl };
         return await PostAsync<Profile>("profiles", request);
     }
 
-    public async Task<ApiResponse<Profile>> UpdateProfileAsync(string profileId, string? name = null, string? avatarUrl = null)
+    public async Task<ApiResponse<Profile>> UpdateProfileAsync(string profileId, UpdateProfileRequest request)
     {
-        var request = new UpdateProfileRequest { Name = name, AvatarUrl = avatarUrl };
         return await PutAsync<Profile>($"profiles/{profileId}", request);
     }
 
