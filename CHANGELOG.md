@@ -14,10 +14,27 @@ Versioning follows [Semantic Versioning](https://semver.org/): MAJOR.MINOR.PATCH
 
 ### Added
 - Offline-first caching with SQLite and bidirectional sync service (`SqliteService`, `SyncService`, `CachedDataService`)
-- Sync DTOs for cloud/local data comparison
+- Sync DTOs for cloud/local data comparison (`ProfileSyncInfo`, `SyncResponse`, `BatchFetchRequest`, etc.)
+- Cache models (`CachedProfile`, `CachedHaircutRecord`, `PendingOperation`, `SyncStatus`)
+- Sync API endpoints (batch fetch, sync info) in ProfileFunctions
+- AdService full lifecycle management
+- Cutting guide and theme selection navigation routes
+- Rewritten test suite — 58 tests covering models, DTOs, ApiResponse, and sync types
 
 ### Changed
-- (In progress) Various service and model updates for sync support
+- All ViewModels now use `BaseViewModel.ExecuteAsync` for consistent error handling
+- Updated app icons and splash screen
+- Updated platform configs (AndroidManifest, Info.plist)
+- Test project retargeted to `net8.0` referencing `HaircutHistoryApp.Shared`
+
+### Fixed
+- `ProfileListViewModel` was showing raw exception messages to users — now uses `AlertService` friendly messages
+- Removed obsolete PlayFab error mapping from `AlertService`
+- Added logging to previously silent catch in stats calculation
+- Fixed test project broken reference (was `HaircutHistoryApp.Core`, now `HaircutHistoryApp.Shared`)
+
+### Removed
+- Old test files for non-existent models (`HaircutProfile`, `ShareSession`, `Achievement`)
 
 ---
 
