@@ -2,12 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ master ]
   pull_request:
-    branches: [ main, develop ]
-
-env:
-  DOTNET_VERSION: '10.0.x'
+    branches: [ master ]
 
 jobs:
   build-and-test:
@@ -17,19 +14,25 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup .NET
+    - name: Setup .NET 8
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+        dotnet-version: '8.0.x'
 
-    - name: Restore dependencies
-      run: dotnet restore src/HaircutHistoryApp.Core/HaircutHistoryApp.Core.csproj
+    - name: Restore Shared library
+      run: dotnet restore src/HaircutHistoryApp.Shared/HaircutHistoryApp.Shared.csproj
 
-    - name: Build Core library
-      run: dotnet build src/HaircutHistoryApp.Core/HaircutHistoryApp.Core.csproj --no-restore --configuration Release
+    - name: Build Shared library
+      run: dotnet build src/HaircutHistoryApp.Shared/HaircutHistoryApp.Shared.csproj --no-restore --configuration Release
+
+    - name: Restore API project
+      run: dotnet restore src/HaircutHistoryApp.Api/HaircutHistoryApp.Api.csproj
+
+    - name: Build API project
+      run: dotnet build src/HaircutHistoryApp.Api/HaircutHistoryApp.Api.csproj --no-restore --configuration Release
 
     - name: Run tests
-      run: dotnet test tests/HaircutHistoryApp.Tests/HaircutHistoryApp.Tests.csproj --no-restore --verbosity normal --collect:"XPlat Code Coverage"
+      run: dotnet test tests/HaircutHistoryApp.Tests/HaircutHistoryApp.Tests.csproj --verbosity normal --collect:"XPlat Code Coverage"
 
     - name: Upload coverage reports
       uses: codecov/codecov-action@v4
@@ -41,16 +44,16 @@ jobs:
   build-android:
     runs-on: windows-latest
     needs: build-and-test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup .NET
+    - name: Setup .NET 10
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+        dotnet-version: '10.0.x'
 
     - name: Install MAUI workload
       run: dotnet workload install maui-android
@@ -70,16 +73,16 @@ jobs:
   build-ios:
     runs-on: macos-latest
     needs: build-and-test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup .NET
+    - name: Setup .NET 10
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+        dotnet-version: '10.0.x'
 
     - name: Install MAUI workload
       run: dotnet workload install maui-ios

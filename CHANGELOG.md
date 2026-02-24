@@ -20,18 +20,24 @@ Versioning follows [Semantic Versioning](https://semver.org/): MAJOR.MINOR.PATCH
 - AdService full lifecycle management
 - Cutting guide and theme selection navigation routes
 - Rewritten test suite — 58 tests covering models, DTOs, ApiResponse, and sync types
+- CI/CD: API deploy workflow (`.github/workflows/deploy-api.yml`) with automated health check smoke test
+- CI/CD: `AZURE_FUNCTIONAPP_PUBLISH_PROFILE` GitHub secret for automated API deployment
 
 ### Changed
 - All ViewModels now use `BaseViewModel.ExecuteAsync` for consistent error handling
 - Updated app icons and splash screen
 - Updated platform configs (AndroidManifest, Info.plist)
 - Test project retargeted to `net8.0` referencing `HaircutHistoryApp.Shared`
+- CI workflow triggers on `master` branch (was `main`/`develop`)
+- CI workflow uses .NET 8 for API/Shared/tests build, .NET 10 only for MAUI builds
+- CI workflow now builds both Shared and API projects before running tests
 
 ### Fixed
 - `ProfileListViewModel` was showing raw exception messages to users — now uses `AlertService` friendly messages
 - Removed obsolete PlayFab error mapping from `AlertService`
 - Added logging to previously silent catch in stats calculation
 - Fixed test project broken reference (was `HaircutHistoryApp.Core`, now `HaircutHistoryApp.Shared`)
+- CI workflow: fixed reference to deleted `HaircutHistoryApp.Core` project (now uses `HaircutHistoryApp.Shared`)
 
 ### Removed
 - Old test files for non-existent models (`HaircutProfile`, `ShareSession`, `Achievement`)

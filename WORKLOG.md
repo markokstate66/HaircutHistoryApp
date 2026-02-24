@@ -9,6 +9,37 @@ Each session appends a new entry using the template below.
 
 ---
 
+### [SESSION-002] — 2026-02-23
+
+**Goal:** Deploy latest API code to Azure, smoke test endpoints, fix broken CI/CD pipeline
+
+**Completed:**
+- Deployed all 22 Azure Functions to `haircuthistory-api` using `func azure functionapp publish` — includes new `GetProfileSync` and `GetProfilesBatch` endpoints
+- Smoke tested all key endpoints: health check (200), auth-required (UNAUTHORIZED via ApiResponse wrapper), new sync/batch endpoints (working), non-existent routes (404), function count (22)
+- Rewrote `.github/workflows/ci.yml`: fixed branch triggers (`main`/`develop` → `master`), fixed project refs (`Core` → `Shared`), added API build step, split SDK versions (.NET 8 for API/tests, .NET 10 for MAUI)
+- Created `.github/workflows/deploy-api.yml`: automated API deployment on push to master (when API/Shared files change), uses `azure/functions-action@v1` with publish profile, includes health check smoke test
+- Stored `AZURE_FUNCTIONAPP_PUBLISH_PROFILE` as GitHub secret (downloaded from Azure via `az` CLI, stored via `gh secret set`)
+- Updated `CHANGELOG.md` with CI/CD additions
+
+**In Progress / Pending:**
+- [ ] Test bidirectional sync between SQLite cache and Cosmos DB end-to-end
+- [ ] Add integration tests or mocked service tests for SyncService/CachedDataService
+- [ ] Consider returning proper HTTP 401 status codes from AuthMiddleware instead of 200 + error body
+
+**Decisions Made:**
+- Auth middleware returns HTTP 200 with `ApiResponse` error body (`UNAUTHORIZED`) rather than HTTP 401 — this is the existing pattern, not changing it now
+- Resource group is `rg-haircuthistory` (not `HaircutHistoryRG`)
+- deploy-api.yml also triggers on `workflow_dispatch` for manual deployments
+- CI `build-and-test` job uses .NET 8 (API/Shared/tests all target net8.0), MAUI build jobs use .NET 10
+
+**Notes:**
+- Azure Functions Core Tools v4.6.0, Azure CLI logged into "Summit Technology Group LLC"
+- 9 nullable reference warnings in `AuthMiddleware.cs` — not errors, low priority
+- `release.yml` left unchanged (triggers on release events, not branch-specific)
+- `azure-static-web-app.yml` left unchanged (already references both `main` and `master`)
+
+---
+
 ### [SESSION-001] — 2026-02-23
 
 **Goal:** Establish project documentation, commit pending work, and harden the codebase
