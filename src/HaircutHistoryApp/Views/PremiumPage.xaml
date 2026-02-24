@@ -231,12 +231,18 @@
                     IsVisible="{Binding IsPremium, Converter={StaticResource InvertedBoolConverter}}"
                     IsEnabled="{Binding IsNotBusy}"/>
 
-            <!-- Restore Purchases -->
-            <Button Text="{Binding IsRestoring, Converter={StaticResource BoolToModeConverter}, ConverterParameter='Restoring...|Restore Purchases'}"
-                    Command="{Binding RestorePurchasesCommand}"
-                    Style="{StaticResource SecondaryButton}"
-                    IsVisible="{Binding IsPremium, Converter={StaticResource InvertedBoolConverter}}"
-                    IsEnabled="{Binding IsRestoring, Converter={StaticResource InvertedBoolConverter}}"/>
+            <!-- Restore Purchases Link -->
+            <Label Text="{Binding IsRestoring, Converter={StaticResource BoolToModeConverter}, ConverterParameter='Restoring...|Restore Purchases'}"
+                   FontSize="14"
+                   TextColor="{StaticResource Primary}"
+                   TextDecorations="Underline"
+                   HorizontalOptions="Center"
+                   IsVisible="{Binding IsPremium, Converter={StaticResource InvertedBoolConverter}}"
+                   Margin="0,5">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding RestorePurchasesCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
 
             <!-- Legal Text -->
             <Label Text="Subscriptions automatically renew unless cancelled at least 24 hours before the end of the current period. You can manage and cancel subscriptions in your device's account settings. By subscribing, you agree to our Terms of Service and Privacy Policy."

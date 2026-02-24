@@ -122,7 +122,7 @@ public partial class QRShareViewModel : BaseViewModel
         await Share.RequestAsync(new ShareTextRequest
         {
             Title = "Share Haircut Profile",
-            Text = $"View my haircut profile with code: {ShareCode}\n\nOr scan this in the HairCut History app."
+            Text = $"View my haircut profile with code: {ShareCode}\n\nOr scan this in the Haircut History app."
         });
     }
 

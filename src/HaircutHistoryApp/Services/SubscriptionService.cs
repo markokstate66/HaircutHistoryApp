@@ -498,4 +498,23 @@ public class SubscriptionService : ISubscriptionService
         };
     }
 #endif
+
+#if DEBUG
+    public async Task SetDebugPremiumAsync(bool isPremium)
+    {
+        _logService.Info($"DEBUG: Setting premium mode to {isPremium}");
+
+        var subscription = new SubscriptionInfo
+        {
+            Tier = isPremium ? SubscriptionTier.Premium : SubscriptionTier.Free,
+            TransactionId = isPremium ? "debug-premium" : null,
+            ProductId = isPremium ? "debug.premium.lifetime" : null,
+            PurchaseDate = isPremium ? DateTime.UtcNow : default,
+            PurchaseState = isPremium ? AppPurchaseState.Purchased : AppPurchaseState.Failed,
+            ExpirationDate = isPremium ? DateTime.UtcNow.AddYears(100) : default
+        };
+
+        await SaveSubscriptionAsync(subscription);
+    }
+#endif
 }

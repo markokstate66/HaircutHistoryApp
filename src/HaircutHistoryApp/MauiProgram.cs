@@ -61,7 +61,12 @@ public static class MauiProgram
         // Register Azure/Firebase Services
         builder.Services.AddSingleton<IApiService, AzureApiService>();
         builder.Services.AddSingleton<IAuthService, FirebaseAuthService>();
-        builder.Services.AddSingleton<IDataService, AzureDataService>();
+
+        // Register SQLite and Sync services for local caching
+        builder.Services.AddSingleton<ISqliteService, SqliteService>();
+        builder.Services.AddSingleton<AzureDataService>(); // Keep as concrete type for CachedDataService
+        builder.Services.AddSingleton<ISyncService, SyncService>();
+        builder.Services.AddSingleton<IDataService, CachedDataService>(); // Replace with cached version
 
         // Register ViewModels
         builder.Services.AddTransient<LoginViewModel>();

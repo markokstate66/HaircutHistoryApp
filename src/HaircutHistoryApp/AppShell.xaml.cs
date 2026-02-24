@@ -20,5 +20,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("editHaircut", typeof(AddEditHaircutPage));
         Routing.RegisterRoute("cuttingGuide", typeof(CuttingGuidePage));
         Routing.RegisterRoute("themeSelection", typeof(ThemeSelectionPage));
+        Routing.RegisterRoute("premium", typeof(PremiumPage));
     }
 }

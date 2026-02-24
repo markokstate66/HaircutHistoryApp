@@ -45,6 +45,24 @@ public class Profile
     public string? AvatarUrl { get; set; }
 
     /// <summary>
+    /// Reference photo URL 1.
+    /// </summary>
+    [JsonPropertyName("imageUrl1")]
+    public string? ImageUrl1 { get; set; }
+
+    /// <summary>
+    /// Reference photo URL 2.
+    /// </summary>
+    [JsonPropertyName("imageUrl2")]
+    public string? ImageUrl2 { get; set; }
+
+    /// <summary>
+    /// Reference photo URL 3.
+    /// </summary>
+    [JsonPropertyName("imageUrl3")]
+    public string? ImageUrl3 { get; set; }
+
+    /// <summary>
     /// Whether this profile has been soft deleted.
     /// </summary>
     [JsonPropertyName("isDeleted")]
@@ -61,6 +79,13 @@ public class Profile
     /// </summary>
     [JsonPropertyName("updatedAt")]
     public DateTime UpdatedAt { get; set; }
+
+    /// <summary>
+    /// Content hash for sync comparison.
+    /// Computed from Name, Description, Measurements, and image URLs.
+    /// </summary>
+    [JsonPropertyName("contentHash")]
+    public string? ContentHash { get; set; }
 
     /// <summary>
     /// Count of haircut records for this profile (populated by API).

@@ -51,6 +51,12 @@ public partial class ProfileDetailViewModel : BaseViewModel
     [ObservableProperty]
     private bool _hasStats;
 
+    // Image helpers
+    public bool HasImage1 => !string.IsNullOrEmpty(Profile?.ImageUrl1);
+    public bool HasImage2 => !string.IsNullOrEmpty(Profile?.ImageUrl2);
+    public bool HasImage3 => !string.IsNullOrEmpty(Profile?.ImageUrl3);
+    public bool HasAnyImages => HasImage1 || HasImage2 || HasImage3;
+
     public string DaysSinceDisplay => DaysSinceLastHaircut.HasValue
         ? DaysSinceLastHaircut.Value == 0 ? "Today"
         : DaysSinceLastHaircut.Value == 1 ? "1 day ago"
@@ -85,6 +91,12 @@ public partial class ProfileDetailViewModel : BaseViewModel
             }
 
             Title = Profile.Name;
+
+            // Notify image properties changed
+            OnPropertyChanged(nameof(HasImage1));
+            OnPropertyChanged(nameof(HasImage2));
+            OnPropertyChanged(nameof(HasImage3));
+            OnPropertyChanged(nameof(HasAnyImages));
 
             // Load recent haircuts
             var haircuts = await _dataService.GetHaircutRecordsAsync(ProfileId);

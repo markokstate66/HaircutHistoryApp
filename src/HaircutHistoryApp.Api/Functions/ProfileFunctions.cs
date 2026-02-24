@@ -7,6 +7,9 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 
 namespace HaircutHistoryApp.Api.Functions;
 
@@ -142,8 +145,14 @@ public class ProfileFunctions
             Name = requestBody.Name,
             Description = requestBody.Description,
             Measurements = requestBody.Measurements ?? new List<Measurement>(),
-            AvatarUrl = requestBody.AvatarUrl
+            AvatarUrl = requestBody.AvatarUrl,
+            ImageUrl1 = requestBody.ImageUrl1,
+            ImageUrl2 = requestBody.ImageUrl2,
+            ImageUrl3 = requestBody.ImageUrl3
         };
+
+        // Compute content hash for sync
+        profile.ContentHash = ComputeContentHash(profile);
 
         profile = await _cosmosDbService.CreateProfileAsync(profile);
         _logger.LogInformation("Created profile {ProfileId} for user {UserId}", profile.Id, userId);
@@ -190,7 +199,16 @@ public class ProfileFunctions
                 profile.Measurements = requestBody.Measurements;
             if (requestBody.AvatarUrl != null)
                 profile.AvatarUrl = requestBody.AvatarUrl;
+            if (requestBody.ImageUrl1 != null)
+                profile.ImageUrl1 = requestBody.ImageUrl1;
+            if (requestBody.ImageUrl2 != null)
+                profile.ImageUrl2 = requestBody.ImageUrl2;
+            if (requestBody.ImageUrl3 != null)
+                profile.ImageUrl3 = requestBody.ImageUrl3;
         }
+
+        // Recompute content hash for sync
+        profile.ContentHash = ComputeContentHash(profile);
 
         profile = await _cosmosDbService.UpdateProfileAsync(profile);
 
@@ -258,5 +276,104 @@ public class ProfileFunctions
     {
         // Cross-partition query to find profile by ID (used for shared profiles)
         return await _cosmosDbService.GetProfileByIdAsync(profileId);
+    }
+
+    /// <summary>
+    /// GET /api/profiles/sync - Get lightweight sync info for all profiles
+    /// Returns only {id, contentHash, updatedAt, isDeleted} for efficient comparison
+    /// </summary>
+    [Function("GetProfileSync")]
+    public async Task<HttpResponseData> GetProfileSyncAsync(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "profiles/sync")] HttpRequestData req,
+        FunctionContext context)
+    {
+        var userId = context.GetUserId();
+        if (string.IsNullOrEmpty(userId))
+        {
+            var errorResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
+            await errorResponse.WriteAsJsonAsync(ApiResponse<SyncResponse>.Fail(ErrorCodes.Unauthorized, "Authentication required"));
+            return errorResponse;
+        }
+
+        var profiles = await _cosmosDbService.GetProfilesSyncInfoAsync(userId);
+
+        var syncInfo = profiles.Select(p => new ProfileSyncInfo
+        {
+            Id = p.Id,
+            ContentHash = p.ContentHash ?? ComputeContentHash(p),
+            UpdatedAt = p.UpdatedAt,
+            IsDeleted = p.IsDeleted
+        }).ToList();
+
+        var syncResponse = new SyncResponse
+        {
+            Profiles = syncInfo,
+            ServerTime = DateTime.UtcNow
+        };
+
+        var response = req.CreateResponse(HttpStatusCode.OK);
+        await response.WriteAsJsonAsync(ApiResponse<SyncResponse>.Ok(syncResponse));
+        return response;
+    }
+
+    /// <summary>
+    /// POST /api/profiles/batch - Fetch multiple profiles by ID
+    /// </summary>
+    [Function("GetProfilesBatch")]
+    public async Task<HttpResponseData> GetProfilesBatchAsync(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "profiles/batch")] HttpRequestData req,
+        FunctionContext context)
+    {
+        var userId = context.GetUserId();
+        if (string.IsNullOrEmpty(userId))
+        {
+            var errorResponse = req.CreateResponse(HttpStatusCode.Unauthorized);
+            await errorResponse.WriteAsJsonAsync(ApiResponse<List<Profile>>.Fail(ErrorCodes.Unauthorized, "Authentication required"));
+            return errorResponse;
+        }
+
+        var requestBody = await req.ReadFromJsonAsync<BatchFetchRequest>();
+        if (requestBody == null || requestBody.Ids.Count == 0)
+        {
+            var validationResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+            await validationResponse.WriteAsJsonAsync(ApiResponse<List<Profile>>.Fail(ErrorCodes.ValidationError, "At least one profile ID is required"));
+            return validationResponse;
+        }
+
+        var profiles = await _cosmosDbService.GetProfilesByIdsAsync(requestBody.Ids, userId);
+
+        // Ensure content hashes are set
+        foreach (var profile in profiles)
+        {
+            if (string.IsNullOrEmpty(profile.ContentHash))
+            {
+                profile.ContentHash = ComputeContentHash(profile);
+            }
+        }
+
+        var response = req.CreateResponse(HttpStatusCode.OK);
+        await response.WriteAsJsonAsync(ApiResponse<List<Profile>>.Ok(profiles));
+        return response;
+    }
+
+    /// <summary>
+    /// Computes a content hash for a profile based on its mutable content.
+    /// </summary>
+    private static string ComputeContentHash(Profile profile)
+    {
+        var content = new
+        {
+            profile.Name,
+            profile.Description,
+            Measurements = profile.Measurements.Select(m => new { m.Area, m.GuardSize, m.Technique, m.Notes, m.StepOrder }).ToList(),
+            profile.AvatarUrl,
+            profile.ImageUrl1,
+            profile.ImageUrl2,
+            profile.ImageUrl3
+        };
+
+        var json = JsonSerializer.Serialize(content);
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(json));
+        return Convert.ToBase64String(bytes)[..16]; // First 16 chars of base64 hash
     }
 }

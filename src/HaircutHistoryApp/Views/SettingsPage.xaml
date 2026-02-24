@@ -251,6 +251,37 @@
                 </VerticalStackLayout>
             </Frame>
 
+<!-- DEBUG: Developer Options (only visible in debug builds) -->
+            <Frame x:Name="DebugOptionsFrame"
+                   Padding="15"
+                   BackgroundColor="#FFF3E0"
+                   BorderColor="#FF9800"
+                   CornerRadius="12"
+                   IsVisible="False">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Debug Options"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="#E65100"/>
+
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Premium Mode"
+                                   FontSize="16"
+                                   TextColor="#E65100"/>
+                            <Label Text="Enable premium features for testing"
+                                   FontSize="12"
+                                   TextColor="#F57C00"/>
+                        </VerticalStackLayout>
+                        <Switch x:Name="DebugPremiumSwitch"
+                                Grid.Column="1"
+                                VerticalOptions="Center"
+                                ThumbColor="#FF9800"
+                                OnColor="#FFB74D"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
             <!-- Offline Mode Banner -->
             <Frame Padding="15"
                    BackgroundColor="{StaticResource Warning}"

@@ -71,7 +71,7 @@ public partial class ProfileListViewModel : BaseViewModel
         _dataService = dataService;
         _analytics = analytics;
         _subscriptionService = subscriptionService;
-        Title = "My Haircuts";
+        Title = "Haircut Profiles";
 
         _analytics.TrackScreen(AnalyticsScreens.ProfileList);
     }

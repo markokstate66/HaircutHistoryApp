@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.Input;
+using HaircutHistoryApp.Services;
 using HaircutHistoryApp.ViewModels;
 #if ANDROID || IOS
 using Plugin.MauiMTAdmob.Controls;
@@ -9,27 +10,34 @@ namespace HaircutHistoryApp.Views;
 public partial class ProfileListPage : ContentPage
 {
     private readonly ProfileListViewModel _viewModel;
+    private readonly IAdService? _adService;
+    private bool _bannerInitialized;
 
-    public ProfileListPage(ProfileListViewModel viewModel)
+    public ProfileListPage(ProfileListViewModel viewModel, IAdService adService)
     {
         InitializeComponent();
         BindingContext = _viewModel = viewModel;
-
-        // Temporarily disabled to debug JavaProxyThrowable
-        // InitializeAdBanner();
+        _adService = adService;
     }
 
     private void InitializeAdBanner()
     {
+        if (_bannerInitialized)
+            return;
+
 #if ANDROID || IOS
         try
         {
-            var adView = new MTAdView
+            if (_viewModel.ShowAds)
             {
-                AdsId = _viewModel.BannerAdUnitId
-            };
-            adView.SetBinding(IsVisibleProperty, new Binding(nameof(_viewModel.ShowAds)));
-            AdBannerContainer.Content = adView;
+                var adView = new MTAdView
+                {
+                    AdsId = _viewModel.BannerAdUnitId
+                };
+                adView.SetBinding(IsVisibleProperty, new Binding(nameof(_viewModel.ShowAds)));
+                AdBannerContainer.Content = adView;
+                _bannerInitialized = true;
+            }
         }
         catch (Exception ex)
         {
@@ -43,6 +51,27 @@ public partial class ProfileListPage : ContentPage
     {
         base.OnAppearing();
         _viewModel.LoadProfilesCommand.Execute(null);
+
+        // Initialize banner ad if not already done
+        InitializeAdBanner();
+
+        // Try to show interstitial ad (respects interval timer)
+        TryShowInterstitialAsync();
+    }
+
+    private async void TryShowInterstitialAsync()
+    {
+        try
+        {
+            if (_adService != null && _adService.ShouldShowAds)
+            {
+                await _adService.TryShowInterstitialAdAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Interstitial error: {ex.Message}");
+        }
     }
 
     [RelayCommand]

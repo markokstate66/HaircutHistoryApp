@@ -13,245 +13,237 @@
     </ContentPage.ToolbarItems>
 
     <ScrollView>
-        <VerticalStackLayout Padding="15" Spacing="20">
+        <VerticalStackLayout Padding="15" Spacing="15">
 
-            <!-- Avatar Section -->
+            <!-- Name & Notes Section -->
             <Frame Padding="15"
                    BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                    BorderColor="Transparent"
                    CornerRadius="12">
-                <VerticalStackLayout Spacing="15" HorizontalOptions="Center">
-                    <Label Text="Profile Photo"
-                           FontSize="18"
-                           FontAttributes="Bold"
-                           HorizontalOptions="Center"
-                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-
-                    <!-- Avatar Preview -->
-                    <Border StrokeShape="RoundRectangle 60"
-                            Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
-                            BackgroundColor="{StaticResource Primary}"
-                            WidthRequest="120"
-                            HeightRequest="120"
-                            HorizontalOptions="Center">
-                        <Grid>
-                            <Image Source="{Binding AvatarUrl}"
-                                   Aspect="AspectFill"
-                                   IsVisible="{Binding AvatarUrl, Converter={StaticResource StringToBoolConverter}}"/>
-                            <Label Text="{Binding AvatarInitials}"
-                                   FontSize="40"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   TextColor="White"
-                                   IsVisible="{Binding AvatarUrl, Converter={StaticResource StringToBoolConverter}, ConverterParameter=invert}"/>
-                        </Grid>
-                    </Border>
-
-                    <!-- Photo Buttons -->
-                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                        <Button Text="Take Photo"
-                                Command="{Binding TakePhotoCommand}"
-                                Style="{StaticResource SecondaryButton}"/>
-                        <Button Text="Gallery"
-                                Command="{Binding PickPhotoCommand}"
-                                Style="{StaticResource SecondaryButton}"/>
-                    </HorizontalStackLayout>
-
-                    <Button Text="Remove Photo"
-                            Command="{Binding RemovePhotoCommand}"
-                            IsVisible="{Binding AvatarUrl, Converter={StaticResource StringToBoolConverter}}"
-                            Style="{StaticResource DangerButton}"
-                            HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-            </Frame>
-
-            <!-- Name & Description Section -->
-            <Frame Padding="15"
-                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
-                   BorderColor="Transparent"
-                   CornerRadius="12">
-                <VerticalStackLayout Spacing="15">
-                    <Label Text="Profile Details"
-                           FontSize="18"
-                           FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-
+                <VerticalStackLayout Spacing="12">
                     <!-- Name -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Name *"
-                               FontSize="14"
-                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
-                        <Entry Placeholder="e.g., Dad's Winter Cut, Ryder's Summer Style"
-                               Text="{Binding Name}"
-                               Style="{StaticResource EntryStyle}"/>
-                        <Label Text="Give this haircut template a descriptive name"
-                               FontSize="12"
-                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
-                    </VerticalStackLayout>
+                    <Entry Placeholder="Profile Name"
+                           Text="{Binding Name}"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
 
-                    <!-- Description -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Notes"
-                               FontSize="14"
-                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
-                        <Editor Placeholder="Any special notes (e.g., 'Shorter for baseball helmet season')"
-                                Text="{Binding Description}"
-                                HeightRequest="80"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
-                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-                    </VerticalStackLayout>
+                    <!-- Notes -->
+                    <Editor Placeholder="Notes (optional)"
+                            Text="{Binding Description}"
+                            HeightRequest="60"
+                            FontSize="14"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Measurements Section -->
+            <!-- Reference Photos (3 slots) -->
             <Frame Padding="15"
                    BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
                    BorderColor="Transparent"
                    CornerRadius="12">
-                <VerticalStackLayout Spacing="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Reference Photos"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                        <!-- Image 1 -->
+                        <Border Grid.Column="0"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
+                                HeightRequest="100">
+                            <Grid>
+                                <Image Source="{Binding ImageUrl1}"
+                                       Aspect="AspectFill"
+                                       IsVisible="{Binding HasImage1}"/>
+                                <Label Text="+"
+                                       FontSize="32"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       IsVisible="{Binding HasImage1, Converter={StaticResource InvertedBoolConverter}}"/>
+                                <!-- Remove button -->
+                                <Button Text="X"
+                                        FontSize="10"
+                                        WidthRequest="24"
+                                        HeightRequest="24"
+                                        CornerRadius="12"
+                                        Padding="0"
+                                        BackgroundColor="{StaticResource Danger}"
+                                        TextColor="White"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Start"
+                                        Margin="4"
+                                        Command="{Binding RemoveImage1Command}"
+                                        IsVisible="{Binding HasImage1}"/>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding PickImage1Command}"/>
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </Border>
+
+                        <!-- Image 2 -->
+                        <Border Grid.Column="1"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
+                                HeightRequest="100">
+                            <Grid>
+                                <Image Source="{Binding ImageUrl2}"
+                                       Aspect="AspectFill"
+                                       IsVisible="{Binding HasImage2}"/>
+                                <Label Text="+"
+                                       FontSize="32"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       IsVisible="{Binding HasImage2, Converter={StaticResource InvertedBoolConverter}}"/>
+                                <Button Text="X"
+                                        FontSize="10"
+                                        WidthRequest="24"
+                                        HeightRequest="24"
+                                        CornerRadius="12"
+                                        Padding="0"
+                                        BackgroundColor="{StaticResource Danger}"
+                                        TextColor="White"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Start"
+                                        Margin="4"
+                                        Command="{Binding RemoveImage2Command}"
+                                        IsVisible="{Binding HasImage2}"/>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding PickImage2Command}"/>
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </Border>
+
+                        <!-- Image 3 -->
+                        <Border Grid.Column="2"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
+                                HeightRequest="100">
+                            <Grid>
+                                <Image Source="{Binding ImageUrl3}"
+                                       Aspect="AspectFill"
+                                       IsVisible="{Binding HasImage3}"/>
+                                <Label Text="+"
+                                       FontSize="32"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       IsVisible="{Binding HasImage3, Converter={StaticResource InvertedBoolConverter}}"/>
+                                <Button Text="X"
+                                        FontSize="10"
+                                        WidthRequest="24"
+                                        HeightRequest="24"
+                                        CornerRadius="12"
+                                        Padding="0"
+                                        BackgroundColor="{StaticResource Danger}"
+                                        TextColor="White"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Start"
+                                        Margin="4"
+                                        Command="{Binding RemoveImage3Command}"
+                                        IsVisible="{Binding HasImage3}"/>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding PickImage3Command}"/>
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Haircut Specs Section -->
+            <Frame Padding="15"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLight}, Dark={StaticResource SurfaceDark}}"
+                   BorderColor="Transparent"
+                   CornerRadius="12">
+                <VerticalStackLayout Spacing="10">
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label Text="Cutting Steps"
-                               FontSize="18"
+                        <Label Text="Haircut Specs"
+                               FontSize="16"
                                FontAttributes="Bold"
                                VerticalOptions="Center"
                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
                         <Button Grid.Column="1"
-                                Text="+ Add Step"
+                                Text="+ Add"
                                 Command="{Binding AddMeasurementCommand}"
-                                Style="{StaticResource SecondaryButton}"
-                                Padding="10,5"/>
+                                FontSize="12"
+                                HeightRequest="32"
+                                Padding="12,0"
+                                CornerRadius="16"
+                                BackgroundColor="{StaticResource Primary}"
+                                TextColor="White"/>
                     </Grid>
 
-                    <Label Text="Define the steps for this haircut. These will appear in the cutting guide."
-                           FontSize="12"
-                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
-
                     <!-- Empty State -->
-                    <Frame IsVisible="{Binding HasMeasurements, Converter={StaticResource InvertedBoolConverter}}"
-                           Padding="20"
-                           BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
-                           BorderColor="Transparent"
-                           CornerRadius="8">
-                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                            <Label Text="No steps added yet"
-                                   FontSize="16"
-                                   HorizontalOptions="Center"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
-                            <Label Text="Tap '+ Add Step' to define cutting instructions"
-                                   FontSize="13"
-                                   HorizontalOptions="Center"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
-                        </VerticalStackLayout>
-                    </Frame>
+                    <Label Text="No specs added yet"
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                           HorizontalOptions="Center"
+                           Margin="0,10"
+                           IsVisible="{Binding HasMeasurements, Converter={StaticResource InvertedBoolConverter}}"/>
 
-                    <!-- Measurements List -->
+                    <!-- Specs List -->
                     <CollectionView ItemsSource="{Binding Measurements}"
                                     IsVisible="{Binding HasMeasurements}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:HaircutMeasurement">
-                                <Frame Margin="0,5"
-                                       Padding="12"
-                                       BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
-                                       BorderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
-                                       CornerRadius="8">
-                                    <VerticalStackLayout Spacing="10">
-                                        <!-- Step Header with Reorder/Delete -->
-                                        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" ColumnSpacing="5">
-                                            <Label Text="{Binding StepOrder, StringFormat='Step {0}'}"
-                                                   FontSize="16"
-                                                   FontAttributes="Bold"
-                                                   VerticalOptions="Center"
-                                                   TextColor="{StaticResource Primary}"/>
+                                <SwipeView>
+                                    <SwipeView.RightItems>
+                                        <SwipeItems>
+                                            <SwipeItem Text="Delete"
+                                                       BackgroundColor="{StaticResource Danger}"
+                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=RemoveMeasurementCommand}"
+                                                       CommandParameter="{Binding .}"/>
+                                        </SwipeItems>
+                                    </SwipeView.RightItems>
 
-                                            <!-- Move Up -->
-                                            <Button Grid.Column="2"
-                                                    Text="^"
-                                                    FontSize="14"
-                                                    FontAttributes="Bold"
-                                                    WidthRequest="36"
-                                                    HeightRequest="36"
-                                                    Padding="0"
-                                                    CornerRadius="18"
-                                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
-                                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=MoveMeasurementUpCommand}"
-                                                    CommandParameter="{Binding .}"/>
-
-                                            <!-- Move Down -->
-                                            <Button Grid.Column="3"
-                                                    Text="v"
-                                                    FontSize="14"
-                                                    FontAttributes="Bold"
-                                                    WidthRequest="36"
-                                                    HeightRequest="36"
-                                                    Padding="0"
-                                                    CornerRadius="18"
-                                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
-                                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=MoveMeasurementDownCommand}"
-                                                    CommandParameter="{Binding .}"/>
-
-                                            <!-- Delete -->
-                                            <Button Grid.Column="4"
-                                                    Text="X"
-                                                    FontSize="14"
-                                                    FontAttributes="Bold"
-                                                    WidthRequest="36"
-                                                    HeightRequest="36"
-                                                    Padding="0"
-                                                    CornerRadius="18"
-                                                    BackgroundColor="{StaticResource Danger}"
-                                                    TextColor="White"
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=RemoveMeasurementCommand}"
-                                                    CommandParameter="{Binding .}"/>
-                                        </Grid>
-
-                                        <!-- Area Picker -->
-                                        <VerticalStackLayout Spacing="3">
-                                            <Label Text="Area"
-                                                   FontSize="12"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
-                                            <Picker Title="Select area"
+                                    <Frame Margin="0,4"
+                                           Padding="12"
+                                           BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
+                                           BorderColor="Transparent"
+                                           CornerRadius="8">
+                                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" RowDefinitions="Auto,Auto" RowSpacing="8">
+                                            <!-- Area Picker -->
+                                            <Picker Grid.Column="0"
+                                                    Title="Area"
                                                     SelectedItem="{Binding Area, Mode=TwoWay}"
                                                     ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=AreaOptions}"
+                                                    FontSize="13"
                                                     TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-                                        </VerticalStackLayout>
 
-                                        <!-- Guard Size & Technique Row -->
-                                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                                            <VerticalStackLayout Spacing="3">
-                                                <Label Text="Guard Size"
-                                                       FontSize="12"
-                                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
-                                                <Picker Title="Select guard"
-                                                        SelectedItem="{Binding GuardSize, Mode=TwoWay}"
-                                                        ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=GuardSizeOptions}"
-                                                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-                                            </VerticalStackLayout>
+                                            <!-- Guard Size Picker -->
+                                            <Picker Grid.Column="1"
+                                                    Title="Guard"
+                                                    SelectedItem="{Binding GuardSize, Mode=TwoWay}"
+                                                    ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=GuardSizeOptions}"
+                                                    FontSize="13"
+                                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
 
-                                            <VerticalStackLayout Grid.Column="1" Spacing="3">
-                                                <Label Text="Technique"
-                                                       FontSize="12"
-                                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
-                                                <Picker Title="Select technique"
-                                                        SelectedItem="{Binding Technique, Mode=TwoWay}"
-                                                        ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=TechniqueOptions}"
-                                                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-                                            </VerticalStackLayout>
-                                        </Grid>
+                                            <!-- Technique Picker -->
+                                            <Picker Grid.Column="2"
+                                                    Title="Technique"
+                                                    SelectedItem="{Binding Technique, Mode=TwoWay}"
+                                                    ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:AddEditProfileViewModel}}, Path=TechniqueOptions}"
+                                                    FontSize="13"
+                                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
 
-                                        <!-- Notes -->
-                                        <VerticalStackLayout Spacing="3">
-                                            <Label Text="Step Notes"
+                                            <!-- Notes -->
+                                            <Entry Grid.Row="1" Grid.ColumnSpan="3"
+                                                   Placeholder="Notes (optional)"
+                                                   Text="{Binding Notes, Mode=TwoWay}"
                                                    FontSize="12"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
-                                            <Entry Placeholder="Optional notes for this step"
-                                                   Text="{Binding Notes}"
                                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
-                                        </VerticalStackLayout>
-                                    </VerticalStackLayout>
-                                </Frame>
+                                        </Grid>
+                                    </Frame>
+                                </SwipeView>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
@@ -259,16 +251,15 @@
             </Frame>
 
             <!-- Save/Cancel Buttons -->
-            <HorizontalStackLayout Spacing="15" HorizontalOptions="Center" Margin="0,10,0,30">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="15" Margin="0,10,0,30">
                 <Button Text="Cancel"
                         Command="{Binding CancelCommand}"
-                        Style="{StaticResource SecondaryButton}"
-                        WidthRequest="120"/>
-                <Button Text="Save Profile"
+                        Style="{StaticResource SecondaryButton}"/>
+                <Button Grid.Column="1"
+                        Text="Save"
                         Command="{Binding SaveCommand}"
-                        Style="{StaticResource PrimaryButton}"
-                        WidthRequest="140"/>
-            </HorizontalStackLayout>
+                        Style="{StaticResource PrimaryButton}"/>
+            </Grid>
 
             <!-- Loading -->
             <ActivityIndicator IsRunning="{Binding IsBusy}"

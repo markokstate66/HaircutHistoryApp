@@ -12,11 +12,11 @@
 
             <!-- Logo/Title -->
             <VerticalStackLayout Spacing="10">
-                <Label Text="S"
-                       FontSize="100"
-                       HorizontalOptions="Center"
-                       TextColor="{StaticResource Primary}"/>
-                <Label Text="HairCut History"
+                <Image Source="icon.png"
+                       HeightRequest="120"
+                       WidthRequest="120"
+                       HorizontalOptions="Center"/>
+                <Label Text="Haircut History"
                        FontSize="32"
                        FontAttributes="Bold"
                        HorizontalOptions="Center"

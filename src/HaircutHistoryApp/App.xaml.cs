@@ -14,6 +14,9 @@ public partial class App : Application
 
 		// Initialize theme service
 		InitializeThemeAsync(serviceProvider);
+
+		// Initialize ad service and preload interstitial
+		InitializeAdsAsync(serviceProvider);
 	}
 
 	private async void InitializeThemeAsync(IServiceProvider serviceProvider)
@@ -29,6 +32,28 @@ public partial class App : Application
 		catch (Exception ex)
 		{
 			System.Diagnostics.Debug.WriteLine($"Failed to initialize theme: {ex.Message}");
+		}
+	}
+
+	private async void InitializeAdsAsync(IServiceProvider serviceProvider)
+	{
+		try
+		{
+			var adService = serviceProvider.GetService<IAdService>();
+			if (adService != null)
+			{
+				await adService.InitializeAsync();
+
+				// Preload interstitial ad for free users
+				if (adService.ShouldShowAds)
+				{
+					adService.LoadInterstitialAd();
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine($"Failed to initialize ads: {ex.Message}");
 		}
 	}
 

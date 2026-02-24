@@ -38,4 +38,8 @@ public interface ICosmosDbService
 
     // Cross-container queries
     Task<List<Profile>> GetSharedProfilesAsync(string stylistUserId);
+
+    // Sync operations
+    Task<List<Profile>> GetProfilesSyncInfoAsync(string ownerUserId);
+    Task<List<Profile>> GetProfilesByIdsAsync(List<string> profileIds, string ownerUserId);
 }

@@ -222,6 +222,21 @@ public class AzureApiService : IApiService
 
     #endregion
 
+    #region Sync Operations
+
+    public async Task<ApiResponse<SyncResponse>> GetProfileSyncAsync()
+    {
+        return await GetAsync<SyncResponse>("profiles/sync");
+    }
+
+    public async Task<ApiResponse<List<Profile>>> GetProfilesBatchAsync(List<string> ids)
+    {
+        var request = new BatchFetchRequest { Ids = ids };
+        return await PostAsync<List<Profile>>("profiles/batch", request);
+    }
+
+    #endregion
+
     #region HTTP Helpers
 
     private async Task<ApiResponse<T>> GetAsync<T>(string endpoint, bool isRetry = false)

@@ -31,6 +31,24 @@ public class CreateProfileRequest
     /// </summary>
     [JsonPropertyName("avatarUrl")]
     public string? AvatarUrl { get; set; }
+
+    /// <summary>
+    /// Reference photo URL 1.
+    /// </summary>
+    [JsonPropertyName("imageUrl1")]
+    public string? ImageUrl1 { get; set; }
+
+    /// <summary>
+    /// Reference photo URL 2.
+    /// </summary>
+    [JsonPropertyName("imageUrl2")]
+    public string? ImageUrl2 { get; set; }
+
+    /// <summary>
+    /// Reference photo URL 3.
+    /// </summary>
+    [JsonPropertyName("imageUrl3")]
+    public string? ImageUrl3 { get; set; }
 }
 
 /// <summary>
@@ -61,4 +79,22 @@ public class UpdateProfileRequest
     /// </summary>
     [JsonPropertyName("avatarUrl")]
     public string? AvatarUrl { get; set; }
+
+    /// <summary>
+    /// Reference photo URL 1.
+    /// </summary>
+    [JsonPropertyName("imageUrl1")]
+    public string? ImageUrl1 { get; set; }
+
+    /// <summary>
+    /// Reference photo URL 2.
+    /// </summary>
+    [JsonPropertyName("imageUrl2")]
+    public string? ImageUrl2 { get; set; }
+
+    /// <summary>
+    /// Reference photo URL 3.
+    /// </summary>
+    [JsonPropertyName("imageUrl3")]
+    public string? ImageUrl3 { get; set; }
 }

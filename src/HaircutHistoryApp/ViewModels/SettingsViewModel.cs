@@ -9,6 +9,7 @@ public partial class SettingsViewModel : BaseViewModel
 {
     private readonly IAuthService _authService;
     private readonly IProfilePictureService _profilePictureService;
+    private readonly ISubscriptionService _subscriptionService;
 
     [ObservableProperty]
     private User? _currentUser;
@@ -34,6 +35,11 @@ public partial class SettingsViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isOfflineMode;
 
+#if DEBUG
+    [ObservableProperty]
+    private bool _isDebugPremium;
+#endif
+
     public bool HasProfilePicture => !string.IsNullOrEmpty(ProfilePictureUrl);
     public bool HasNoProfilePicture => string.IsNullOrEmpty(ProfilePictureUrl);
 
@@ -46,10 +52,11 @@ public partial class SettingsViewModel : BaseViewModel
         _ => "Email account"
     };
 
-    public SettingsViewModel(IAuthService authService, IProfilePictureService profilePictureService)
+    public SettingsViewModel(IAuthService authService, IProfilePictureService profilePictureService, ISubscriptionService subscriptionService)
     {
         _authService = authService;
         _profilePictureService = profilePictureService;
+        _subscriptionService = subscriptionService;
         Title = "Settings";
     }
 
@@ -59,6 +66,10 @@ public partial class SettingsViewModel : BaseViewModel
         await ExecuteAsync(async () =>
         {
             IsOfflineMode = Preferences.Get("OfflineMode", false);
+
+#if DEBUG
+            IsDebugPremium = _subscriptionService.IsPremium;
+#endif
 
             CurrentUser = await _authService.GetCurrentUserAsync();
 
@@ -235,8 +246,8 @@ public partial class SettingsViewModel : BaseViewModel
     {
         await Share.RequestAsync(new ShareTextRequest
         {
-            Title = "Share HairCut History",
-            Text = "Check out HairCut History - the app that helps you remember your perfect haircut!\n\nhttps://play.google.com/store/apps/details?id=com.stg.haircuthistory"
+            Title = "Share Haircut History",
+            Text = "Check out Haircut History - the app that helps you remember your perfect haircut!\n\nhttps://play.google.com/store/apps/details?id=com.stg.haircuthistory"
         });
     }
 
@@ -248,7 +259,7 @@ public partial class SettingsViewModel : BaseViewModel
             var deviceInfo = $"\n\n---\nDevice: {DeviceInfo.Manufacturer} {DeviceInfo.Model}\nOS: {DeviceInfo.Platform} {DeviceInfo.VersionString}\nApp Version: 1.0.0";
             var body = $"Hi, I need help with...\n{deviceInfo}";
 
-            await Microsoft.Maui.ApplicationModel.Communication.Email.Default.ComposeAsync("HairCut History Support", body, "support@haircuthistory.com");
+            await Microsoft.Maui.ApplicationModel.Communication.Email.Default.ComposeAsync("Haircut History Support", body, "support@haircuthistory.com");
         }
         catch
         {
@@ -297,4 +308,17 @@ public partial class SettingsViewModel : BaseViewModel
     {
         await Shell.Current.GoToAsync("..");
     }
+
+#if DEBUG
+    [RelayCommand]
+    private async Task ToggleDebugPremiumAsync()
+    {
+        IsDebugPremium = !IsDebugPremium;
+        await _subscriptionService.SetDebugPremiumAsync(IsDebugPremium);
+        await Shell.Current.DisplayAlertAsync(
+            "Debug Mode",
+            $"Premium mode {(IsDebugPremium ? "enabled" : "disabled")}. Restart may be needed for some features.",
+            "OK");
+    }
+#endif
 }

@@ -1,10 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true">
-		<!-- AdMob App ID - Using Google's test app ID for development -->
-		<!-- Replace with your actual App ID before release -->
+		<!-- AdMob App ID -->
 		<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
-				   android:value="ca-app-pub-3940256099942544~3347511713"/>
+				   android:value="ca-app-pub-6676281664229738~8089129883"/>
 
 		<!-- OAuth Callback Activity for Google/Facebook/Apple Sign-In -->
 		<activity android:name="Microsoft.Maui.Authentication.WebAuthenticatorCallbackActivity"

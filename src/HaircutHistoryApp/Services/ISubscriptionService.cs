@@ -68,4 +68,11 @@ public interface ISubscriptionService
     /// Validate subscription status with the store and sync
     /// </summary>
     Task<bool> ValidateAndSyncSubscriptionAsync();
+
+#if DEBUG
+    /// <summary>
+    /// Toggle premium mode for testing (DEBUG only)
+    /// </summary>
+    Task SetDebugPremiumAsync(bool isPremium);
+#endif
 }

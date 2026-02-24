@@ -65,25 +65,24 @@ public static class SubscriptionConfig
     // ============================================
 
     /// <summary>
-    /// AdMob Application ID for Android (test ID for development)
-    /// Replace with actual ID before release
+    /// AdMob Application ID for Android
     /// </summary>
-    public const string AdMobAppIdAndroid = "ca-app-pub-3940256099942544~3347511713";
+    public const string AdMobAppIdAndroid = "ca-app-pub-6676281664229738~8089129883";
 
     /// <summary>
     /// AdMob Application ID for iOS
     /// </summary>
-    public const string AdMobAppIdIos = "ca-app-pub-XXXXXXXXXXXXXXXX~ZZZZZZZZZZ";
+    public const string AdMobAppIdIos = "ca-app-pub-6676281664229738~9052230606";
 
     /// <summary>
     /// Banner ad unit ID for Android (production)
     /// </summary>
-    public const string BannerAdUnitIdAndroid = "ca-app-pub-XXXXXXXXXXXXXXXX/AAAAAAAAAA";
+    public const string BannerAdUnitIdAndroid = "ca-app-pub-6676281664229738/6237391547";
 
     /// <summary>
     /// Banner ad unit ID for iOS (production)
     /// </summary>
-    public const string BannerAdUnitIdIos = "ca-app-pub-XXXXXXXXXXXXXXXX/BBBBBBBBBB";
+    public const string BannerAdUnitIdIos = "ca-app-pub-6676281664229738/6332770056";
 
     // ============================================
     // TEST AD UNIT IDS (use during development)
@@ -99,6 +98,31 @@ public static class SubscriptionConfig
     /// Test banner ad unit ID for iOS
     /// </summary>
     public const string TestBannerAdUnitIdIos = "ca-app-pub-3940256099942544/2934735716";
+
+    /// <summary>
+    /// Interstitial ad unit ID for Android (production)
+    /// </summary>
+    public const string InterstitialAdUnitIdAndroid = "ca-app-pub-6676281664229738/1523721539";
+
+    /// <summary>
+    /// Interstitial ad unit ID for iOS (production)
+    /// </summary>
+    public const string InterstitialAdUnitIdIos = "ca-app-pub-6676281664229738/3738649588";
+
+    /// <summary>
+    /// Test interstitial ad unit ID for Android
+    /// </summary>
+    public const string TestInterstitialAdUnitIdAndroid = "ca-app-pub-3940256099942544/1033173712";
+
+    /// <summary>
+    /// Test interstitial ad unit ID for iOS
+    /// </summary>
+    public const string TestInterstitialAdUnitIdIos = "ca-app-pub-3940256099942544/4411468910";
+
+    /// <summary>
+    /// Minimum interval between interstitial ads (in seconds)
+    /// </summary>
+    public const int InterstitialAdIntervalSeconds = 600; // 10 minutes
 
     // ============================================
     // HELPER METHODS
@@ -130,6 +154,21 @@ public static class SubscriptionConfig
         return AdMobAppIdIos;
 #else
         return AdMobAppIdAndroid;
+#endif
+    }
+
+    /// <summary>
+    /// Gets the appropriate interstitial ad unit ID for the current platform
+    /// </summary>
+    /// <param name="useTestAds">Whether to use test ad units</param>
+    public static string GetInterstitialAdUnitId(bool useTestAds = false)
+    {
+#if ANDROID
+        return useTestAds ? TestInterstitialAdUnitIdAndroid : InterstitialAdUnitIdAndroid;
+#elif IOS
+        return useTestAds ? TestInterstitialAdUnitIdIos : InterstitialAdUnitIdIos;
+#else
+        return TestInterstitialAdUnitIdAndroid;
 #endif
     }
 

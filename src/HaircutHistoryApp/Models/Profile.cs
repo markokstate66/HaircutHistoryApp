@@ -12,6 +12,20 @@ public class Profile
     public string? Description { get; set; }
     public List<HaircutMeasurement> Measurements { get; set; } = new();
     public string? AvatarUrl { get; set; }
+
+    /// <summary>
+    /// Reference photo URLs (up to 3 images)
+    /// </summary>
+    public string? ImageUrl1 { get; set; }
+    public string? ImageUrl2 { get; set; }
+    public string? ImageUrl3 { get; set; }
+
+    /// <summary>
+    /// Returns true if any reference images are set
+    /// </summary>
+    public bool HasImages => !string.IsNullOrEmpty(ImageUrl1) ||
+                             !string.IsNullOrEmpty(ImageUrl2) ||
+                             !string.IsNullOrEmpty(ImageUrl3);
     public int HaircutCount { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

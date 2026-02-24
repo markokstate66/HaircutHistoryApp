@@ -41,4 +41,8 @@ public interface IApiService
     // Photo operations
     Task<ApiResponse<PhotoUploadResponse>> GetPhotoUploadUrlAsync(string fileName, string contentType);
     Task<ApiResponse> DeletePhotoAsync(string blobUrl);
+
+    // Sync operations
+    Task<ApiResponse<SyncResponse>> GetProfileSyncAsync();
+    Task<ApiResponse<List<Profile>>> GetProfilesBatchAsync(List<string> ids);
 }

@@ -34,9 +34,9 @@
 	<string>This app needs photo library access to select haircut reference photos.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This app needs permission to save haircut reference photos to your library.</string>
-	<!-- AdMob App ID - Replace with your actual App ID before release -->
+	<!-- AdMob App ID -->
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-XXXXXXXXXXXXXXXX~ZZZZZZZZZZ</string>
+	<string>ca-app-pub-6676281664229738~9052230606</string>
 	<!-- SKAdNetwork identifiers for ad attribution -->
 	<key>SKAdNetworkItems</key>
 	<array>

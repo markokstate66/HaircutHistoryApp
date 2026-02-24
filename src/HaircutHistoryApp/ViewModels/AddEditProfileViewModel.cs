@@ -31,10 +31,23 @@ public partial class AddEditProfileViewModel : BaseViewModel
     private string? _avatarUrl;
 
     [ObservableProperty]
+    private string? _imageUrl1;
+
+    [ObservableProperty]
+    private string? _imageUrl2;
+
+    [ObservableProperty]
+    private string? _imageUrl3;
+
+    [ObservableProperty]
     private ObservableCollection<HaircutMeasurement> _measurements = new();
 
     [ObservableProperty]
     private bool _hasMeasurements;
+
+    public bool HasImage1 => !string.IsNullOrEmpty(ImageUrl1);
+    public bool HasImage2 => !string.IsNullOrEmpty(ImageUrl2);
+    public bool HasImage3 => !string.IsNullOrEmpty(ImageUrl3);
 
     // Picker options
     public List<string> AreaOptions => HaircutMeasurement.CommonAreas;
@@ -101,6 +114,12 @@ public partial class AddEditProfileViewModel : BaseViewModel
             Name = profile.Name;
             Description = profile.Description ?? string.Empty;
             AvatarUrl = profile.AvatarUrl;
+            ImageUrl1 = profile.ImageUrl1;
+            ImageUrl2 = profile.ImageUrl2;
+            ImageUrl3 = profile.ImageUrl3;
+            OnPropertyChanged(nameof(HasImage1));
+            OnPropertyChanged(nameof(HasImage2));
+            OnPropertyChanged(nameof(HasImage3));
 
             Measurements.Clear();
             foreach (var m in profile.Measurements.OrderBy(m => m.StepOrder))
@@ -139,6 +158,60 @@ public partial class AddEditProfileViewModel : BaseViewModel
         AvatarUrl = null;
     }
 
+    [RelayCommand]
+    private async Task PickImage1Async()
+    {
+        var path = await _imageService.PickImageAsync();
+        if (!string.IsNullOrEmpty(path))
+        {
+            ImageUrl1 = path;
+            OnPropertyChanged(nameof(HasImage1));
+        }
+    }
+
+    [RelayCommand]
+    private async Task PickImage2Async()
+    {
+        var path = await _imageService.PickImageAsync();
+        if (!string.IsNullOrEmpty(path))
+        {
+            ImageUrl2 = path;
+            OnPropertyChanged(nameof(HasImage2));
+        }
+    }
+
+    [RelayCommand]
+    private async Task PickImage3Async()
+    {
+        var path = await _imageService.PickImageAsync();
+        if (!string.IsNullOrEmpty(path))
+        {
+            ImageUrl3 = path;
+            OnPropertyChanged(nameof(HasImage3));
+        }
+    }
+
+    [RelayCommand]
+    private void RemoveImage1()
+    {
+        ImageUrl1 = null;
+        OnPropertyChanged(nameof(HasImage1));
+    }
+
+    [RelayCommand]
+    private void RemoveImage2()
+    {
+        ImageUrl2 = null;
+        OnPropertyChanged(nameof(HasImage2));
+    }
+
+    [RelayCommand]
+    private void RemoveImage3()
+    {
+        ImageUrl3 = null;
+        OnPropertyChanged(nameof(HasImage3));
+    }
+
     #endregion
 
     #region Measurement Commands
@@ -149,7 +222,9 @@ public partial class AddEditProfileViewModel : BaseViewModel
         var newMeasurement = new HaircutMeasurement
         {
             StepOrder = Measurements.Count + 1,
-            Area = AreaOptions.FirstOrDefault() ?? "Top"
+            Area = AreaOptions.FirstOrDefault() ?? "Top",
+            GuardSize = GuardSizeOptions.FirstOrDefault() ?? string.Empty,
+            Technique = TechniqueOptions.FirstOrDefault() ?? string.Empty
         };
         Measurements.Add(newMeasurement);
         UpdateHasMeasurements();
@@ -227,6 +302,9 @@ public partial class AddEditProfileViewModel : BaseViewModel
             profile.Name = Name.Trim();
             profile.Description = string.IsNullOrWhiteSpace(Description) ? null : Description.Trim();
             profile.AvatarUrl = AvatarUrl;
+            profile.ImageUrl1 = ImageUrl1;
+            profile.ImageUrl2 = ImageUrl2;
+            profile.ImageUrl3 = ImageUrl3;
 
             // Ensure step orders are correct before saving
             RenumberSteps();

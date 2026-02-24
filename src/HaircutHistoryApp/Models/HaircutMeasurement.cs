@@ -28,6 +28,20 @@ public partial class HaircutMeasurement : ObservableObject
     /// </summary>
     public string StepDisplay => StepOrder > 0 ? $"Step {StepOrder}: {Area}" : Area;
 
+    /// <summary>
+    /// Condensed display format: "Top: #4 (Scissor)"
+    /// </summary>
+    public string CondensedDisplay
+    {
+        get
+        {
+            var guard = string.IsNullOrEmpty(GuardSize) ? "" : $"#{GuardSize}";
+            var tech = string.IsNullOrEmpty(Technique) ? "" : $"({Technique})";
+            var details = string.Join(" ", new[] { guard, tech }.Where(s => !string.IsNullOrEmpty(s)));
+            return string.IsNullOrEmpty(details) ? Area : $"{Area}: {details}";
+        }
+    }
+
     public static List<string> CommonAreas => new()
     {
         "Top",

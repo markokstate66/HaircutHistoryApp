@@ -87,6 +87,12 @@ public class HaircutRecord
     public DateTime UpdatedAt { get; set; }
 
     /// <summary>
+    /// Content hash for sync comparison.
+    /// </summary>
+    [JsonPropertyName("contentHash")]
+    public string? ContentHash { get; set; }
+
+    /// <summary>
     /// Display summary for list views.
     /// </summary>
     [JsonIgnore]

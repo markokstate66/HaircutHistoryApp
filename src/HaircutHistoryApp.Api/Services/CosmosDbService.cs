@@ -358,4 +358,45 @@ public class CosmosDbService : ICosmosDbService
     }
 
     #endregion
+
+    #region Sync Operations
+
+    public async Task<List<Profile>> GetProfilesSyncInfoAsync(string ownerUserId)
+    {
+        // Return lightweight profile info for sync comparison
+        var query = _profilesContainer.GetItemLinqQueryable<Profile>()
+            .Where(p => p.OwnerUserId == ownerUserId);
+
+        var profiles = new List<Profile>();
+        using var iterator = query.ToFeedIterator();
+
+        while (iterator.HasMoreResults)
+        {
+            var response = await iterator.ReadNextAsync();
+            profiles.AddRange(response);
+        }
+
+        return profiles;
+    }
+
+    public async Task<List<Profile>> GetProfilesByIdsAsync(List<string> profileIds, string ownerUserId)
+    {
+        if (profileIds.Count == 0)
+            return new List<Profile>();
+
+        var profiles = new List<Profile>();
+
+        foreach (var id in profileIds)
+        {
+            var profile = await GetProfileAsync(id, ownerUserId);
+            if (profile != null)
+            {
+                profiles.Add(profile);
+            }
+        }
+
+        return profiles;
+    }
+
+    #endregion
 }

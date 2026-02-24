@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:HaircutHistoryApp.Views"
-    Title="HairCut History"
+    Title="Haircut History"
     FlyoutWidth="280"
     FlyoutBehavior="Flyout"
     Shell.BackgroundColor="{StaticResource Primary}"
@@ -17,16 +17,21 @@
         <Grid BackgroundColor="{StaticResource Primary}"
               Padding="20"
               HeightRequest="140">
-            <VerticalStackLayout VerticalOptions="Center" Spacing="5">
-                <Label Text="HairCut History"
-                       FontSize="24"
-                       FontAttributes="Bold"
-                       TextColor="White"/>
-                <Label Text="Never forget your perfect cut"
-                       FontSize="14"
-                       TextColor="White"
-                       Opacity="0.8"/>
-            </VerticalStackLayout>
+            <HorizontalStackLayout VerticalOptions="Center" Spacing="12">
+                <Image Source="icon.png"
+                       HeightRequest="50"
+                       WidthRequest="50"/>
+                <VerticalStackLayout VerticalOptions="Center" Spacing="2">
+                    <Label Text="Haircut History"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="White"/>
+                    <Label Text="Never forget your perfect cut"
+                           FontSize="12"
+                           TextColor="White"
+                           Opacity="0.8"/>
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
         </Grid>
     </Shell.FlyoutHeader>
 

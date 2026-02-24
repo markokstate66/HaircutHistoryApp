@@ -89,7 +89,10 @@ public class AzureDataService : IDataService
                         Notes = m.Notes,
                         StepOrder = m.StepOrder
                     }).ToList(),
-                    AvatarUrl = profile.AvatarUrl
+                    AvatarUrl = profile.AvatarUrl,
+                    ImageUrl1 = profile.ImageUrl1,
+                    ImageUrl2 = profile.ImageUrl2,
+                    ImageUrl3 = profile.ImageUrl3
                 };
                 var response = await _apiService.CreateProfileAsync(request);
 
@@ -121,7 +124,10 @@ public class AzureDataService : IDataService
                         Notes = m.Notes,
                         StepOrder = m.StepOrder
                     }).ToList(),
-                    AvatarUrl = profile.AvatarUrl
+                    AvatarUrl = profile.AvatarUrl,
+                    ImageUrl1 = profile.ImageUrl1,
+                    ImageUrl2 = profile.ImageUrl2,
+                    ImageUrl3 = profile.ImageUrl3
                 };
                 var response = await _apiService.UpdateProfileAsync(profile.Id, request);
 
@@ -399,6 +405,9 @@ public class AzureDataService : IDataService
             StepOrder = m.StepOrder
         }).OrderBy(m => m.StepOrder).ToList(),
         AvatarUrl = p.AvatarUrl,
+        ImageUrl1 = p.ImageUrl1,
+        ImageUrl2 = p.ImageUrl2,
+        ImageUrl3 = p.ImageUrl3,
         HaircutCount = p.HaircutCount,
         CreatedAt = p.CreatedAt,
         UpdatedAt = p.UpdatedAt
