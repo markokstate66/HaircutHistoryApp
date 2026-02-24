@@ -7,6 +7,10 @@ x86/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+publish/
+
+# Windows device name artifacts
+nul
 
 # Visual Studio
 .vs/
