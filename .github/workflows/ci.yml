@@ -55,14 +55,14 @@ jobs:
       with:
         dotnet-version: '10.0.x'
 
-    - name: Install MAUI workload
-      run: dotnet workload install maui-android
+    - name: Install MAUI workloads
+      run: dotnet workload install maui
 
     - name: Restore dependencies
-      run: dotnet restore src/HaircutHistoryApp/HaircutHistoryApp.csproj -p:TargetFrameworks=net10.0-android
+      run: dotnet restore src/HaircutHistoryApp/HaircutHistoryApp.csproj
 
     - name: Build Android
-      run: dotnet build src/HaircutHistoryApp/HaircutHistoryApp.csproj -f net10.0-android -c Release -p:TargetFrameworks=net10.0-android
+      run: dotnet build src/HaircutHistoryApp/HaircutHistoryApp.csproj -f net10.0-android -c Release
 
     - name: Upload Android artifact
       uses: actions/upload-artifact@v4
@@ -84,14 +84,14 @@ jobs:
       with:
         dotnet-version: '10.0.x'
 
-    - name: Install MAUI workload
-      run: dotnet workload install maui-ios
+    - name: Install MAUI workloads
+      run: dotnet workload install maui
 
     - name: Restore dependencies
-      run: dotnet restore src/HaircutHistoryApp/HaircutHistoryApp.csproj -p:TargetFrameworks=net10.0-ios
+      run: dotnet restore src/HaircutHistoryApp/HaircutHistoryApp.csproj
 
     - name: Build iOS
-      run: dotnet build src/HaircutHistoryApp/HaircutHistoryApp.csproj -f net10.0-ios -c Release -p:TargetFrameworks=net10.0-ios -p:BuildIpa=false
+      run: dotnet build src/HaircutHistoryApp/HaircutHistoryApp.csproj -f net10.0-ios -c Release -p:BuildIpa=false
 
     - name: Upload iOS artifact
       uses: actions/upload-artifact@v4
