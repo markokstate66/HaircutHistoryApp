@@ -62,7 +62,7 @@ jobs:
       run: dotnet restore src/HaircutHistoryApp/HaircutHistoryApp.csproj -p:TargetFrameworks=net10.0-android
 
     - name: Build Android
-      run: dotnet build src/HaircutHistoryApp/HaircutHistoryApp.csproj -f net10.0-android -c Release
+      run: dotnet build src/HaircutHistoryApp/HaircutHistoryApp.csproj -f net10.0-android -c Release -p:TargetFrameworks=net10.0-android
 
     - name: Upload Android artifact
       uses: actions/upload-artifact@v4
@@ -91,7 +91,7 @@ jobs:
       run: dotnet restore src/HaircutHistoryApp/HaircutHistoryApp.csproj -p:TargetFrameworks=net10.0-ios
 
     - name: Build iOS
-      run: dotnet build src/HaircutHistoryApp/HaircutHistoryApp.csproj -f net10.0-ios -c Release -p:BuildIpa=false
+      run: dotnet build src/HaircutHistoryApp/HaircutHistoryApp.csproj -f net10.0-ios -c Release -p:TargetFrameworks=net10.0-ios -p:BuildIpa=false
 
     - name: Upload iOS artifact
       uses: actions/upload-artifact@v4
