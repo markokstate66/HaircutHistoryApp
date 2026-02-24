@@ -79,12 +79,8 @@ public partial class ProfileListViewModel : BaseViewModel
     [RelayCommand]
     private async Task LoadProfilesAsync()
     {
-        if (IsBusy)
-            return;
-
-        try
+        await ExecuteAsync(async () =>
         {
-            IsBusy = true;
             var user = await _authService.GetCurrentUserAsync();
 
             if (user == null)
@@ -108,16 +104,9 @@ public partial class ProfileListViewModel : BaseViewModel
 
             // Update subscription status
             await UpdateSubscriptionStatusAsync();
-        }
-        catch (Exception ex)
-        {
-            await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
-        }
-        finally
-        {
-            IsBusy = false;
-            IsRefreshing = false;
-        }
+        }, errorContext: "Loading profiles");
+
+        IsRefreshing = false;
     }
 
     [RelayCommand]
@@ -205,8 +194,9 @@ public partial class ProfileListViewModel : BaseViewModel
 
             OnPropertyChanged(nameof(GlobalDaysSinceDisplay));
         }
-        catch
+        catch (Exception ex)
         {
+            LogService.Error("Failed to calculate global stats", "ProfileListViewModel", ex);
             HasGlobalStats = false;
         }
     }

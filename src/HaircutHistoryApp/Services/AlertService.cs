@@ -114,35 +114,9 @@ public class AlertService : IAlertService
             FormatException =>
                 $"{contextPrefix}The data format is invalid. Please check your input.",
 
-            // PlayFab specific (check for common patterns)
-            _ when exception.Message.Contains("PlayFab", StringComparison.OrdinalIgnoreCase) =>
-                GetPlayFabErrorMessage(exception, contextPrefix),
-
             // Default case - try to provide a helpful message
             _ => GetDefaultErrorMessage(exception, contextPrefix)
         };
-    }
-
-    private static string GetPlayFabErrorMessage(Exception exception, string contextPrefix)
-    {
-        var message = exception.Message.ToLowerInvariant();
-
-        if (message.Contains("invalid") && message.Contains("password"))
-            return $"{contextPrefix}Invalid email or password. Please check your credentials.";
-
-        if (message.Contains("email") && message.Contains("exist"))
-            return $"{contextPrefix}An account with this email already exists.";
-
-        if (message.Contains("not found") || message.Contains("no user"))
-            return $"{contextPrefix}Account not found. Please check your email or create a new account.";
-
-        if (message.Contains("rate") || message.Contains("limit"))
-            return $"{contextPrefix}Too many requests. Please wait a moment and try again.";
-
-        if (message.Contains("network") || message.Contains("connection"))
-            return $"{contextPrefix}Connection error. Please check your internet and try again.";
-
-        return $"{contextPrefix}An error occurred. Please try again.";
     }
 
     private static string GetDefaultErrorMessage(Exception exception, string contextPrefix)
