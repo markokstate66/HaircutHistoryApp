@@ -29,8 +29,7 @@ Versioning follows [Semantic Versioning](https://semver.org/): MAJOR.MINOR.PATCH
 - Updated platform configs (AndroidManifest, Info.plist)
 - Test project retargeted to `net8.0` referencing `HaircutHistoryApp.Shared`
 - CI workflow triggers on `master` branch (was `main`/`develop`)
-- CI workflow uses .NET 8 for API/Shared/tests build, .NET 10 only for MAUI builds
-- CI workflow now builds both Shared and API projects before running tests
+- CI workflow now builds Shared + API and runs tests (MAUI builds removed — handled locally and via Codemagic)
 
 ### Fixed
 - `ProfileListViewModel` was showing raw exception messages to users — now uses `AlertService` friendly messages
